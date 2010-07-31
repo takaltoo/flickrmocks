@@ -1,10 +1,50 @@
 require 'ruby-debug'
+
+
+
 module FlickrMocks
 
   module Helpers
 
+    module MarshalRoutines
+      def marshal_dump(obj)
+        r = marshal_object(obj)
+        r["flickr_type"] = obj.flickr_type
+        r
+      end
+
+      def marshal_load(obj)
+        data = obj.clone
+        type = data.delete('flickr_type')
+        if type =~ /s$/
+          FlickRaw::ResponseList.new(data,type,data.send(:[],$`))
+        else
+          FlickRaw::Response.build(data,type)
+        end
+      end
+
+      private
+
+      def marshal_object(obj)
+        r = {}
+        obj.methods(false).each do |k|
+          v = obj.send k.to_sym
+          r[k.to_s] = case v
+          when Array then v.collect {|e| marshal_object(e)}
+          when FlickRaw::Response then marshal_object(v)
+          when FlickRaw::ResponseList then marshal_object(v)
+          else v
+          end
+        end
+        r
+      end
+
+
+    end
+
     class << self
-      # methods for filenames and paths
+      include MarshalRoutines
+
       def extension
         ".marshal"
       end
@@ -45,24 +85,6 @@ module FlickrMocks
           a == b
         end
       end
-
-
-
-      def marshal_dump(obj)
-        r = marshal_object(obj)
-        r["flickr_type"] = obj.flickr_type
-        r
-      end
-
-      def marshal_load(obj)
-        data = obj.clone
-        type = data.delete('flickr_type')
-        if type =~ /s$/
-          FlickRaw::ResponseList.new(data,type,data.send(:[],$`))
-        else
-          FlickRaw::Response.build(data,type)
-        end
-      end
       
       def marshal(response,file)
         begin
@@ -80,25 +102,7 @@ module FlickrMocks
         ensure
           f.close
         end
-      end
-
-
-      
-      private
-
-      def marshal_object(obj)
-        r = {}
-        obj.methods(false).each do |k|
-          v = obj.send k.to_sym
-          r[k.to_s] = case v
-          when Array then v.collect {|e| marshal_object(e)}
-          when FlickRaw::Response then marshal_object(v)
-          when FlickRaw::ResponseList then marshal_object(v)
-          else v
-          end
-        end
-        r
-      end
+      end      
 
     end
   end

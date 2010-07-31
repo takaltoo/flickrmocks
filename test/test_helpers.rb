@@ -62,7 +62,6 @@ class TestFlickrmocks < Test::Unit::TestCase
       assert @h.compare(@sizes,@sizes), 'FlickRaw::ResponseList class should be equal to itself'
       assert @h.compare(@photos,@photos), 'FlickRaw::ResponseList class should be equal to itself'
 
-
       assert @h.compare(@details_m,@details_m), 'Marshaled FlickRaw::Response class should be equal to itself'
       assert @h.compare(@sizes_m,@sizes_m), 'Marshaled FlickRaw::ResponseList class should be equal to itself'
       assert @h.compare(@photos_m,@photos_m), 'Marshaled FlickRaw::ResponseList class should be equal to itself'
