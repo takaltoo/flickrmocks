@@ -6,7 +6,7 @@ require 'ruby-debug'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'flickr_mocks'
+require 'flickrmocks'
 
 def load_flickr_response(file)
     fname = File.dirname(__FILE__) + '/mocks/' + file.to_s + '.marshal'

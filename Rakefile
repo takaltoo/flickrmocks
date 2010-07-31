@@ -64,7 +64,7 @@ namespace :mocks do
   task :update => :config do
    
     mdir = @config_dir + '/test/mocks/'
-    require "#{@config_dir + '/lib/flickr_mocks'}"
+    require "#{@config_dir + '/lib/flickrmocks'}"
 
     h = FlickrMocks::Helpers
     FlickRaw.api_key= @config['flickr_api_key']
