@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "flickrmocks.gemspec",
      "lib/flickr_mocks/helpers.rb",
+     "lib/flickrmocks.rb",
      "test/helper.rb",
      "test/mocks/photo_details.marshal",
      "test/mocks/photos.marshal",
