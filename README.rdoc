@@ -14,7 +14,15 @@ because they contain singleton's.
 
 2. require 'flickrmocks'
 
+3. You should be able to Marshal/Unmarshal FlickRaw::Response and FlickRaw::ResponseList
+	classes. 
 
+	FlickRaw.api_key = 'xxx your flickr api key goes here'
+	a = flickr.photos.search :tags => 'dog'
+	b = Marshal.dump(a)
+	
+	Marshal.load(b) 
+		
 == Rails Installation (Test::Unit)
 
 Specify the gem dependency in your config/environment.rb file:
