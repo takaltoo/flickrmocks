@@ -10,7 +10,7 @@ require 'flickrmocks'
 
 def load_flickr_response(file)
     fname = File.dirname(__FILE__) + '/mocks/' + file.to_s + '.marshal'
-    FlickrMocks::Helpers.unmarshal fname
+    Marshal.load(FlickrMocks::Helpers.unmarshal fname)
 end
 
 

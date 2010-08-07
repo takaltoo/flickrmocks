@@ -62,7 +62,7 @@ end
 desc "Helpers for updating mocks required for testing utility"
 namespace :mocks do
   task :update => :config do
-   
+    
     mdir = @config_dir + '/test/mocks/'
     require "#{@config_dir + '/lib/flickrmocks'}"
 
@@ -70,13 +70,13 @@ namespace :mocks do
     FlickRaw.api_key= @config['flickr_api_key']
 
     photos = flickr.photos.search :tags => 'iran', :per_page => '4'
-    h.marshal(h.marshal_dump(photos),mdir+'photos.marshal')
+    h.marshal(Marshal.dump(photos),mdir+'photos.marshal')
     
     details = flickr.photos.getInfo :photo_id => photos[0].id, :secret => photos[0].secret
-    h.marshal(h.marshal_dump(details),mdir+'photo_details.marshal')
+    h.marshal(Marshal.dump(details),mdir+'photo_details.marshal')
 
     sizes = flickr.photos.getSizes :photo_id => photos[0].id, :secret => photos[0].secret
-    h.marshal(h.marshal_dump(sizes),mdir+'sizes.marshal')
+    h.marshal(Marshal.dump(sizes),mdir+'sizes.marshal')
   end
 
   desc "load yml configuration file for flickr api"
@@ -85,6 +85,7 @@ namespace :mocks do
     @config = YAML.load_file("#{@config_dir}/config.yml")
   end
 
+  
   desc "generate configuration file"
   task :config_file do
     file = 'config.yml'
@@ -93,7 +94,6 @@ namespace :mocks do
       sh "echo 'flickr_api_key: 247c5c08074816140d8ee7e74ef101e1' >> #{file} "
     end
   end
-  directory "test/mocks"
 
 
 end
