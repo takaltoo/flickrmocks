@@ -63,7 +63,7 @@ class TestFlickrmocks < Test::Unit::TestCase
         assert @h.compare(Marshal.load(Marshal.dump(@sizes)),@sizes), 'marshal/unmarshal same object should not change object'
         assert @h.compare(Marshal.load(Marshal.dump(@details)),@details), 'marshal/unmarshal same object should not change object'
 
-        assert @h.compare(Marshal.load(Marshal.dump(Marshal.load(Marshal.dump(@photos)),@photos))), 'multiple marshal/unmarshal should not change object'
+        assert @h.compare(Marshal.load(Marshal.dump(Marshal.load(Marshal.dump(@photos)))),@photos), 'multiple marshal/unmarshal should not change object'
 
     end
 
