@@ -13,9 +13,9 @@ class TestFlickrmocks < Test::Unit::TestCase
       @details_m =  load_flickr_response :photo_details
       @sizes_m = load_flickr_response :sizes
 
-      @photos = @h.marshal_load @photos_m
-      @details = @h.marshal_load @details_m
-      @sizes = @h.marshal_load @sizes_m
+      @photos = FlickRaw::Response.build(@photos_m,'photos')
+      @details = FlickRaw::Response.build(@details_m,'photo')
+      @sizes = FlickRaw::Response.build(@sizes_m,'sizes')
       
     end
     should 'give correct extension. :extension' do
@@ -43,19 +43,6 @@ class TestFlickrmocks < Test::Unit::TestCase
       assert_equal 'sizes_photo_id_22.marshal',@h.fname_sizes(@o.new({:photo_id=> '22',:id => '222'}))
     end
 
-    should 'properly marshal and unmarshal object' do
-      assert_equal @photos_m, @h.marshal_dump(@photos)
-      assert_equal @details_m, @h.marshal_dump(@details)
-      assert_equal @sizes_m, @h.marshal_dump(@sizes)
-
-      assert @h.compare(@photos, @h.marshal_load(@h.marshal_dump(@photos)))
-      assert @h.compare(@details, @h.marshal_load(@h.marshal_dump(@details)))
-      assert @h.compare(@sizes, @h.marshal_load(@h.marshal_dump(@sizes)))
-
-      assert @h.compare(@photos_m,@h.marshal_dump(@h.marshal_load(@photos_m)))
-      assert @h.compare(@details_m,@h.marshal_dump(@h.marshal_load(@details_m)))
-      assert @h.compare(@sizes_m,@h.marshal_dump(@h.marshal_load(@sizes_m)))
-    end
 
     should 'properly compare objects' do
       assert @h.compare(@details,@details), 'FlickRaw::Response class should be equal to itself'
@@ -72,15 +59,12 @@ class TestFlickrmocks < Test::Unit::TestCase
     end
 
     should 'be able to marshal and unmarshal files' do
-      begin
-        expected = [1,2,3,7]
-        fname ='/tmp/' + Time.now.to_s + Random.rand.to_s
-        @h.marshal(expected,fname)
-        value = @h.unmarshal(fname)
-        assert_equal expected,value
-      ensure
-        File.delete(fname)
-      end
+        assert @h.compare(Marshal.load(Marshal.dump(@photos)),@photos), 'marshal/unmarshal same object should not change object'
+        assert @h.compare(Marshal.load(Marshal.dump(@sizes)),@sizes), 'marshal/unmarshal same object should not change object'
+        assert @h.compare(Marshal.load(Marshal.dump(@details)),@details), 'marshal/unmarshal same object should not change object'
+
+        assert @h.compare(Marshal.load(Marshal.dump(Marshal.load(Marshal.dump(@photos)),@photos))), 'multiple marshal/unmarshal should not change object'
+
     end
 
   end

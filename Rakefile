@@ -96,17 +96,4 @@ namespace :mocks do
   directory "test/mocks"
 
 
-
-end
-
-
-module A
-  module B
-    def self.howdy
-      'howdy doody'
-    end
-  end
-  class << self
-    include B
-  end
 end

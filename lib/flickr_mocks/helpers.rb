@@ -1,50 +1,9 @@
 require 'ruby-debug'
 
-
-
 module FlickrMocks
-
   module Helpers
 
-    module MarshalRoutines
-      def marshal_dump(obj)
-        r = marshal_object(obj)
-        r["flickr_type"] = obj.flickr_type
-        r
-      end
-
-      def marshal_load(obj)
-        data = obj.clone
-        type = data.delete('flickr_type')
-        if type =~ /s$/
-          FlickRaw::ResponseList.new(data,type,data.send(:[],$`))
-        else
-          FlickRaw::Response.build(data,type)
-        end
-      end
-
-      private
-
-      def marshal_object(obj)
-        r = {}
-        obj.methods(false).each do |k|
-          v = obj.send k.to_sym
-          r[k.to_s] = case v
-          when Array then v.collect {|e| marshal_object(e)}
-          when FlickRaw::Response then marshal_object(v)
-          when FlickRaw::ResponseList then marshal_object(v)
-          else v
-          end
-        end
-        r
-      end
-
-
-    end
-
     class << self
-      include MarshalRoutines
-
       def extension
         ".marshal"
       end
@@ -73,11 +32,11 @@ module FlickrMocks
         when FlickRaw::Response,FlickRaw::ResponseList then a.methods(false).collect do |m|
             b.respond_to?(m) ? compare(a.send(m),b.send(m)) : false
           end.inject(true) {|r1,r2| r1 && r2}
-        
+
         when Hash then a.keys.collect  do |k|
             b.has_key?(k) ? compare(a[k],b[k]) : false
           end.inject(true){|r1,r2| r1 && r2}
-        
+
         when Array then a.each_with_index.collect do |v,i|
             b.length == a.length ? compare(v,b[i]) : false
           end.inject(true) {|r1,r2| r1 && r2}
@@ -85,7 +44,7 @@ module FlickrMocks
           a == b
         end
       end
-      
+
       def marshal(response,file)
         begin
           f  = File.open(file,'w')
@@ -102,9 +61,8 @@ module FlickrMocks
         ensure
           f.close
         end
-      end      
+      end
 
     end
   end
 end
-
