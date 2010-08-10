@@ -15,7 +15,7 @@ module FlickrMocks
 
       def fname_photos(options)
         base = options[:tags].downcase.split(',').map {|value| value.strip}.sort.join('_')
-        perpage = options[:perpage].nil? ? nil : ['perpage',options[:perpage].to_s].join('_')
+        perpage = options[:per_page].nil? ? nil : ['perpage',options[:per_page].to_s].join('_')
         page = options[:page].nil? ? nil : ['page',options[:page].to_s].join('_')
         tag_mode = options[:tag_mode].nil? ? nil : ['tagmode',options[:tag_mode].to_s].join('_')
         ['photos',base,perpage,page,tag_mode].find_all {|tag| !tag.nil?}.join('_') + extension

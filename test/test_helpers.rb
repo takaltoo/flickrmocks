@@ -28,9 +28,9 @@ class TestFlickrmocks < Test::Unit::TestCase
       assert_equal 'photos_iran_tehran.marshal',@h.fname_photos({:tags => 'iran,tehran'})
       assert_equal 'photos_iran_tehran.marshal',@h.fname_photos({:tags => 'teHran,Iran'})
       assert_equal 'photos_iran_tehran_tagmode_all.marshal',@h.fname_photos({:tags => 'teHran,Iran',:tag_mode =>'all'})
-      assert_equal 'photos_iran_perpage_333.marshal',@h.fname_photos({:tags => 'iran',:perpage=>'333'})
+      assert_equal 'photos_iran_perpage_333.marshal',@h.fname_photos({:tags => 'iran',:per_page=>'333'})
       assert_equal 'photos_iran_page_2000.marshal',@h.fname_photos({:tags => 'iran',:page=>'2000'})
-      assert_equal 'photos_iran_perpage_333_page_2000_tagmode_any.marshal',@h.fname_photos({:tags => 'iran',:page=>'2000',:perpage=>'333',:tag_mode =>'any'})
+      assert_equal 'photos_iran_perpage_333_page_2000_tagmode_any.marshal',@h.fname_photos({:tags => 'iran',:page=>'2000',:per_page=>'333',:tag_mode =>'any'})
     end
 
     should 'give correct filename for sizes' do
