@@ -19,6 +19,7 @@ class TestFlickrmocks < Test::Unit::TestCase
     end
 
     should 'give correct filename for photo' do
+      debugger
       assert_equal 'photo_id_22.marshal',@h.fname_photo(@o.new({:photo_id => '22'}))
       assert_equal 'photo_id_222.marshal',@h.fname_photo(@o.new({:id => '222'}))
       assert_equal 'photo_id_22.marshal',@h.fname_photo(@o.new({:photo_id=> '22',:id => '222'}))
