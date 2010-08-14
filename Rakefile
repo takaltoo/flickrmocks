@@ -1,5 +1,12 @@
 require 'rubygems'
 require 'rake'
+require File.expand_path(File.dirname(__FILE__) + '/lib/flickrmocks')
+
+# include all tasks
+Dir.glob("tasks/*.rb").each do |file|
+  require File.expand_path(File.dirname(__FILE__) + "/#{file}")
+end
+
 
 begin
   require 'jeweler'
@@ -58,42 +65,4 @@ Rake::RDocTask.new do |rdoc|
 end
 
 
-# tasks for
-desc "Helpers for updating mocks required for testing utility"
-namespace :mocks do
-  task :update => :config do
-    
-    mdir = @config_dir + '/test/mocks/'
-    require "#{@config_dir + '/lib/flickrmocks'}"
 
-    h = FlickrMocks::Helpers
-    FlickRaw.api_key= @config['flickr_api_key']
-
-    photos = flickr.photos.search :tags => 'iran', :per_page => '4'
-    h.marshal(Marshal.dump(photos),mdir+'photos.marshal')
-    
-    details = flickr.photos.getInfo :photo_id => photos[0].id, :secret => photos[0].secret
-    h.marshal(Marshal.dump(details),mdir+'photo_details.marshal')
-
-    sizes = flickr.photos.getSizes :photo_id => photos[0].id, :secret => photos[0].secret
-    h.marshal(Marshal.dump(sizes),mdir+'sizes.marshal')
-  end
-
-  desc "load yml configuration file for flickr api"
-  task :config => :config_file do
-    @config_dir = File.dirname(File.expand_path(__FILE__))
-    @config = YAML.load_file("#{@config_dir}/config.yml")
-  end
-
-  
-  desc "generate configuration file"
-  task :config_file do
-    file = 'config.yml'
-    unless File.exists?(file)
-      sh "touch #{file}"
-      sh "echo 'flickr_api_key: 247c5c08074816140d8ee7e74ef101e1' >> #{file} "
-    end
-  end
-
-
-end
