@@ -70,7 +70,7 @@ module FlickrMocks
 
     def self.interesting_options(params)
       return {
-        :date => params[:date] ? self.sanitize_time(params) : Time.now,
+        :date => self.sanitize_time(params),
         :per_page => self.sanitize_per_page(params),
         :page =>  self.sanitize_page(params)
       }

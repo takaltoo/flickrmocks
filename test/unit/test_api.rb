@@ -164,6 +164,10 @@ class TestFlickrMocks_ApiTest < Test::Unit::TestCase
     should 'give proper date with no page' do
       assert_equal @expected.clone.merge({:page => '1'}),@c.interesting_options({:date=> '2010-02-14',:per_page=>'2'})
     end
+    should 'give proper date when none specified' do
+      date = Chronic.parse('yesterday').strftime('%Y-%m-%d')
+      assert_equal date,@c.interesting_options({})[:date],'correct date returned'
+    end
 
   end
 
