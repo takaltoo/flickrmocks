@@ -94,8 +94,8 @@ module FlickrMocks
     # Url for retrieving the search results in a given page
     def search_url(page=nil)
       page ||= @current_page
-      return base_url + '?' + search_terms_hash.merge({:page => limit_page(page)}).to_param unless search_terms.empty?
-      return base_url + '?' + date_hash.merge({:page => limit_page(page)}).to_param unless date.empty?
+      return base_url + '?' + search_terms_hash.merge({:page => limit_page(page)}).to_param unless search_terms_hash.empty?
+      return base_url + '?' + date_hash.merge({:page => limit_page(page)}).to_param unless date_hash.empty?
       return base_url + '?' + {:page => limit_page(page)}.to_param
     end
 
@@ -120,6 +120,13 @@ module FlickrMocks
       @base_url || Photos.defaults[:base_url]
     end
 
+    def search_terms_hash
+      @search_terms ? {:search_terms => @search_terms } : {}
+    end
+
+    def date_hash
+      @date ? {:date => @date} : {}
+    end
 
 
     private
@@ -149,7 +156,7 @@ module FlickrMocks
 
     def search_terms=(value)
       raise ArgumentError,  "search_terms must respond to :to_s" unless value.respond_to? :to_s
-      @search_terms = value.nil? ? {} : value.to_s.downcase
+      @search_terms = value.nil? ? value : value.to_s.downcase
     end
 
     def base_url=(value)
@@ -186,13 +193,7 @@ module FlickrMocks
       page = page > total_pages ? total_pages : page
       page < 1 ? 1 : page
     end
-    def search_terms_hash
-      @search_terms ? {:search_terms => @search_terms } : {}
-    end
 
-    def date_hash
-      @date ? {:date => @date} : {}
-    end
 
   end
 end

@@ -141,13 +141,59 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     should 'cap page number maxiumum' do
        assert_equal '/flickr/search?page=800&search_terms=iran%2Cshiraz',@data.search_url(20000),'search url is properly capped'
     end
+
     should 'utilize base_url' do
       search_terms = {:search_terms => 'iran,shiraz',:base_url => 'http://www.happy.com'}
       data = @package::Photos.new @photos,search_terms
       assert_equal 'http://www.happy.com?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url uses base_url'
     end
 
+
+    
+    should 'be able to detect empty date' do
+      data = @package::Photos.new @photos,{}
+      assert data.date_hash.empty?, 'detected empty search terms'
+    end
+
+
   end
+
+  context ':date_hash' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = fixtures.photos
+      @options =  {:search_terms => 'iran,shiraz',:date=>'2010-10-20'}
+      @data = @package::Photos.new @photos,@options
+    end
+    should 'support empty? on non-specified date' do
+      data =@package::Photos.new @photos,{:search_terms => 'iran,shiraz'}
+      assert data.date_hash.empty?,'empty hash detected properly'
+    end
+    should 'properly return :date_hash' do
+      expected = {:date => '2010-10-20'}
+      assert_equal expected,@data.date_hash,'date hash is properly returned'
+    end
+  end
+
+  context ':search_terms_hash' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = fixtures.photos
+      @options =  {:search_terms => 'iran,shiraz'}
+      @data = @package::Photos.new @photos,@options
+    end
+    should 'properly return search_terms_hash' do
+      assert_equal @options, @data.search_terms_hash
+    end
+    should 'be able to detect empty search_terms_hash' do
+      data = @package::Photos.new @photos,{}
+      assert data.search_terms_hash.empty?, 'detected empty search terms'
+    end
+
+  end
+
 
   context ':base_url' do
      setup do
