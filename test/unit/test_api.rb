@@ -107,7 +107,7 @@ class TestFlickrMocks_ApiTest < Test::Unit::TestCase
       @extras = {
         :license => '4,5,6,7',
         :media => 'photos',
-        :extras =>  'm_dims',
+        :extras =>  'license',
         :tag_mode => 'any'
       }
       @expected = {
@@ -159,10 +159,10 @@ class TestFlickrMocks_ApiTest < Test::Unit::TestCase
     end
 
     should 'give proper date with default options' do
-      assert_equal @expected,@c.interesting_options(@expected), 'gave correct parameters with default hash'
+      assert_equal @expected.clone.merge({:extras => 'license'}),@c.interesting_options(@expected), 'gave correct parameters with default hash'
     end
     should 'give proper date with no page' do
-      assert_equal @expected.clone.merge({:page => '1'}),@c.interesting_options({:date=> '2010-02-14',:per_page=>'2'})
+      assert_equal @expected.clone.merge({:page => '1',:extras => 'license'}),@c.interesting_options({:date=> '2010-02-14',:per_page=>'2'})
     end
     should 'give proper date when none specified' do
       date = Chronic.parse('yesterday').strftime('%Y-%m-%d')

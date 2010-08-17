@@ -6,7 +6,7 @@ module FlickrMocks
       :per_page => '200',
       :license => '4,5,6,7',
       :media => 'photos',
-      :extras => 'm_dims',
+      :extras => 'license',
       :tag_mode => 'any',
       :flickr_tag_modes => ['any','all']
     }
@@ -72,7 +72,8 @@ module FlickrMocks
       return {
         :date => self.sanitize_time(params),
         :per_page => self.sanitize_per_page(params),
-        :page =>  self.sanitize_page(params)
+        :page =>  self.sanitize_page(params),
+        :extras => self.default(:extras)
       }
     end
 
