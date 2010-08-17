@@ -1,5 +1,17 @@
 require 'find'
-require 'flickraw-cached'
+require 'delegate'
+require 'active_resource' unless defined?(ActiveResource)
+
+
+# Use user specified FlickRaw definition, if not defined use flickraw-cached if
+#   available
+begin
+  require 'flickraw-cached' unless defined?(FlickRaw)
+rescue LoadError
+  require 'flickraw'
+end
+
+  
 
 flickrmocks_path = File.expand_path('../flickr_mocks/', __FILE__)
 

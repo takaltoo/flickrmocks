@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.6.2"
+  s.version = "0.6.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
@@ -28,15 +28,21 @@ Gem::Specification.new do |s|
      "VERSION",
      "flickrmocks.gemspec",
      "lib/flickr_mocks/custom_marshal.rb",
+     "lib/flickr_mocks/fixtures.rb",
      "lib/flickr_mocks/flickraw.rb",
      "lib/flickr_mocks/helpers.rb",
      "lib/flickr_mocks/version.rb",
      "lib/flickrmocks.rb",
+     "tasks/fixtures.rb",
+     "test/fixtures/interesting_photos.marshal",
+     "test/fixtures/photo_details.marshal",
+     "test/fixtures/photo_sizes.marshal",
+     "test/fixtures/photos.marshal",
      "test/helper.rb",
-     "test/mocks/photo_details.marshal",
-     "test/mocks/photos.marshal",
-     "test/mocks/sizes.marshal",
-     "test/test_helpers.rb"
+     "test/unit/test_custom_marshal.rb",
+     "test/unit/test_fixtures.rb",
+     "test/unit/test_helpers.rb",
+     "test/unit/test_version.rb"
   ]
   s.homepage = %q{http://github.com/takaltoo/flickrmocks}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -44,8 +50,11 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Enables FlickRaw responses to be Marshaled.}
   s.test_files = [
-    "test/helper.rb",
-     "test/test_helpers.rb"
+    "test/unit/test_fixtures.rb",
+     "test/unit/test_version.rb",
+     "test/unit/test_helpers.rb",
+     "test/unit/test_custom_marshal.rb",
+     "test/helper.rb"
   ]
 
   if s.respond_to? :specification_version then
