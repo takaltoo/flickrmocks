@@ -1,7 +1,6 @@
 module FlickrMocks
   class Api
-    # FlickRaw.api_key = APP_CONFIG['flickr_api_key']
-    FlickRaw.api_key = '247c5c08074816140d8ee7e74ef101e1'
+
 
     @defaults = {
       :per_page => '200',
