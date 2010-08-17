@@ -164,6 +164,17 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
   end
 
+  context ':empty?' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new(fixtures.photos, {:search_terms => 'iran,shiraz'})
+    end
+    should 'give non-empty' do
+      assert !@photos.empty?, 'correctly identified @photos as non-empty'
+    end
+  end
+
 
 end
 

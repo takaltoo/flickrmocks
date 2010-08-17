@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.6.3"
+  s.version = "0.6.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-08-13}
+  s.date = %q{2010-08-16}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -27,10 +27,16 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "flickrmocks.gemspec",
+     "lib/flickr_mocks/api/api.rb",
      "lib/flickr_mocks/custom_marshal.rb",
      "lib/flickr_mocks/fixtures.rb",
      "lib/flickr_mocks/flickraw.rb",
      "lib/flickr_mocks/helpers.rb",
+     "lib/flickr_mocks/models/photo.rb",
+     "lib/flickr_mocks/models/photo_details.rb",
+     "lib/flickr_mocks/models/photo_size.rb",
+     "lib/flickr_mocks/models/photo_sizes.rb",
+     "lib/flickr_mocks/models/photos.rb",
      "lib/flickr_mocks/version.rb",
      "lib/flickrmocks.rb",
      "tasks/fixtures.rb",
@@ -39,6 +45,12 @@ Gem::Specification.new do |s|
      "test/fixtures/photo_sizes.marshal",
      "test/fixtures/photos.marshal",
      "test/helper.rb",
+     "test/unit/models/test_photo.rb",
+     "test/unit/models/test_photo_details.rb",
+     "test/unit/models/test_photo_size.rb",
+     "test/unit/models/test_photo_sizes.rb",
+     "test/unit/models/test_photos.rb",
+     "test/unit/test_api.rb",
      "test/unit/test_custom_marshal.rb",
      "test/unit/test_fixtures.rb",
      "test/unit/test_helpers.rb",
@@ -51,7 +63,13 @@ Gem::Specification.new do |s|
   s.summary = %q{Enables FlickRaw responses to be Marshaled.}
   s.test_files = [
     "test/unit/test_fixtures.rb",
+     "test/unit/models/test_photo_details.rb",
+     "test/unit/models/test_photos.rb",
+     "test/unit/models/test_photo_size.rb",
+     "test/unit/models/test_photo.rb",
+     "test/unit/models/test_photo_sizes.rb",
      "test/unit/test_version.rb",
+     "test/unit/test_api.rb",
      "test/unit/test_helpers.rb",
      "test/unit/test_custom_marshal.rb",
      "test/helper.rb"

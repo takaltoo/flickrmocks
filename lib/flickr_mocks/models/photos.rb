@@ -30,6 +30,10 @@ module FlickrMocks
       self.base_url = options[:base_url]
     end
 
+    def empty?
+      @collection.length == 0
+    end
+
     # iterate through the page numbers for the collection
     def each_page
       range = 1..length
