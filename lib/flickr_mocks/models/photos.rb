@@ -171,7 +171,9 @@ module FlickrMocks
     end
 
     def date=(value)
-      @date = value ?  Chronic.parse(value).strftime('%Y-%m-%d') : nil
+      date = value ?  Chronic.parse(value) : Chronic.parse('yesterday')
+      date = date < Chronic.parse('yesterday') ? date : Chronic.parse('yesterday')
+      @date = date.strftime('%Y-%m-%d')
     end
 
     def capped_total_entries

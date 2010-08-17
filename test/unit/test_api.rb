@@ -63,11 +63,11 @@ class TestFlickrMocks_ApiTest < Test::Unit::TestCase
 
     should 'be able to get interesting photos' do
       flickr.interestingness.stubs(:getList).returns(@interesting)
-      photos = @package::Api.interesting_photos({:date =>'2010-11-10',:base_url => 'http://www.happydays.com/'})
+      photos = @package::Api.interesting_photos({:date =>'2010-07-10',:base_url => 'http://www.happydays.com/'})
       
       assert_equal @package::Photos,photos.class,'proper classs returned'
-      assert_equal '2010-11-10',photos.date,'properly passed in search terms'
-      assert_equal  'http://www.happydays.com/' + '?date=2010-11-10&page=1', photos.search_url,'base_url option properly passed in'
+      assert_equal '2010-07-10',photos.date,'properly passed in search terms'
+      assert_equal  'http://www.happydays.com/' + '?date=2010-07-10&page=1', photos.search_url,'base_url option properly passed in'
     end
 
   end

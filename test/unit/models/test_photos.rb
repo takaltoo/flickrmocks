@@ -149,11 +149,6 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
 
 
-    
-    should 'be able to detect empty date' do
-      data = @package::Photos.new @photos,{}
-      assert data.date_hash.empty?, 'detected empty search terms'
-    end
 
 
   end
@@ -163,16 +158,26 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       @package = FlickrMocks
       fixtures = FlickrFixtures
       @photos = fixtures.photos
-      @options =  {:search_terms => 'iran,shiraz',:date=>'2010-10-20'}
+      @options =  {:search_terms => 'iran,shiraz',:date=>'2010-07-20'}
       @data = @package::Photos.new @photos,@options
     end
     should 'support empty? on non-specified date' do
       data =@package::Photos.new @photos,{:search_terms => 'iran,shiraz'}
-      assert data.date_hash.empty?,'empty hash detected properly'
+      assert !data.date_hash.empty?,'Hash was not empty'
     end
     should 'properly return :date_hash' do
-      expected = {:date => '2010-10-20'}
+      expected = {:date => '2010-07-20'}
       assert_equal expected,@data.date_hash,'date hash is properly returned'
+    end
+    should 'be able to respond to empty?' do
+      data = @package::Photos.new @photos,{}
+      assert !data.date_hash.empty?, 'detected that :date is non-empty'
+    end
+    should 'give yesterday if date is current or in future' do
+      future = Chronic.parse('ten days from now').strftime('%Y-%m-%d')
+      yesterday = Chronic.parse('yesterday').strftime('%Y-%m-%d')
+      data = @package::Photos.new @photos,{:date => future}
+      assert_equal yesterday,data.date,'date properly clipped at yesterday'
     end
   end
 
