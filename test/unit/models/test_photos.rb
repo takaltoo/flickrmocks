@@ -153,6 +153,18 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
 
 
   end
+  context ':next_day,:date,:prev_day' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = fixtures.photos
+      @yesterday = '2010-07-19'
+      @today = '2010-07-20'
+      @tomorrow = '2010-07-21'
+      @options =  {:search_terms => 'iran,shiraz',:date=>today}
+    end
+
+  end
 
   context ':date_hash' do
     setup do
