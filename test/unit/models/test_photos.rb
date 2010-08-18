@@ -11,6 +11,7 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
 
       @photos = @package::Photos.new fixtures.photos,@search_terms
       @interesting = @package::Photos.new fixtures.photos, @date
+
     end
 
     should 'be able to get/set Flickr::Photos.defaults class instance variable' do
@@ -37,7 +38,7 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     should 'be able to read attributes' do
       assert_equal 1,@photos.current_page,':current_page properly set'
       assert_equal 5,@photos.per_page,':per_page properly set'
-      assert_equal 276016,@photos.total_entries,':total_entries properly set'
+      assert_equal 276362,@photos.total_entries,':total_entries properly set'
       assert_equal 'iran',@photos.search_terms,':search_terms properly set'
       assert_equal 4000, @photos.max_entries,':max_entries properly set'
       assert_equal @photos.photos,@photos.collection,':collection is equal to :photos'

@@ -23,7 +23,7 @@ begin
     gem.authors = ["Takaltoo"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 2.10"
     gem.add_dependency "flickraw", ">=0.8.2"
-    gem.add_dependency 'active_resource', ">=2.3.8" 
+    gem.add_dependency 'activeresource', ">=2.3.8" 
     gem.add_dependency 'chronic'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

@@ -1,4 +1,4 @@
-require 'flickrmocks'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/flickrmocks')
 require 'fileutils'
 
 # used for providing fixtures to users of the gem
@@ -10,7 +10,7 @@ namespace :fixtures do
   task :interesting => :repository do
     puts 'generating interesting photos'
     config_flickr
-    data = flickr.interestingness.getList :date => '2009-10-02'
+    data = flickr.interestingness.getList :date => '2009-10-02', :extras=>'license'
     dump data,repo_dir + 'interesting_photos.marshal'
   end
 
@@ -18,7 +18,7 @@ namespace :fixtures do
   task :photos => :repository do
     puts "generating photos"
     config_flickr
-    data = flickr.photos.search :tags => 'iran', :per_page => '5'
+    data = flickr.photos.search :tags => 'iran', :per_page => '5', :extras=>'license'
     dump data,repo_dir + 'photos.marshal'
   end
 
@@ -26,7 +26,7 @@ namespace :fixtures do
   task :sizes => :repository do
     puts "generating sizes"
     config_flickr
-    data = flickr.photos.getSizes :photo_id => '4877807944'
+    data = flickr.photos.getSizes :photo_id => '4877807944', :extras=>'license'
     dump data,repo_dir + 'photo_sizes.marshal'
   end
 
@@ -34,7 +34,7 @@ namespace :fixtures do
   task :details => :repository do
     puts "generating photo details"
     config_flickr
-    data = flickr.photos.getInfo :photo_id => '4877807944'
+    data = flickr.photos.getInfo :photo_id => '4877807944', :extras=>'license'
     dump data,repo_dir + 'photo_details.marshal'
   end
 
@@ -75,7 +75,7 @@ namespace :fixtures do
 
   def dump(data,fname)
     puts "generating file #{fname}"
-    FlickrMocks::Helpers.marshal data,fname
+    FlickrMocks::Helpers.dump data,fname
   end
 
 end
