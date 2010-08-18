@@ -52,7 +52,7 @@ Then:
 
 == License
 
-Ruby on Rails is released under the MIT license.
+FlickrMocks is released under the MIT license.
 
 == Copyright
 
