@@ -145,5 +145,16 @@ class TestFlickrMocks_PhotoSizes < Test::Unit::TestCase
     end
   end
 
+  context ':available_sizes' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @sizes = @package::PhotoSizes.new fixtures.photo_sizes
+    end
+    should 'return list of available photo_sizes' do
+      assert_equal [:square, :thumbnail, :small, :medium, :"medium 640", :large],@sizes.available_sizes,'properly returned list of available sizes'
+    end
+  end
+
 end
 

@@ -3,7 +3,7 @@ module FlickrMocks
   class PhotoSizes
     attr_reader :sizes,:available_sizes
     alias_method :all, :sizes
-    alias_method :available, :available_sizes
+
 
 
     def initialize(object)
