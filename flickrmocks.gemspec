@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.6.9"
+  s.version = "0.6.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-08-17}
+  s.date = %q{2010-08-19}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -28,10 +28,16 @@ Gem::Specification.new do |s|
      "VERSION",
      "flickrmocks.gemspec",
      "lib/flickr_mocks/api/api.rb",
+     "lib/flickr_mocks/api/flickr.rb",
+     "lib/flickr_mocks/api/helpers.rb",
+     "lib/flickr_mocks/api/options.rb",
+     "lib/flickr_mocks/api/sanitize.rb",
+     "lib/flickr_mocks/api/time.rb",
      "lib/flickr_mocks/custom_marshal.rb",
      "lib/flickr_mocks/fixtures.rb",
      "lib/flickr_mocks/flickraw.rb",
      "lib/flickr_mocks/helpers.rb",
+     "lib/flickr_mocks/models/pages.rb",
      "lib/flickr_mocks/models/photo.rb",
      "lib/flickr_mocks/models/photo_details.rb",
      "lib/flickr_mocks/models/photo_size.rb",
@@ -45,12 +51,17 @@ Gem::Specification.new do |s|
      "test/fixtures/photo_sizes.marshal",
      "test/fixtures/photos.marshal",
      "test/helper.rb",
+     "test/unit/api/test_api.rb",
+     "test/unit/api/test_helper.rb",
+     "test/unit/api/test_options.rb",
+     "test/unit/api/test_sanitize.rb",
+     "test/unit/api/test_time.rb",
+     "test/unit/models/test_pages.rb",
      "test/unit/models/test_photo.rb",
      "test/unit/models/test_photo_details.rb",
      "test/unit/models/test_photo_size.rb",
      "test/unit/models/test_photo_sizes.rb",
      "test/unit/models/test_photos.rb",
-     "test/unit/test_api.rb",
      "test/unit/test_custom_marshal.rb",
      "test/unit/test_fixtures.rb",
      "test/unit/test_helpers.rb",
@@ -64,12 +75,17 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/unit/test_fixtures.rb",
      "test/unit/models/test_photo_details.rb",
+     "test/unit/models/test_pages.rb",
      "test/unit/models/test_photos.rb",
      "test/unit/models/test_photo_size.rb",
      "test/unit/models/test_photo.rb",
      "test/unit/models/test_photo_sizes.rb",
      "test/unit/test_version.rb",
-     "test/unit/test_api.rb",
+     "test/unit/api/test_helper.rb",
+     "test/unit/api/test_time.rb",
+     "test/unit/api/test_api.rb",
+     "test/unit/api/test_sanitize.rb",
+     "test/unit/api/test_options.rb",
      "test/unit/test_helpers.rb",
      "test/unit/test_custom_marshal.rb",
      "test/helper.rb"
