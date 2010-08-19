@@ -326,6 +326,36 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
 
   end
 
+  context ':next_date_url' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = fixtures.photos
+    end
+    should 'give correct url when no date specified' do
+      data = @package::Photos.new @photos,:date => '2010-01-01'
+      assert_equal '/flickr/search?date=2010-01-02&page=1',data.next_date_url,'gives correct next page when date unspecified'
+    end
+    should 'give correct url when date specified' do
+      data = @package::Photos.new @photos,:date => '2010-01-01'
+      assert_equal '/flickr/search?date=2010-02-15&page=1',data.next_date_url('2010-02-14'),'gives correct url when date specified'
+    end
+    should 'give nil when next date does not exist' do
+      yesterday = Chronic.parse('yesterday')
+      data = @package::Photos.new @photos, :date => yesterday
+      assert_equal nil,data.next_date_url(yesterday)
+    end
+    should 'give url when date is a Hash' do
+      data = @package::Photos.new @photos,:date => '2010-01-01'
+      assert_equal '/flickr/search?date=2010-01-04&page=1',data.next_date_url(:date => '2010-01-03'), 'hash properly taken'
+    end
+    should 'give url when date is Time object' do
+      data = @package::Photos.new @photos,:date => '2010-01-01'
+      assert_equal '/flickr/search?date=2009-01-03&page=1',data.next_date_url(Chronic.parse('January 2 2009'))
+    end
+  end
+
+
 
 
 

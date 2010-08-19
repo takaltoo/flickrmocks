@@ -107,6 +107,12 @@ module FlickrMocks
       return base_url + '?' + {:date => day}.merge({:page => limit_page(page)}).to_param
     end
 
+    def next_date_url(options=nil)
+      date = extract_date options
+      next_date(date) == format_date(date) ? nil : search_url(:date => next_date(date))
+    end
+
+
 
     def next_page(options=nil)
       value = case options
@@ -138,8 +144,13 @@ module FlickrMocks
       format_date Chronic.parse(date) - ChronicDuration.parse('1 day')
     end
 
-    def next_date(date=nil)
-      date ||= @date
+    def next_date(options=nil)
+      date = case options
+        when Time then format_date options
+        when Hash then options[:date]
+        when String then options
+        else @date
+      end
       if Chronic.parse(date) >= Chronic.parse('yesterday')
         format_date Chronic.parse('yesterday')
       else
@@ -149,8 +160,8 @@ module FlickrMocks
 
     def format_date(date)
       case date
-      when Time then date.strftime('%Y-%m-%d')
-      when String then  Chronic.parse(date).strftime('%Y-%m-%d')
+        when Time then date.strftime('%Y-%m-%d')
+        when String then Chronic.parse(date).strftime('%Y-%m-%d')
       end
     end
 
@@ -198,7 +209,11 @@ module FlickrMocks
     end
 
     def date=(value)
-      date = value ?  Chronic.parse(value) : Chronic.parse('yesterday')
+      date = case value
+        when Time then  value
+        when String then Chronic.parse(value)
+        else Chronic.parse('yesterday')
+      end
       date = date < Chronic.parse('yesterday') ? date : Chronic.parse('yesterday')
       @date = format_date(date)
     end
@@ -223,6 +238,15 @@ module FlickrMocks
       page < 1 ? 1 : page
     end
 
+    def extract_date(options)
+       case options
+          when nil then @date
+          when Hash then options[:date] ? options[:date] : @date
+          when String then options
+          when Time then format_date options
+          else @date
+      end
+    end
 
   end
 end
