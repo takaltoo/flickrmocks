@@ -1,17 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
 
 class TestFlickrMocks_Photos < Test::Unit::TestCase
-  context 'Photos' do
+  context ':defaults class variable' do
     setup do
       @package = FlickrMocks
-      @search_terms = {:search_terms => 'iran'}
-      @date = {:date => '2009-10-02'}
-
       fixtures = FlickrFixtures
-
-      @photos = @package::Photos.new fixtures.photos,@search_terms
-      @interesting = @package::Photos.new fixtures.photos, @date
-
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+      @interesting = @package::Photos.new fixtures.photos,{:date => '2009-10-02'}
     end
 
     should 'be able to get/set Flickr::Photos.defaults class instance variable' do
@@ -25,32 +20,63 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
           @package::Photos.defaults[attribute] = default
         end
       end
-
-      # can read attributes
-      assert_equal 4000, @package::Photos.defaults[:max_entries],'can read :max_entries'
-      assert_equal 50,@package::Photos.defaults[:per_page],'can read :per_page'
-      assert_equal '/flickr/search',@package::Photos.defaults[:base_url],'can read :base_url'
-
       # can write attributes
       check_attribute_write :max_entries,:per_page,:base_url
     end
 
-    should 'be able to read attributes' do
-      assert_equal 1,@photos.current_page,':current_page properly set'
-      assert_equal 5,@photos.per_page,':per_page properly set'
-      assert_equal 276362,@photos.total_entries,':total_entries properly set'
-      assert_equal 'iran',@photos.search_terms,':search_terms properly set'
-      assert_equal 4000, @photos.max_entries,':max_entries properly set'
-      assert_equal @photos.photos,@photos.collection,':collection is equal to :photos'
-      assert_equal '2009-10-02',@interesting.date,':date is accessible'
+    should 'be able to read :max_entries' do
+      assert_equal 4000, @package::Photos.defaults[:max_entries],'can read :max_entries'
+    end
+    should 'be able to access :per_page' do
+      assert_equal 50,@package::Photos.defaults[:per_page],'can read :per_page'
+    end
+    should 'be able to access :base_url' do
+      assert_equal '/flickr/search',@package::Photos.defaults[:base_url],'can read :base_url'
     end
 
+    should 'be able to read current_page' do
+      assert_equal 1,@photos.current_page,':current_page properly set'
+    end
+    should 'be able to access :per_page' do
+      assert_equal 5,@photos.per_page,':per_page properly set'
+    end
+    should 'be able to access :total_entries' do
+      assert_equal 276362,@photos.total_entries,':total_entries properly set'
+    end
+    should 'be able to access :search_terms' do
+      assert_equal 'iran',@photos.search_terms,':search_terms properly set'
+    end
+    should 'be able to access :max_entries' do
+      assert_equal 4000, @photos.max_entries,':max_entries properly set'
+    end
+    should 'be able to access :collection' do
+      assert_equal @photos.photos,@photos.collection,':collection is equal to :photos'
+    end
+    should 'be able to access :date' do
+      assert_equal '2009-10-02',@interesting.date,':date is accessible'
+    end
+  end
+
+  context ':each_page' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
     should 'be able to iterate through each page' do
       pages = []
       @photos.each_page do |page| pages.push page end
       range = 1..@photos.total_pages
       reference = range.map {|num| num}
       assert_equal reference,pages,':each_page can be iterated'
+    end
+  end
+
+  context ':each_photo' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
     end
 
     should 'be able to iterate with each_photo' do
@@ -61,66 +87,189 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       end
       assert_equal @photos.per_page,count
     end
+  end
 
+  context ':pages_with_url' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
 
-    should 'give correct pages with url' do
-      count=1
-      @photos.pages_with_url do |datum|
-        assert datum.current_page,':current_page properly set'
-        assert_equal count,datum.page,':page properly set'
-        assert_equal @photos.search_url(count),datum.url,':url properly set'
+    should 'gives correct :current_page' do
+      pages = @photos.pages_with_url
+      index = pages.length() -1
+      
+      assert pages[0].current_page?,":current_page properly set for first page"
+
+      count = 1
+      pages[1,index].each do |obj|
+        assert !obj.current_page?,"all other pages are non-current page: #{count}"
         count+=1
       end
     end
 
-    should 'give correct index with :[]' do
-      assert_equal @photos.collection[0], @photos[0],':[] works properly'
-      assert_equal @photos.collection[-1], @photos[-1],':[] works properly'
-      assert_equal @photos.collection[3], @photos[3],':[] works properly'
-      assert_equal @photos[0],@photos.first,':[] works properly'
-      assert_equal @photos[-1],@photos.last,':[] works properly'
+    should 'give correct :page' do
+      count = 1
+      @photos.pages_with_url.each do |obj|
+        assert_equal count,obj.page,':page properly set'
+        count +=1
+      end
     end
 
+    should 'give correct :url' do
+      count = 1
+      @photos.pages_with_url.each do |obj|
+        assert_equal @photos.search_url(:page => count),obj.url,':url properly set'
+        count +=1
+      end
+    end
+    
+  end
+
+  context ':[]' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
+
+    should 'give correct index with :[0]' do
+      assert_equal @photos.collection[0], @photos[0],':[0] works properly'
+    end
+    should 'give correct :[-1]' do
+      assert_equal @photos.collection[-1], @photos[-1],':[-1] works properly'
+    end
+    should 'give correct :[3]' do
+      assert_equal @photos.collection[3], @photos[3],':[3] works properly'
+    end
+    should 'give correct :first' do
+      assert_equal @photos[0],@photos.first,':first works properly'
+    end
+    should 'give correct :last' do
+      assert_equal @photos[-1],@photos.last,':last works properly'
+    end
+  end
+
+
+  context ':total_pages' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
     should 'give correct :total_pages and :length' do
       assert_equal 800,@photos.total_pages,':total_pages properly set'
-      assert_equal @photos.length,@photos.total_pages,':total_pages properly set'
     end
+  end
 
-    
-    should 'give correct search_url' do
+  context ':length' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
+    should 'give correct :length' do
+      assert_equal 800,@photos.length,':total_pages properly set'
+    end
+  end
+
+
+  context ':search_url' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
+    should 'give correct :search_url with default :base_url' do
       default_url = @package::Photos.defaults[:base_url]
       assert_equal '/flickr/search?page=1&search_terms=iran',@photos.search_url,':search_url properly given'
+    end
+    should 'give correct :search_url with non-default :base_url' do
+      default_url = @package::Photos.defaults[:base_url]
       @package::Photos.defaults[:base_url]='/googoo'
       assert_equal '/googoo?page=1&search_terms=iran',@photos.search_url,':search_url properly given'
       @package::Photos.defaults[:base_url]=default_url
     end
+  end
+  
+  context ':next_page' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
 
-    should 'give correct next page' do
+    should 'give correct next page when no page specified' do
       assert_equal 2,@photos.next_page,':next_page given'
-      assert_equal 1,@photos.next_page(0),':next_page given'
-      assert_equal 1,@photos.next_page(-1),':next_page given'
-      assert_equal 3,@photos.next_page(2),':next_page given'
-      assert_equal 800,@photos.next_page(799),':next_page given'
-      assert_equal 800,@photos.next_page(800),':next_page given'
-      assert_equal 800,@photos.next_page(8001),':next_page given'
     end
 
-    should 'give correct prev_page' do
-      assert_equal 1,@photos.prev_page,':prev_page given'
-      assert_equal 1,@photos.prev_page(0),':prev_page given'
-      assert_equal 1,@photos.prev_page(-1),':prev_page given'
-      assert_equal 1,@photos.prev_page(2),':prev_page given'
-      assert_equal 798,@photos.prev_page(799),':prev_page given'
-      assert_equal 799,@photos.prev_page(800),':prev_page given'
-      assert_equal 800,@photos.prev_page(801),':prev_page given'
+    should 'give correct page when page is 0' do
+      assert_equal 1,@photos.next_page(:page => 0),'correct when page is 0'
     end
 
+    should 'give correct :next page when  is -1' do
+      assert_equal 1,@photos.next_page(:page => -1),':next_page given'
+    end
+
+    should 'give correct :next_page when far away from end' do
+      assert_equal 3,@photos.next_page(:page => 2),'returned next page'
+    end
+
+    should 'give correct :next_page when right before the end' do
+      assert_equal 800,@photos.next_page(:page => 799),'returned last index'
+    end
+
+    should 'give correct :next_page when right at the end' do
+      assert_equal 800,@photos.next_page(:page => 800),'returned last inext'
+    end
+    should 'give last page if page number is much higher than last page' do
+      assert_equal 800,@photos.next_page(:page => 8001),':next_page given'
+    end
+  end
+
+  context 'prev_page' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
+
+    should 'give correct prev_page when no page specified' do
+      assert_equal 1,@photos.prev_page,':prev_page nil'
+    end
+    should 'give correct prev_page when page is below current_page' do
+      assert_equal 1,@photos.prev_page(0),':prev_page 0'
+    end
+    should 'give correct prev_page when page is negative' do
+      assert_equal 1,@photos.prev_page(-1),':prev_page negative'
+    end
+    should 'give correct prev_page when page is not first' do
+      assert_equal 1,@photos.prev_page(2),':prev_page not first'
+    end
+    should 'give correct prev_page when page is at max page' do
+      assert_equal 799,@photos.prev_page(800),':prev_page max_page'
+    end
+    should 'give correct page when page is one more than max' do
+      assert_equal 800,@photos.prev_page(801),':prev_page max_page+=1'
+    end
+    should 'give correct page when page is much larger than max_page' do
+      assert_equal 800, @photos.prev_page(90000),':prev_page much much greater than max_page'
+    end
+  end
+
+  context ':capped?' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
+    end
     should 'give correct capped? value' do
       assert @photos.capped?,':capped? is correct'
     end
   end
   
-  context '@package::Photos should give proper search_url' do
+  context ':search_url' do
     setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
@@ -136,11 +285,11 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
 
     should 'use page when given' do
-      assert_equal '/flickr/search?page=2&search_terms=iran%2Cshiraz',@data.search_url(2),'search url is properly set'
+      assert_equal '/flickr/search?page=2&search_terms=iran%2Cshiraz',@data.search_url(:page => 2),'search url is properly set'
     end
 
     should 'cap page number maxiumum' do
-       assert_equal '/flickr/search?page=800&search_terms=iran%2Cshiraz',@data.search_url(20000),'search url is properly capped'
+      assert_equal '/flickr/search?page=800&search_terms=iran%2Cshiraz',@data.search_url(:page => 20000),'search url is properly capped'
     end
 
     should 'utilize base_url' do
@@ -149,72 +298,41 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       assert_equal 'http://www.happy.com?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url uses base_url'
     end
 
-
-
-
-  end
-  context ':next_day,:date,:prev_day' do
-    setup do
-      @package = FlickrMocks
-      fixtures = FlickrFixtures
-      @photos = fixtures.photos
-      @yesterday = '2010-07-19'
-      @today = '2010-07-20'
-      @tomorrow = '2010-07-21'
-      @options =  {:search_terms => 'iran,shiraz',:date=>today}
+    should 'use date with empty search_terms' do
+      data = @package::Photos.new @photos,{:date => '2001-11-10'}
+      assert_equal '/flickr/search?date=2001-11-10&page=1',data.search_url,'properly returned date'
     end
-
-  end
-
-  context ':date_hash' do
-    setup do
-      @package = FlickrMocks
-      fixtures = FlickrFixtures
-      @photos = fixtures.photos
-      @options =  {:search_terms => 'iran,shiraz',:date=>'2010-07-20'}
-      @data = @package::Photos.new @photos,@options
+    should 'use pages with date' do
+      data = @package::Photos.new @photos,{:date => '2001-11-10'}
+      assert_equal '/flickr/search?date=&page=2',data.search_url(:page => '2'),'properly returned date with page'
     end
-    should 'support empty? on non-specified date' do
-      data =@package::Photos.new @photos,{:search_terms => 'iran,shiraz'}
-      assert !data.date_hash.empty?,'Hash was not empty'
+    should 'cap pages with date' do
+      data = @package::Photos.new @photos,{:date => '2001-11-10'}
+      page = data.length() + 200
+      assert_equal "/flickr/search?date=&page=#{data.length}",data.search_url(:page => "#{page}" ),'properly returned date with page'
     end
-    should 'properly return :date_hash' do
-      expected = {:date => '2010-07-20'}
-      assert_equal expected,@data.date_hash,'date hash is properly returned'
-    end
-    should 'be able to respond to empty?' do
+    should 'prefer :search_terms over :date' do
       data = @package::Photos.new @photos,{}
-      assert !data.date_hash.empty?, 'detected that :date is non-empty'
+      assert_equal "/flickr/search?date=2010-01-01&page=4",data.search_url(:date => '2010-01-01',:page => '4', :search_terms => 'hello' ),'properly returned date with page'
     end
-    should 'give yesterday if date is current or in future' do
-      future = Chronic.parse('ten days from now').strftime('%Y-%m-%d')
-      yesterday = Chronic.parse('yesterday').strftime('%Y-%m-%d')
-      data = @package::Photos.new @photos,{:date => future}
-      assert_equal yesterday,data.date,'date properly clipped at yesterday'
+    should 'take default :page,:search_terms if none specified' do
+      data = @package::Photos.new @photos,{ :search_terms =>'iran,shiraz,tehran'}
+      assert_equal '/flickr/search?page=1&search_terms=iran%2Cshiraz%2Ctehran',data.search_url,'properly used default values :)'
     end
-  end
-
-  context ':search_terms_hash' do
-    setup do
-      @package = FlickrMocks
-      fixtures = FlickrFixtures
-      @photos = fixtures.photos
-      @options =  {:search_terms => 'iran,shiraz'}
-      @data = @package::Photos.new @photos,@options
-    end
-    should 'properly return search_terms_hash' do
-      assert_equal @options, @data.search_terms_hash
-    end
-    should 'be able to detect empty search_terms_hash' do
-      data = @package::Photos.new @photos,{}
-      assert data.search_terms_hash.empty?, 'detected empty search terms'
+    should 'take default :page,:date if none specifed' do
+      data = @package::Photos.new @photos,{ :date =>'2010-01-02'}
+      assert_equal '/flickr/search?date=2010-01-02&page=1',data.search_url,'properly used default values :)'
     end
 
   end
+
+
+
+
 
 
   context ':base_url' do
-     setup do
+    setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
       @photos = fixtures.photos
@@ -239,7 +357,38 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
   end
 
+  context ':previous_date' do
+    setup do
+      @package = FlickrMocks
+      @fixtures = FlickrFixtures
+      @photos = @package::Photos.new(@fixtures.photos, {:search_terms => 'iran,shiraz', :date => '2010-01-01'})
+    end
+    should 'give correct previous date' do
+      assert_equal '2009-12-31',@photos.previous_date, 'correctly gives previous day'
+    end
+    should 'accept date as argument' do
+      assert_equal '2009-11-20',@photos.previous_date('2009-11-21'), 'correctly gives previous day'
+    end
+  end
 
+  context ':next_date' do
+    setup do
+      @package = FlickrMocks
+      @fixtures = FlickrFixtures
+      @photos = @package::Photos.new(@fixtures.photos, {:search_terms => 'iran,shiraz', :date => '2010-01-01'})
+    end
+    should 'give correct next page if no options' do
+      assert_equal '2010-01-02',@photos.next_date, 'correctly gives previous day'
+    end
+    should 'give correct next page if date specified' do
+      assert_equal '2010-01-01',@photos.next_date('2009-12-31'),'correctly gives next day'
+    end
+
+    should 'return nil if passed in date is yesterday' do
+      date = Chronic.parse('yesterday').strftime('%Y-%m-%d')
+      assert_equal date,@photos.next_date(date),'yesterday does not have a next date'
+    end
+  end
 end
 
 

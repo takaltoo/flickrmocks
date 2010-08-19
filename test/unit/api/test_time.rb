@@ -19,4 +19,6 @@ class TestFlickrMocks_ApiTime < Test::Unit::TestCase
       assert_equal expected,@c.time(expected)
     end
   end
+  
+
 end

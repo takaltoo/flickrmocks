@@ -1,4 +1,5 @@
 module FlickrMocks
+
   class Api
     @defaults = {
       :per_page => '200',

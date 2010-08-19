@@ -1,6 +1,6 @@
 module FlickrMocks
+
   class Api
-    private
     # Not required for testing, simple wrappers for flickr* methods
     def self.flickr_photos(params)
       flickr.photos.search self.search_options(params)
@@ -19,3 +19,5 @@ module FlickrMocks
     end
   end
 end
+  
+

@@ -57,13 +57,21 @@ module FlickrMocks
     def pages_with_url
       data = []
       pages.each do |page|
-        datum = OpenStruct.new
-        datum.page = page
-        datum.url = search_url(page)
-        datum.current_page = @current_page == page
+        datum = Pages.new :page => page,
+                                         :current_page =>  @current_page,
+                                        :url => search_url(:page => page)
         data.push datum
       end
       data
+    end
+
+    def current_page?(options=nil)
+      page = case options
+      when Hash then options[:page].to_i
+      when String then options.to_i
+      else nil
+      end
+      page == @current_page
     end
 
     def [](index)
@@ -92,17 +100,21 @@ module FlickrMocks
     end
 
     # Url for retrieving the search results in a given page
-    def search_url(page=nil)
-      page ||= @current_page
-      return base_url + '?' + search_terms_hash.merge({:page => limit_page(page)}).to_param unless search_terms_hash.empty?
-      return base_url + '?' + date_hash.merge({:page => limit_page(page)}).to_param unless date_hash.empty?
-      return base_url + '?' + {:page => limit_page(page)}.to_param
+    def search_url(options=nil)
+      page = options ? options[:page].to_i : current_page
+      day = options ? options[:date] : date
+      return base_url + '?' + {:search_terms => search_terms}.merge({:page => limit_page(page)}).to_param if search_terms
+      return base_url + '?' + {:date => day}.merge({:page => limit_page(page)}).to_param
     end
 
-    def next_page(value=nil)
-      value ||= @current_page
-      value += 1
-      limit_page value
+
+    def next_page(options=nil)
+      value = case options
+      when Hash then options ? options[:page].to_i : @current_page
+      when nil then @current_page
+      else options.to_i
+      end
+      limit_page value + 1
     end
 
     def prev_page(value=nil)
@@ -120,13 +132,28 @@ module FlickrMocks
       @base_url || Photos.defaults[:base_url]
     end
 
-    def search_terms_hash
-      @search_terms ? {:search_terms => @search_terms } : {}
+
+    def previous_date(date=nil)
+      date ||=@date
+      format_date Chronic.parse(date) - ChronicDuration.parse('1 day')
     end
 
-    def date_hash
-      @date ? {:date => @date} : {}
+    def next_date(date=nil)
+      date ||= @date
+      if Chronic.parse(date) >= Chronic.parse('yesterday')
+        format_date Chronic.parse('yesterday')
+      else
+        format_date Chronic.parse(date) + ChronicDuration.parse('1 day')
+      end
     end
+
+    def format_date(date)
+      case date
+      when Time then date.strftime('%Y-%m-%d')
+      when String then  Chronic.parse(date).strftime('%Y-%m-%d')
+      end
+    end
+
 
 
     private
@@ -173,7 +200,7 @@ module FlickrMocks
     def date=(value)
       date = value ?  Chronic.parse(value) : Chronic.parse('yesterday')
       date = date < Chronic.parse('yesterday') ? date : Chronic.parse('yesterday')
-      @date = date.strftime('%Y-%m-%d')
+      @date = format_date(date)
     end
 
     def capped_total_entries
