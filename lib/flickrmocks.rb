@@ -1,6 +1,9 @@
+require 'active_resource' unless defined?(ActiveResource)
+require 'chronic'
+
 require 'find'
 require 'delegate'
-require 'active_resource' unless defined?(ActiveResource)
+
 
 
 # Use user specified FlickRaw definition, if not defined use flickraw-cached if

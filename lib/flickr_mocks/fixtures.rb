@@ -1,4 +1,3 @@
-require 'ruby-debug'
 
 module FlickrMocks
   class Fixtures

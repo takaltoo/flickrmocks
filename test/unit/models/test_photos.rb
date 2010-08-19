@@ -234,7 +234,6 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       fixtures = FlickrFixtures
       @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
     end
-
     should 'give correct prev_page when no page specified' do
       assert_equal 1,@photos.prev_page,':prev_page nil'
     end
@@ -323,7 +322,27 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       data = @package::Photos.new @photos,{ :date =>'2010-01-02'}
       assert_equal '/flickr/search?date=2010-01-02&page=1',data.search_url,'properly used default values :)'
     end
+  end
 
+  context ':prev_date_url' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photos = fixtures.photos
+      @data = @package::Photos.new @photos,:date => '2010-01-01'
+    end
+    should 'give correct url when no date specified' do
+      assert_equal '/flickr/search?date=2009-12-31&page=1',@data.prev_date_url,'correct url without specifying date'
+    end
+    should 'give correct url when date specified' do
+      assert_equal '/flickr/search?date=2010-02-13&page=1',@data.prev_date_url('2010-02-14'),'correct url when date specified'
+    end
+    should 'give correct url when date is Time' do
+      assert_equal '/flickr/search?date=2010-02-13&page=1',@data.prev_date_url(Chronic.parse('february 14 2010')), 'correctly accepts date object'
+    end
+    should 'give correct url when date is Hash' do
+      assert_equal '/flickr/search?date=2010-02-13&page=1',@data.prev_date_url(:date => '2010-02-14'), 'correctly accepts hash'
+    end
   end
 
   context ':next_date_url' do
@@ -355,12 +374,6 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
   end
 
-
-
-
-
-
-
   context ':base_url' do
     setup do
       @package = FlickrMocks
@@ -387,17 +400,17 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
   end
 
-  context ':previous_date' do
+  context ':prev_date' do
     setup do
       @package = FlickrMocks
       @fixtures = FlickrFixtures
       @photos = @package::Photos.new(@fixtures.photos, {:search_terms => 'iran,shiraz', :date => '2010-01-01'})
     end
     should 'give correct previous date' do
-      assert_equal '2009-12-31',@photos.previous_date, 'correctly gives previous day'
+      assert_equal '2009-12-31',@photos.prev_date, 'correctly gives previous day'
     end
     should 'accept date as argument' do
-      assert_equal '2009-11-20',@photos.previous_date('2009-11-21'), 'correctly gives previous day'
+      assert_equal '2009-11-20',@photos.prev_date('2009-11-21'), 'correctly gives previous day'
     end
   end
 

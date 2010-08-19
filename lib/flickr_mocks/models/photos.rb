@@ -1,5 +1,4 @@
-require 'ostruct'
-require 'chronic'
+
 
 module FlickrMocks
   class Photos
@@ -107,6 +106,10 @@ module FlickrMocks
       return base_url + '?' + {:date => day}.merge({:page => limit_page(page)}).to_param
     end
 
+    def prev_date_url(options=nil)
+      date = extract_date options
+      search_url :date => prev_date(date)
+    end
     def next_date_url(options=nil)
       date = extract_date options
       next_date(date) == format_date(date) ? nil : search_url(:date => next_date(date))
@@ -139,7 +142,7 @@ module FlickrMocks
     end
 
 
-    def previous_date(date=nil)
+    def prev_date(date=nil)
       date ||=@date
       format_date Chronic.parse(date) - ChronicDuration.parse('1 day')
     end

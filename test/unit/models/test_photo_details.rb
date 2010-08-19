@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
 
 class TestFlickrMocks_PhotoDetails < Test::Unit::TestCase
-  context 'FlickrMocks::Photo' do
+  context 'delegation to @photo' do
     setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
@@ -9,14 +9,28 @@ class TestFlickrMocks_PhotoDetails < Test::Unit::TestCase
       @sizes = @package::PhotoSizes.new fixtures.photo_sizes
       @details = @package::PhotoDetails.new @photo,@sizes
     end
-
-
-    should 'correctly delegate to @photo' do
-      [:id, :secret, :server, :farm, :dateuploaded, :isfavorite, :license, :rotation, :owner, :title,
-        :description, :visibility, :dates, :views, :editability, :usage, :comments,
-        :notes, :tags, :urls, :media, :flickr_type,:small,:square,:thumbnail,:medium,:'medium 640',:large].each do |method|
-        assert_equal @photo.send(method.to_sym),@details.send(method.to_sym),"gives correct #{method.to_sym}"
-      end
+    # Note only check a few methods to ensure that delgation occurs
+    should 'correctly delegate to :id' do
+      assert_equal @photo.id,@details.id,"gives correct :id"
+    end
+    should 'delegate to :secret' do
+      assert_equal @photo.secret,@details.secret,"gives correct :secret"
+    end
+    should 'delegate to :server' do
+      assert_equal @photo.server,@details.server,"gives correct :server"
+    end
+    should 'delegate to :medium_640' do
+      assert_equal @photo.medium_640,@details.medium_640,'gives correct :medium_640'
+    end
+  end
+  
+  context 'non-delegated methods' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photo = @package::Photo.new fixtures.photo_details
+      @sizes = @package::PhotoSizes.new fixtures.photo_sizes
+      @details = @package::PhotoDetails.new @photo,@sizes
     end
 
     should 'correct class for :sizes' do
@@ -33,5 +47,5 @@ class TestFlickrMocks_PhotoDetails < Test::Unit::TestCase
     end
 
   end
-
 end
+

@@ -1,18 +1,24 @@
 require File.expand_path(File.dirname(__FILE__) + '/../helper')
 
 class TestFlickrMocks_CustomMarshal < Test::Unit::TestCase
-  context 'FlickrMocks::CustomMarshal methods' do
+  context '_dump and _load' do
     setup do
       @h = FlickrMocks::Helpers
       @f = FlickrMocks::Fixtures.new
     end
     
     # indirectly tests _dump/_load 
-    should 'custom _dump/_load for FlickRaw::Response/List enables marshaling and unmarshaling' do
-      assert @h.equivalent?(Marshal.load(Marshal.dump(@f.photos)),@f.photos), 'marshal/unmarshal same object should not change object'
-      assert @h.equivalent?(Marshal.load(Marshal.dump(@f.photo_sizes)),@f.photo_sizes), 'marshal/unmarshal same object should not change object'
-      assert @h.equivalent?(Marshal.load(Marshal.dump(@f.photo_details)),@f.photo_details), 'marshal/unmarshal same object should not change object'
-      assert @h.equivalent?(Marshal.load(Marshal.dump(Marshal.load(Marshal.dump(@f.photos)))),@f.photos), 'multiple marshal/unmarshal should not change object'
+    should 'be able to Marshal/Un-Marshal Photos' do
+      assert @h.equivalent?(Marshal.load(Marshal.dump(@f.photos)),@f.photos), 'Photos properly marshaled and unmarshaled'
+    end
+    should 'be able to Marshal/Un-Marshal PhotoSizes' do
+      assert @h.equivalent?(Marshal.load(Marshal.dump(@f.photo_sizes)),@f.photo_sizes), 'PhotoSizes properly marshaled and un-marshaled'
+    end
+    should 'be able to Marashal/Un-Marshal PhotoDetails' do
+      assert @h.equivalent?(Marshal.load(Marshal.dump(@f.photo_details)),@f.photo_details), 'PhotoDetails properly marshaled and un-marshaled'
+    end
+    should 'be able to Marshal/Un-Marshal Photos' do
+      assert @h.equivalent?(Marshal.load(Marshal.dump(Marshal.load(Marshal.dump(@f.photos)))),@f.photos), 'Photos properly marshaled and un-marshaled'
     end
   end
 end
