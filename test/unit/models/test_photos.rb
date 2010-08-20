@@ -437,18 +437,18 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
-      @interesting = @package::Photos.new fixtures.photos,{:date => '2009-10-02'}
+      @interesting = @package::Photos.new fixtures.interesting_photos,{:date => '2010-08-17'}
     end
     should 'return correct number of entries that can be used for commercial purposes' do
-      assert_equal 3,@interesting.usable_entries,'correct number of :usable_entries returned'
+      assert_equal 1,@interesting.usable_entries,'correct number of :usable_entries returned'
     end
   end
 
-  context ':usabe_entries?' do
+  context ':usable_entries?' do
     setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
-      @interesting = @package::Photos.new fixtures.photos,{:date => '2009-10-02'}
+      @interesting = @package::Photos.new fixtures.interesting_photos,{:date => '2009-10-02'}
     end
     should 'detect that there are usable entries' do
       assert @interesting.usable_entries?,'correctly determined that usable entries were visible'

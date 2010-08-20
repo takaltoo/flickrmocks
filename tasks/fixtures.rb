@@ -10,7 +10,7 @@ namespace :fixtures do
   task :interesting => :repository do
     puts 'generating interesting photos'
     config_flickr
-    data = flickr.interestingness.getList :date => '2009-10-02', :extras=>'license'
+    data = flickr.interestingness.getList :date => '2010-08-18', :per_page => '50', :extras=>'license'
     dump data,repo_dir + 'interesting_photos.marshal'
   end
 

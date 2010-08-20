@@ -170,7 +170,7 @@ module FlickrMocks
       return @usable_entries if @usable_entries
       count =0
       each_photo do |photo|
-        count +=1 if photo.license.to_i >= 3
+        count +=1 if photo.license.to_i >= 4
       end
       @usable_entries = count
       @usable_entries
