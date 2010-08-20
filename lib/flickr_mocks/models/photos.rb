@@ -115,8 +115,6 @@ module FlickrMocks
       next_date(date) == format_date(date) ? nil : search_url(:date => next_date(date))
     end
 
-
-
     def next_page(options=nil)
       value = case options
       when Hash then options ? options[:page].to_i : @current_page
@@ -140,7 +138,6 @@ module FlickrMocks
     def base_url
       @base_url || Photos.defaults[:base_url]
     end
-
 
     def prev_date(date=nil)
       date ||=@date
@@ -168,7 +165,17 @@ module FlickrMocks
       end
     end
 
-
+    def usable_entries
+      count=0
+      each_photo do |photo|
+        count +=1 if photo.license.to_i >= 3
+      end
+      count
+    end
+    
+    def usabe_entries?
+      usabe_entries == 0 ? false : true
+    end
 
     private
 

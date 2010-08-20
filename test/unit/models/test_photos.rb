@@ -374,6 +374,7 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
   end
 
+
   context ':base_url' do
     setup do
       @package = FlickrMocks
@@ -426,10 +427,20 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     should 'give correct next page if date specified' do
       assert_equal '2010-01-01',@photos.next_date('2009-12-31'),'correctly gives next day'
     end
-
     should 'return nil if passed in date is yesterday' do
       date = Chronic.parse('yesterday').strftime('%Y-%m-%d')
       assert_equal date,@photos.next_date(date),'yesterday does not have a next date'
+    end
+  end
+
+  context ':usable_entries' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @interesting = @package::Photos.new fixtures.photos,{:date => '2009-10-02'}
+    end
+    should 'return correct number of entries that can be used for commercial purposes' do
+      assert_equal 3,@interesting.usable_entries,'correct number of :usable_entries returned'
     end
   end
 end
