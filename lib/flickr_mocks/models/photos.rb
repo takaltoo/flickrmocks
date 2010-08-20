@@ -4,6 +4,7 @@ module FlickrMocks
   class Photos
     attr_reader :current_page, :per_page, :total_entries, :search_terms
     attr_reader :collection,:max_entries,:date
+    attr_accessor :usable_entries
 
 
     @defaults =  {
@@ -166,11 +167,13 @@ module FlickrMocks
     end
 
     def usable_entries
-      count=0
+      return @usable_entries if @usable_entries
+      count =0
       each_photo do |photo|
         count +=1 if photo.license.to_i >= 3
       end
-      count
+      @usable_entries = count
+      @usable_entries
     end
     
     def usable_entries?
