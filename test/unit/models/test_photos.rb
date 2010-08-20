@@ -443,6 +443,23 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       assert_equal 3,@interesting.usable_entries,'correct number of :usable_entries returned'
     end
   end
+
+  context ':usabe_entries?' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @interesting = @package::Photos.new fixtures.photos,{:date => '2009-10-02'}
+    end
+    should 'detect that there are usable entries' do
+      assert @interesting.usable_entries?,'correctly determined that usable entries were visible'
+    end
+    should 'detect that there are no usable entries' do
+      @interesting.stubs(:usable_entries).returns(0)
+      assert !@interesting.usable_entries?,'correctly determined that there are no usable entries'
+    end
+  end
+
+
 end
 
 

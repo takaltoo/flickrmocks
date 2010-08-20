@@ -173,8 +173,8 @@ module FlickrMocks
       count
     end
     
-    def usabe_entries?
-      usabe_entries == 0 ? false : true
+    def usable_entries?
+      usable_entries == 0 ? false : true
     end
 
     private
