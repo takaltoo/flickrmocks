@@ -45,6 +45,7 @@ module FlickrMocks
     end
 
 
+
     # yields a photo for every
     def each_photo
       # return an external iterator for photos
@@ -96,6 +97,12 @@ module FlickrMocks
       total_pages
     end
 
+    def single_page?
+      total_pages == 1
+    end
+    def multi_page?
+      total_pages >= 2
+    end
     def total_pages
       (capped_total_entries.to_f / @per_page.to_f).ceil
     end

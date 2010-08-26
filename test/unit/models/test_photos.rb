@@ -468,6 +468,44 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
   end
 
+  context ':single_page?' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @interesting = @package::Photos.new fixtures.interesting_photos,{:date => '2009-10-02'}
+    end
+    should 'identifies properly where number of pages is zero' do
+       @interesting.stubs(:total_pages).returns(0)
+       assert !@interesting.single_page?,'correctly identifies that there isn\'t a single pages'
+    end
+    should 'identify that there is a single page' do
+      @interesting.stubs(:total_pages).returns(1)
+      assert @interesting.single_page?,'correctly identifies that there is a single page'
+    end
+    should 'identify that were not a single page' do
+      @interesting.stubs(:total_pages).returns(10)
+      assert !@interesting.single_page?, 'correctly identifies that was not a single page'
+    end
+  end
+  context ':multi_page?' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @interesting = @package::Photos.new fixtures.interesting_photos,{:date => '2009-10-02'}
+    end
+    should 'identifies properly where number of pages is zero' do
+       @interesting.stubs(:total_pages).returns(0)
+       assert !@interesting.multi_page?,'correctly identifies that there aren\'t multiple pages'
+    end
+    should 'identify that there is multiple pages' do
+      @interesting.stubs(:total_pages).returns(1)
+      assert !@interesting.multi_page?,'correctly identifies that there aren\'t multiple pages'
+    end
+    should 'identify that were not multiple pages' do
+      @interesting.stubs(:total_pages).returns(10)
+      assert @interesting.multi_page?, 'correctly identifies that were multiple pages'
+    end
+  end
 
 end
 
