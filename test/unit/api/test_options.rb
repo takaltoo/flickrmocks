@@ -103,6 +103,7 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
       @c = @package::Api
       @expected = {
         :search_terms => 'iran,shiraz',
+        :author_search_terms => 'authorid',
         :base_url => 'http://www.happyboy.com/'
       }
     end
@@ -114,6 +115,26 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
     end
     should 'properly extract :base_url' do
       assert_equal @expected.clone.merge({:base_url => 'http://www.illusion.com/'}),@c.search_params(@expected.clone.merge({:base_url => 'http://www.illusion.com/'}))
+    end
+  end
+
+  context 'self.interesting_params' do
+    setup do
+      @package = FlickrMocks
+      @c = @package::Api
+      @expected = {
+        :date => 'iran,shiraz',
+        :base_url => 'http://www.happyboy.com/'
+      }
+    end
+    should 'behave properly with fully specified options' do
+      assert_equal @expected,@c.interesting_params(@expected),'default parameters behave correctly'
+    end
+    should 'filter non-required options' do
+      assert_equal @expected,@c.interesting_params(@expected.clone.merge({:search_terms => 'iran,shiraz',:author_search_terms => 'authorid'}))
+    end
+    should 'properly extract :base_url' do
+      assert_equal @expected.clone.merge({:base_url => 'http://www.illusion.com/'}),@c.interesting_params(@expected.clone.merge({:base_url => 'http://www.illusion.com/'}))
     end
   end
 
@@ -129,7 +150,7 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
       }
       @expected = {
         :per_page => '400',
-        :author_search_terms => 'authorid',
+        :user_id => 'authorid',
         :page => '2'}.merge(@extras.clone)
       @options = {
         :author_search_terms => 'authorid',

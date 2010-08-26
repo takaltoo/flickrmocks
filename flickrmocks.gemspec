@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.7.3"
+  s.version = "0.7.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/version.rb",
      "lib/flickrmocks.rb",
      "tasks/fixtures.rb",
+     "test/fixtures/author_photos.marshal",
      "test/fixtures/interesting_photos.marshal",
      "test/fixtures/photo_details.marshal",
      "test/fixtures/photo_sizes.marshal",

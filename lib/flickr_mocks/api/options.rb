@@ -30,7 +30,7 @@ module FlickrMocks
 
     def self.author_options(params)
       options = self.search_options(params)
-      options[:author_search_terms] = params[:author_search_terms]
+      options[:user_id] = params[:author_search_terms]
       options.delete :tags
       options
     end
@@ -38,6 +38,14 @@ module FlickrMocks
     def self.search_params(params)
       return {
         :search_terms => self.sanitize_tags(params[:search_terms]),
+        :author_search_terms => self.sanitize_tags(params[:author_search_terms]),
+        :base_url => params[:base_url]
+      }
+    end
+
+    def self.interesting_params(params)
+      return {
+        :date => params[:date],
         :base_url => params[:base_url]
       }
     end

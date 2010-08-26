@@ -33,7 +33,7 @@ class TestFlickrMocks_Fixtures < Test::Unit::TestCase
 
     should 'be able to access :author_photos' do
       assert_equal FlickRaw::ResponseList,@f.author_photos.class, ':author_photos can be accessed'
-       assert @f.author_photos.respond_to?(:author_search_terms), 'element responds to :author_search_terms'
+      assert @f.photos[0].owner == @f.photos[1].owner, 'two elements have same owner'
     end
 
     should 'provide correct self.repository' do
