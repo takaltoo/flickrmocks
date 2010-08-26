@@ -31,6 +31,11 @@ class TestFlickrMocks_Fixtures < Test::Unit::TestCase
       assert @f.interesting_photos.respond_to?(:perpage), 'element responds to :perpage'
     end
 
+    should 'be able to access :author_photos' do
+      assert_equal FlickRaw::ResponseList,@f.author_photos.class, ':author_photos can be accessed'
+       assert @f.author_photos.respond_to?(:author_search_terms), 'element responds to :author_search_terms'
+    end
+
     should 'provide correct self.repository' do
       expected = File.expand_path(File.dirname(__FILE__) + '/../fixtures') + '/'
       assert_equal expected,FlickrMocks::Fixtures.repository,'self.repository is properly provided'

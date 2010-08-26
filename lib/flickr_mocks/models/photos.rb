@@ -2,7 +2,7 @@
 
 module FlickrMocks
   class Photos
-    attr_reader :current_page, :per_page, :total_entries, :search_terms
+    attr_reader :current_page, :per_page, :total_entries, :search_terms,:author_search_terms
     attr_reader :collection,:max_entries,:date
     attr_accessor :usable_entries
 
@@ -26,6 +26,7 @@ module FlickrMocks
       self.current_page = data.page
       self.per_page = data.perpage
       self.search_terms = options[:search_terms]
+      self.author_search_terms = options[:author_search_terms]
       self.date= options[:date]
       self.base_url = options[:base_url]
     end
@@ -104,6 +105,7 @@ module FlickrMocks
       page = options ? options[:page].to_i : current_page
       day = options ? options[:date] : date
       return base_url + '?' + {:search_terms => search_terms}.merge({:page => limit_page(page)}).to_param if search_terms
+      return base_url + '?' + {:author_search_terms => author_search_terms}.merge({:page => limit_page(page)}).to_param if author_search_terms
       return base_url + '?' + {:date => day}.merge({:page => limit_page(page)}).to_param
     end
 
@@ -205,6 +207,10 @@ module FlickrMocks
       @collection=collection
     end
 
+    def author_search_terms=(value)
+      raise ArgumentError,  "author_search_terms must respond to :to_s" unless value.respond_to? :to_s
+      @author_search_terms = value.nil? ? value : value.to_s.downcase
+    end
     def search_terms=(value)
       raise ArgumentError,  "search_terms must respond to :to_s" unless value.respond_to? :to_s
       @search_terms = value.nil? ? value : value.to_s.downcase

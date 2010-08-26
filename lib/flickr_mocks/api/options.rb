@@ -28,6 +28,13 @@ module FlickrMocks
       }
     end
 
+    def self.author_options(params)
+      options = self.search_options(params)
+      options[:author_search_terms] = params[:author_search_terms]
+      options.delete :tags
+      options
+    end
+
     def self.search_params(params)
       return {
         :search_terms => self.sanitize_tags(params[:search_terms]),

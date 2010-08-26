@@ -4,7 +4,7 @@ require 'fileutils'
 # used for providing fixtures to users of the gem
 namespace :fixtures do
   desc 'generate all fixtures for USERS of the GEM'
-  task :all => [:photos,:sizes,:details,:interesting]
+  task :all => [:photos,:sizes,:details,:interesting, :author_photos]
 
   desc 'generate fixture for flickr.interestingness.getList'
   task :interesting => :repository do
@@ -14,12 +14,21 @@ namespace :fixtures do
     dump data,repo_dir + 'interesting_photos.marshal'
   end
 
+
   desc 'generate fixture for flickr.photos.search'
   task :photos => :repository do
     puts "generating photos"
     config_flickr
     data = flickr.photos.search :tags => 'iran', :per_page => '5', :extras=>'license'
     dump data,repo_dir + 'photos.marshal'
+  end
+  
+  desc 'generate fixture for flickr.photos.search :author'
+  task :author_photos => :repository do
+    puts "generating photos"
+    config_flickr
+    data = flickr.photos.search :user_id => '8070463@N03', :per_page => '20', :extras=>'license'
+    dump data,repo_dir + 'author_photos.marshal'
   end
 
   desc 'generate fixture for flickr.photos.getSizes'

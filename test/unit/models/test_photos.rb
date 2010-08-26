@@ -277,8 +277,8 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       @data = @package::Photos.new @photos,options
     end
 
-    should 'give :search_terms when present' do
-      search_terms = {:search_terms => 'iran,shiraz',:date => '2010-10-04'}
+    should 'give :search_terms when all options present' do
+      search_terms = {:search_terms => 'iran,shiraz',:author_search_terms => 'authorid', :date => '2010-10-04'}
       data = @package::Photos.new @photos,search_terms
       assert_equal '/flickr/search?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url is properly set'
     end
@@ -295,6 +295,15 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       search_terms = {:search_terms => 'iran,shiraz',:base_url => 'http://www.happy.com'}
       data = @package::Photos.new @photos,search_terms
       assert_equal 'http://www.happy.com?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url uses base_url'
+    end
+
+    should 'use author_search_terms with empty search terms' do
+      data = @package::Photos.new @photos,{:author_search_terms=> 'authorid',:date => '2001-11-10'}
+      assert_equal '/flickr/search?author_search_terms=authorid&page=1',data.search_url,'properly returned author search terms'
+    end
+    should 'use pages with :author_search_terms' do
+      data = @package::Photos.new @photos,{:author_search_terms=> 'authorid',:date => '2001-11-10'}
+      assert_equal '/flickr/search?author_search_terms=authorid&page=2',data.search_url(:page=> '2'),'properly used page with author search terms'
     end
 
     should 'use date with empty search_terms' do

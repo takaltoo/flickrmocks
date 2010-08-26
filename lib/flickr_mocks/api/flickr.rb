@@ -17,6 +17,10 @@ module FlickrMocks
     def self.flickr_interestingness(params)
       flickr.interestingness.getList self.interesting_options(params)
     end
+
+    def self.flickr_author(params)
+      flickr.photos.search self.author_options(params)
+    end
   end
 end
   

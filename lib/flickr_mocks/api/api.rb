@@ -37,6 +37,11 @@ module FlickrMocks
       photos = self.flickr_interestingness(params)
       Photos.new photos,params
     end
+    
+    def self.author_photos(params)
+      photos = self.flickr_author(params)
+      Photos.new photos,params
+    end
 
   end
 end

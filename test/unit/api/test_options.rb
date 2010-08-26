@@ -117,5 +117,32 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
     end
   end
 
+  context 'self.author_options' do
+    setup do
+      @package = FlickrMocks
+      @c = @package::Api
+      @extras = {
+        :license => '4,5,6,7',
+        :media => 'photos',
+        :extras =>  'license',
+        :tag_mode => 'any'
+      }
+      @expected = {
+        :per_page => '400',
+        :author_search_terms => 'authorid',
+        :page => '2'}.merge(@extras.clone)
+      @options = {
+        :author_search_terms => 'authorid',
+        :page => '2'
+      }.merge(@extras.clone)
+    end
+    should 'return proper options when fully specified' do
+      assert_equal @expected,@c.author_options(:per_page => '400',
+                                                            :author_search_terms => 'authorid',
+                                                            :page => '2'),'properly parsed options for author'
+    end
+    
+  end
+
 
 end
