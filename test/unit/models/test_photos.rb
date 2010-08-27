@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
-
+require 'ruby-debug'
 class TestFlickrMocks_Photos < Test::Unit::TestCase
   context ':defaults class variable' do
     setup do
@@ -12,12 +12,14 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     should 'be able to get/set Flickr::Photos.defaults class instance variable' do
       def check_attribute_write(*attributes)
         attributes.each do |attribute|
-          default=@package::Photos.defaults[attribute]
-          value = default.is_a?(String) ? default + 'xyz' : default + 121
-          @package::Photos.defaults[attribute]=value
-          
-          assert_equal value,@package::Photos.defaults[attribute],'default attribute: #{attribute} can be set.'
-          @package::Photos.defaults[attribute] = default
+          begin
+            default=@package::Photos.defaults[attribute]
+            value = default.is_a?(String) ? default + 'xyz' : default + 121
+            @package::Photos.defaults[attribute]=value
+            assert_equal value,@package::Photos.defaults[attribute],'default attribute: #{attribute} can be set.'
+          ensure
+            @package::Photos.defaults[attribute] = default
+          end
         end
       end
       # can write attributes
@@ -187,9 +189,12 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
     should 'give correct :search_url with non-default :base_url' do
       default_url = @package::Photos.defaults[:base_url]
+      begin
       @package::Photos.defaults[:base_url]='/googoo'
       assert_equal '/googoo?page=1&search_terms=iran',@photos.search_url,':search_url properly given'
-      @package::Photos.defaults[:base_url]=default_url
+      ensure
+        @package::Photos.defaults[:base_url]=default_url
+      end
     end
   end
   
@@ -277,10 +282,10 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       @data = @package::Photos.new @photos,options
     end
 
-    should 'give :search_terms when all options present' do
-      search_terms = {:search_terms => 'iran,shiraz',:author_search_terms => 'authorid', :date => '2010-10-04'}
+    should 'give proper url when all options present' do
+      search_terms = {:search_terms => 'iran,shiraz',:author_id => 'authorid', :date => '2010-10-04'}
       data = @package::Photos.new @photos,search_terms
-      assert_equal '/flickr/search?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url is properly set'
+      assert_equal '/flickr/search?author_id=authorid&page=1&search_terms=iran%2Cshiraz',data.search_url,'search url is properly set'
     end
 
     should 'use page when given' do
@@ -297,27 +302,27 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       assert_equal 'http://www.happy.com?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url uses base_url'
     end
 
-    should 'use author_search_terms with empty search terms' do
-      data = @package::Photos.new @photos,{:author_search_terms=> 'authorid',:date => '2001-11-10'}
-      assert_equal '/flickr/search?author_search_terms=authorid&page=1',data.search_url,'properly returned author search terms'
+    should 'use :author_id even when :search_terms is empty' do
+      data = @package::Photos.new @photos,{:author_id=> 'authorid',:date => '2001-11-10'}
+      assert_equal '/flickr/search?author_id=authorid&page=1',data.search_url,'properly returned author search terms'
     end
-    should 'use pages with :author_search_terms' do
-      data = @package::Photos.new @photos,{:author_search_terms=> 'authorid',:date => '2001-11-10'}
-      assert_equal '/flickr/search?author_search_terms=authorid&page=2',data.search_url(:page=> '2'),'properly used page with author search terms'
+    should 'use pages with :author_id' do
+      data = @package::Photos.new @photos,{:author_id=> 'authorid',:date => '2001-11-10'}
+      assert_equal '/flickr/search?author_id=authorid&page=2',data.search_url(:page=> '2'),'properly used page with author search terms'
     end
 
-    should 'use date with empty search_terms' do
+    should 'use date when search_terms is empty' do
       data = @package::Photos.new @photos,{:date => '2001-11-10'}
       assert_equal '/flickr/search?date=2001-11-10&page=1',data.search_url,'properly returned date'
     end
     should 'use pages with date' do
       data = @package::Photos.new @photos,{:date => '2001-11-10'}
-      assert_equal '/flickr/search?date=&page=2',data.search_url(:page => '2'),'properly returned date with page'
+      assert_equal '/flickr/search?date=2001-11-10&page=2',data.search_url(:page => '2'),'properly returned date with page'
     end
     should 'cap pages with date' do
       data = @package::Photos.new @photos,{:date => '2001-11-10'}
       page = data.length() + 200
-      assert_equal "/flickr/search?date=&page=#{data.length}",data.search_url(:page => "#{page}" ),'properly returned date with page'
+      assert_equal "/flickr/search?date=2001-11-10&page=#{data.length}",data.search_url(:page => "#{page}" ),'properly returned date with page'
     end
     should 'prefer :search_terms over :date' do
       data = @package::Photos.new @photos,{}

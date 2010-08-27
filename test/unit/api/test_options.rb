@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
 class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
 
-  context 'self.search_options ' do
+context 'self.search_options ' do
     setup do
       @package = FlickrMocks
       @c = @package::Api
@@ -13,6 +13,7 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
       }
       @expected = {
         :per_page => '400',
+        :user_id => nil,
         :tags => 'iran,shiraz',
         :page => '2'}.merge(@extras.clone)
       @options = {
@@ -21,8 +22,14 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
       }.merge(@extras.clone)
     end
 
-    should 'give correct values when all specified' do
+    should 'give correct values when all but :author_id is specified' do
       assert_equal @expected, @c.search_options(@options.clone.merge(:per_page => '400'))
+    end
+    
+    should 'return proper options when fully specified' do
+      assert_equal @expected.clone.merge(:user_id => 'authorid',:tags => nil),@c.search_options(:per_page => '400',
+                                                            :author_id => 'authorid',
+                                                            :page => '2'),'properly parsed options for author'
     end
     should 'give correct values when :perpage given' do
       assert_equal @expected, @c.search_options(@options.clone.merge({:perpage => '400'}))
@@ -138,32 +145,7 @@ class TestFlickrMocks_ApiOptions < Test::Unit::TestCase
     end
   end
 
-  context 'self.author_options' do
-    setup do
-      @package = FlickrMocks
-      @c = @package::Api
-      @extras = {
-        :license => '4,5,6,7',
-        :media => 'photos',
-        :extras =>  'license',
-        :tag_mode => 'any'
-      }
-      @expected = {
-        :per_page => '400',
-        :user_id => 'authorid',
-        :page => '2'}.merge(@extras.clone)
-      @options = {
-        :author_search_terms => 'authorid',
-        :page => '2'
-      }.merge(@extras.clone)
-    end
-    should 'return proper options when fully specified' do
-      assert_equal @expected,@c.author_options(:per_page => '400',
-                                                            :author_search_terms => 'authorid',
-                                                            :page => '2'),'properly parsed options for author'
-    end
-    
-  end
+
 
 
 end

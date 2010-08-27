@@ -2,7 +2,7 @@
 
 module FlickrMocks
   class Photos
-    attr_reader :current_page, :per_page, :total_entries, :search_terms,:author_search_terms
+    attr_reader :current_page, :per_page, :total_entries, :search_terms,:author_id
     attr_reader :collection,:max_entries,:date
     attr_accessor :usable_entries
 
@@ -26,7 +26,7 @@ module FlickrMocks
       self.current_page = data.page
       self.per_page = data.perpage
       self.search_terms = options[:search_terms]
-      self.author_search_terms = options[:author_search_terms]
+      self.author_id = options[:author_id]
       self.date= options[:date]
       self.base_url = options[:base_url]
     end
@@ -109,11 +109,17 @@ module FlickrMocks
 
     # Url for retrieving the search results in a given page
     def search_url(options=nil)
-      page = options ? options[:page].to_i : current_page
-      day = options ? options[:date] : date
-      return base_url + '?' + {:search_terms => search_terms}.merge({:page => limit_page(page)}).to_param if search_terms
-      return base_url + '?' + {:author_search_terms => author_search_terms}.merge({:page => limit_page(page)}).to_param if author_search_terms
-      return base_url + '?' + {:date => day}.merge({:page => limit_page(page)}).to_param
+        page ||= current_page
+        day ||= date
+        case options
+        when Hash then
+          page = (options[:page] ? options[:page] : page).to_i
+          day = options[:date] ? options[:date] :day
+        end
+
+      return base_url + '?' + params_url(:search_terms => search_terms, :author_id => author_id,:page => limit_page(page)) if search_terms || author_id
+      return base_url + '?' + params_url(:date => day,:page => limit_page(page)) if day
+
     end
 
     def prev_date_url(options=nil)
@@ -214,9 +220,9 @@ module FlickrMocks
       @collection=collection
     end
 
-    def author_search_terms=(value)
-      raise ArgumentError,  "author_search_terms must respond to :to_s" unless value.respond_to? :to_s
-      @author_search_terms = value.nil? ? value : value.to_s.downcase
+    def author_id=(value)
+      raise ArgumentError,  "author_id must respond to :to_s" unless value.respond_to? :to_s
+      @author_id = value.nil? ? value : value.to_s.downcase
     end
     def search_terms=(value)
       raise ArgumentError,  "search_terms must respond to :to_s" unless value.respond_to? :to_s
@@ -273,6 +279,14 @@ module FlickrMocks
           else @date
       end
     end
+    def params_url(params)
+      result = {}
+      params.each_pair do |k,v|
+        result[k] = v if v
+      end
+      result.to_param
+    end
+
 
   end
 end
