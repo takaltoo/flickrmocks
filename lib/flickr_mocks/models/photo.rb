@@ -1,3 +1,4 @@
+
 module FlickrMocks
   class Photo < SimpleDelegator
 
@@ -33,6 +34,16 @@ module FlickrMocks
 
     def author_url
       FlickRaw.url_photopage self
+    end
+
+
+    def owner_id
+      case owner
+      when String then owner
+      else
+        return owner.nsid if owner.respond_to?(:nsid)
+        return owner.to_s
+      end
     end
 
 

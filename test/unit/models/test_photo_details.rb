@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
-
+require 'ruby-debug'
 class TestFlickrMocks_PhotoDetails < Test::Unit::TestCase
   context 'delegation to @photo' do
     setup do
@@ -38,8 +38,12 @@ class TestFlickrMocks_PhotoDetails < Test::Unit::TestCase
     end
 
 
-    should 'correctly give author name' do
-      assert_equal "Steven",@details.author, 'correct author name'
+    should 'correctly give owner name' do
+      assert_equal "Steven",@details.owner_name, 'correct name for owner'
+    end
+
+    should 'correctly give owner_username' do
+      assert_equal 'lionheart613',@details.owner_username,'correct username for owner'
     end
 
     should 'respond to :original' do
@@ -47,5 +51,9 @@ class TestFlickrMocks_PhotoDetails < Test::Unit::TestCase
     end
 
   end
+
+
+  
+
 end
 

@@ -80,4 +80,19 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
     end
   end
 
+  context ':author_url' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photo = @package::Photo.new fixtures.photo
+      @detailed_photo = @package::Photo.new fixtures.photo_details
+    end
+    should 'return proper author id with simple photo' do
+      assert_equal '73934501@N00',@photo.owner,'correct id returned'
+    end
+    should 'return proper author id with detailed photo' do
+      assert_equal '57529085@N00',@detailed_photo.owner_id,'correct id returned'
+    end
+  end
+
 end

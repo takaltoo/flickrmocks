@@ -9,8 +9,11 @@ module FlickrMocks
       super(photo.is_a?(Photo) ?  photo : Photo.new(photo)  )
     end
 
-    def author
+    def owner_name
       self.owner.realname
+    end
+    def owner_username
+      self.owner.username
     end
 
     # requires originalsecret which is in the detail view but not generic
