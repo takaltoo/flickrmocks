@@ -2,7 +2,7 @@
 
 module FlickrMocks
   class Photos
-    attr_reader :current_page, :per_page, :total_entries, :search_terms,:author_id
+    attr_reader :current_page, :per_page, :total_entries, :search_terms,:owner_id
     attr_reader :collection,:max_entries,:date
     attr_accessor :usable_entries
 
@@ -26,7 +26,7 @@ module FlickrMocks
       self.current_page = data.page
       self.per_page = data.perpage
       self.search_terms = options[:search_terms]
-      self.author_id = options[:author_id]
+      self.owner_id = options[:owner_id]
       self.date= options[:date]
       self.base_url = options[:base_url]
     end
@@ -117,7 +117,7 @@ module FlickrMocks
           day = options[:date] ? options[:date] :day
         end
 
-      return base_url + '?' + params_url(:search_terms => search_terms, :author_id => author_id,:page => limit_page(page)) if search_terms || author_id
+      return base_url + '?' + params_url(:search_terms => search_terms, :owner_id => owner_id,:page => limit_page(page)) if search_terms || owner_id
       return base_url + '?' + params_url(:date => day,:page => limit_page(page)) if day
 
     end
@@ -220,9 +220,9 @@ module FlickrMocks
       @collection=collection
     end
 
-    def author_id=(value)
-      raise ArgumentError,  "author_id must respond to :to_s" unless value.respond_to? :to_s
-      @author_id = value.nil? ? value : value.to_s.downcase
+    def owner_id=(value)
+      raise ArgumentError,  "owner_id must respond to :to_s" unless value.respond_to? :to_s
+      @owner_id = value.nil? ? value : value.to_s.downcase
     end
     def search_terms=(value)
       raise ArgumentError,  "search_terms must respond to :to_s" unless value.respond_to? :to_s

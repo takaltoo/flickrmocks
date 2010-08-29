@@ -106,21 +106,7 @@ class TestFlickrMocks_ApiTest < Test::Unit::TestCase
     end
   end
   
-  context 'self.author_photos' do
-    setup do
-      @package = FlickrMocks
-      fixtures = FlickrFixtures
-      @author_photos = fixtures.author_photos
-    end
 
-    should 'be able to get author photos' do
-      flickr.photos.stubs(:search).returns(@author_photos)
-      photos = @package::Api.author_photos({:search_author_terms =>'121313@N00',:base_url => 'http://www.happydays.com/'})
-
-      assert_equal @package::Photos,photos.class,'proper classs returned'
-      assert_equal photos[0].owner,photos[1].owner,'phot os belong to same author'
-    end
-  end
 
   
 end

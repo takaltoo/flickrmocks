@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
-require 'ruby-debug'
+
 class TestFlickrMocks_Photos < Test::Unit::TestCase
   context ':defaults class variable' do
     setup do
@@ -283,9 +283,9 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
     end
 
     should 'give proper url when all options present' do
-      search_terms = {:search_terms => 'iran,shiraz',:author_id => 'authorid', :date => '2010-10-04'}
+      search_terms = {:search_terms => 'iran,shiraz',:owner_id => 'authorid', :date => '2010-10-04'}
       data = @package::Photos.new @photos,search_terms
-      assert_equal '/flickr/search?author_id=authorid&page=1&search_terms=iran%2Cshiraz',data.search_url,'search url is properly set'
+      assert_equal '/flickr/search?owner_id=authorid&page=1&search_terms=iran%2Cshiraz',data.search_url,'search url is properly set'
     end
 
     should 'use page when given' do
@@ -302,13 +302,13 @@ class TestFlickrMocks_Photos < Test::Unit::TestCase
       assert_equal 'http://www.happy.com?page=1&search_terms=iran%2Cshiraz',data.search_url,'search url uses base_url'
     end
 
-    should 'use :author_id even when :search_terms is empty' do
-      data = @package::Photos.new @photos,{:author_id=> 'authorid',:date => '2001-11-10'}
-      assert_equal '/flickr/search?author_id=authorid&page=1',data.search_url,'properly returned author search terms'
+    should 'use :owner_id even when :search_terms is empty' do
+      data = @package::Photos.new @photos,{:owner_id=> 'authorid',:date => '2001-11-10'}
+      assert_equal '/flickr/search?owner_id=authorid&page=1',data.search_url,'properly returned author search terms'
     end
-    should 'use pages with :author_id' do
-      data = @package::Photos.new @photos,{:author_id=> 'authorid',:date => '2001-11-10'}
-      assert_equal '/flickr/search?author_id=authorid&page=2',data.search_url(:page=> '2'),'properly used page with author search terms'
+    should 'use pages with :owner_id' do
+      data = @package::Photos.new @photos,{:owner_id=> 'authorid',:date => '2001-11-10'}
+      assert_equal '/flickr/search?owner_id=authorid&page=2',data.search_url(:page=> '2'),'properly used page with author search terms'
     end
 
     should 'use date when search_terms is empty' do
