@@ -69,30 +69,39 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
     end
   end
   
-  context ':author_url' do
+  context ':owner_url' do
      setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
       @photo = @package::Photo.new fixtures.photo
     end
-     should 'give correct author_url methods' do
-      assert_equal "http://www.flickr.com/photos/73934501@N00/4902722511", @photo.author_url, 'author url properly given'
+     should 'give correct owner_url methods' do
+      assert_equal "http://www.flickr.com/photos/73934501@N00/4902722511", @photo.owner_url, 'owner url properly given'
     end
   end
 
-  context ':author_url' do
+  context ':owner_id' do
     setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
       @photo = @package::Photo.new fixtures.photo
       @detailed_photo = @package::Photo.new fixtures.photo_details
     end
-    should 'return proper author id with simple photo' do
-      assert_equal '73934501@N00',@photo.owner,'correct id returned'
-    end
-    should 'return proper author id with detailed photo' do
+    should 'return proper owner_id with detailed photo' do
       assert_equal '57529085@N00',@detailed_photo.owner_id,'correct id returned'
     end
   end
+    context ':owner' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @photo = @package::Photo.new fixtures.photo
+      @detailed_photo = @package::Photo.new fixtures.photo_details
+    end
+    should 'return proper owner with simple photo' do
+      assert_equal '73934501@N00',@photo.owner,'correct id returned'
+    end
+  end
+
 
 end

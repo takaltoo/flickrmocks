@@ -32,7 +32,7 @@ module FlickrMocks
       FlickRaw.url_z self
     end
 
-    def author_url
+    def owner_url
       FlickRaw.url_photopage self
     end
 
