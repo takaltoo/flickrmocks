@@ -44,7 +44,7 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
       @package = FlickrMocks
       fixtures = FlickrFixtures
       @photo = @package::Photo.new fixtures.photo
-       @url = 'http://farm5.static.flickr.com/4123/4902722511_2c4465a03f'
+      @url = 'http://farm5.static.flickr.com/4123/4902722511_2c4465a03f'
     end
     should 'get correct :square url' do
       assert_equal "#{@url}_s.jpg",@photo.square,':square gives incorrect url'
@@ -70,12 +70,12 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
   end
   
   context ':owner_url' do
-     setup do
+    setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
       @photo = @package::Photo.new fixtures.photo
     end
-     should 'give correct owner_url methods' do
+    should 'give correct owner_url methods' do
       assert_equal "http://www.flickr.com/photos/73934501@N00/4902722511", @photo.owner_url, 'owner url properly given'
     end
   end
@@ -91,7 +91,8 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
       assert_equal '57529085@N00',@detailed_photo.owner_id,'correct id returned'
     end
   end
-    context ':owner' do
+
+  context ':owner' do
     setup do
       @package = FlickrMocks
       fixtures = FlickrFixtures
@@ -102,6 +103,5 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
       assert_equal '73934501@N00',@photo.owner,'correct id returned'
     end
   end
-
 
 end

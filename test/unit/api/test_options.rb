@@ -22,13 +22,13 @@ context 'self.search_options ' do
       }.merge(@extras.clone)
     end
 
-    should 'give correct values when all but :author_id is specified' do
+    should 'give correct values when all but :owner_id is specified' do
       assert_equal @expected, @c.search_options(@options.clone.merge(:per_page => '400'))
     end
     
     should 'return proper options when fully specified' do
       assert_equal @expected.clone.merge(:user_id => 'authorid',:tags => nil),@c.search_options(:per_page => '400',
-                                                            :author_id => 'authorid',
+                                                            :owner_id => 'authorid',
                                                             :page => '2'),'properly parsed options for author'
     end
     should 'give correct values when :perpage given' do
