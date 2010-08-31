@@ -1,5 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
-require 'ruby-debug'
 
 class TestFlickrMocks_Photo < Test::Unit::TestCase
 
@@ -16,6 +15,7 @@ class TestFlickrMocks_Photo < Test::Unit::TestCase
     should 'give correct :id' do
       assert_equal '4902722511',@photo.id,':id given correctly'
     end
+
     should 'give correct owner' do
       assert_equal '73934501@N00',@photo.owner,':owner not correct'
     end

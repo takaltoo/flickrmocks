@@ -16,6 +16,15 @@ class TestFlickrMocks_PhotoSizes < Test::Unit::TestCase
       count=0
       assert_equal '4877807944',@size.id, 'give correct id'
     end
+
+    should 'give correct size' do
+      assert_equal 'large',@size.size, 'correct size given'
+    end
+
+    should 'give correct size with "Medium 640"' do
+      @size.stubs(:label).returns('Medium 640')
+      assert_equal 'medium_640',@size.size, 'correct substitution for size given'
+    end
   end
 
   context 'delegated methods' do
@@ -25,10 +34,12 @@ class TestFlickrMocks_PhotoSizes < Test::Unit::TestCase
       @sizes = @package::PhotoSizes.new fixtures.photo_sizes
       @size = @sizes.last
     end
+
     # check a few options to ensure it works properly
     should 'respond correctly to :label' do
       assert_equal 'Large',@size.label,'gives correct photo label'
     end
+
     should 'respond to :media' do
       assert_equal 'photo',@size.media,'correct media'
     end
