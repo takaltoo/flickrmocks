@@ -8,8 +8,8 @@ module FlickrMocks
 
     def initialize(object)
       raise TypeError, 'FlickRaw::Response expected' unless object.is_a? FlickRaw::Response
-      self.available_sizes=object
-      self.sizes=object
+      self.sizes = object
+      self.available_sizes=@sizes
     end
 
     def [](index)
@@ -45,20 +45,20 @@ module FlickrMocks
     end
 
     def size_index(name)
-      @available_sizes.find_index name.to_sym.downcase
+      @available_sizes.find_index name.to_s.downcase.sub(/\s+/,'_').to_sym
     end
 
     def size_index?(name)
       !!size_index(name)
     end
 
+
     private
     def available_sizes=(data)
       @available_sizes=[]
       data.each do |datum|
-        @available_sizes.push datum.size
+        @available_sizes.push datum.size.to_sym
       end
-
     end
 
     def sizes=(data)

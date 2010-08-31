@@ -121,7 +121,10 @@ class TestFlickrMocks_PhotoSizes < Test::Unit::TestCase
       assert_equal 5,@sizes.size_index(:large),'correct :large index'
     end
     should 'behave properly for :medium_640' do
-      assert_equal 4,@sizes.size_index(:'medium 640'),'correct :medium_640 index'
+      assert_equal 4,@sizes.size_index(:'medium_640'),'correct :medium_640 index'
+    end
+    should 'behave properly for MeDium 640' do
+      assert_equal 4,@sizes.size_index(:'MeDium 640'),'correct :MeDium 640 index'
     end
     should 'behave properly for :square' do
       assert_equal 0,@sizes.size_index(:square),'correct :square index'
@@ -152,7 +155,7 @@ class TestFlickrMocks_PhotoSizes < Test::Unit::TestCase
       @sizes = @package::PhotoSizes.new fixtures.photo_sizes
     end
     should 'return list of available photo_sizes' do
-      assert_equal [:square, :thumbnail, :small, :medium, :"medium 640", :large],@sizes.available_sizes,'properly returned list of available sizes'
+      assert_equal [:square, :thumbnail, :small, :medium, :medium_640, :large],@sizes.available_sizes,'properly returned list of available sizes'
     end
   end
 
