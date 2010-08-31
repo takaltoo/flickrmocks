@@ -110,7 +110,7 @@ context 'self.search_options ' do
       @c = @package::Api
       @expected = {
         :search_terms => 'iran,shiraz',
-        :author_search_terms => 'authorid',
+        :owner_id => 'authorid',
         :base_url => 'http://www.happyboy.com/'
       }
     end
@@ -138,7 +138,7 @@ context 'self.search_options ' do
       assert_equal @expected,@c.interesting_params(@expected),'default parameters behave correctly'
     end
     should 'filter non-required options' do
-      assert_equal @expected,@c.interesting_params(@expected.clone.merge({:search_terms => 'iran,shiraz',:author_search_terms => 'authorid'}))
+      assert_equal @expected,@c.interesting_params(@expected.clone.merge({:search_terms => 'iran,shiraz',:owner_id => 'authorid'}))
     end
     should 'properly extract :base_url' do
       assert_equal @expected.clone.merge({:base_url => 'http://www.illusion.com/'}),@c.interesting_params(@expected.clone.merge({:base_url => 'http://www.illusion.com/'}))

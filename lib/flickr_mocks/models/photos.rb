@@ -27,7 +27,7 @@ module FlickrMocks
       self.per_page = data.perpage
       self.search_terms = options[:search_terms]
       self.owner_id = options[:owner_id]
-      self.date= options[:date]
+      self.date = options[:date]
       self.base_url = options[:base_url]
     end
 

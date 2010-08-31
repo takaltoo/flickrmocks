@@ -39,7 +39,7 @@ module FlickrMocks
     def self.search_params(params)
       return {
         :search_terms => self.sanitize_tags(params[:search_terms]),
-        :author_search_terms => self.sanitize_tags(params[:author_search_terms]),
+        :owner_id => self.sanitize_tags(params[:owner_id]),
         :base_url => params[:base_url]
       }
     end
