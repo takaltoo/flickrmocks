@@ -56,7 +56,7 @@ module FlickrMocks
     def available_sizes=(data)
       @available_sizes=[]
       data.each do |datum|
-        @available_sizes.push datum.label.downcase.to_sym
+        @available_sizes.push datum.size
       end
 
     end
