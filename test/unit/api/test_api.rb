@@ -28,7 +28,7 @@ class TestFlickrMocks_ApiTest < Test::Unit::TestCase
       flickr.photos.stubs(:search).returns(@photos)
       search_terms = {:search_terms=>'iran'}
       base_url = 'http://www.happydays.com/'
-
+      
       photos = @package::Api.photos({:per_page=>'5',:search_terms=>'iran',:base_url=>base_url})
 
       assert_equal @package::Photos,photos.class,'proper class generated'
