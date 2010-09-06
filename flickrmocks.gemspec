@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-09-03}
+  s.date = %q{2010-09-06}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -99,18 +99,18 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
       s.add_runtime_dependency(%q<flickraw>, [">= 0.8.2"])
-      s.add_runtime_dependency(%q<activeresource>, ["= 2.3.8"])
+      s.add_runtime_dependency(%q<activeresource>, ["= 2.3.9"])
       s.add_runtime_dependency(%q<chronic>, [">= 0"])
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
       s.add_dependency(%q<flickraw>, [">= 0.8.2"])
-      s.add_dependency(%q<activeresource>, ["= 2.3.8"])
+      s.add_dependency(%q<activeresource>, ["= 2.3.9"])
       s.add_dependency(%q<chronic>, [">= 0"])
     end
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
     s.add_dependency(%q<flickraw>, [">= 0.8.2"])
-    s.add_dependency(%q<activeresource>, ["= 2.3.8"])
+    s.add_dependency(%q<activeresource>, ["= 2.3.9"])
     s.add_dependency(%q<chronic>, [">= 0"])
   end
 end
