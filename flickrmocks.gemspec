@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.7.8"
+  s.version = "0.7.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
@@ -40,6 +40,7 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/models/pages.rb",
      "lib/flickr_mocks/models/photo.rb",
      "lib/flickr_mocks/models/photo_details.rb",
+     "lib/flickr_mocks/models/photo_dimensions.rb",
      "lib/flickr_mocks/models/photo_size.rb",
      "lib/flickr_mocks/models/photo_sizes.rb",
      "lib/flickr_mocks/models/photos.rb",
@@ -60,6 +61,7 @@ Gem::Specification.new do |s|
      "test/unit/models/test_pages.rb",
      "test/unit/models/test_photo.rb",
      "test/unit/models/test_photo_details.rb",
+     "test/unit/models/test_photo_dimensions.rb",
      "test/unit/models/test_photo_size.rb",
      "test/unit/models/test_photo_sizes.rb",
      "test/unit/models/test_photos.rb",
@@ -77,6 +79,7 @@ Gem::Specification.new do |s|
     "test/unit/test_fixtures.rb",
      "test/unit/models/test_photo_details.rb",
      "test/unit/models/test_pages.rb",
+     "test/unit/models/test_photo_dimensions.rb",
      "test/unit/models/test_photos.rb",
      "test/unit/models/test_photo_size.rb",
      "test/unit/models/test_photo.rb",
