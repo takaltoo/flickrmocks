@@ -4,9 +4,11 @@ module FlickrMocks
   class PhotoDimensions
     # sizes that are recognized by class. The sizes are in order from smallest to largest
     @possible_sizes =  [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
+    @size_regexp = /^[a-z]+(_\d+)?:\d+x\d+(,[a-z]+(_\d+)?:\d+x\d+)*$/
 
     class << self
       attr_accessor :possible_sizes
+      attr_reader :size_regexp
     end
     
     attr_accessor :sizes
@@ -46,8 +48,9 @@ module FlickrMocks
     def available_sizes
       sizes = []
       PhotoDimensions.possible_sizes.each do |size|
-        sizes.push(size.to_s) if @sizes.has_key?(size)
+        sizes.push(size) if @sizes.has_key?(size)
       end
+      sizes
     end
 
     def each
@@ -80,9 +83,14 @@ module FlickrMocks
 
     def sizes=(data)
       raise ArgumentEror, "Invalid #{data} must respond to :to_s" unless data.respond_to?(:to_s)
+
       @sizes={}
       # expecting strings of type: "square:1x1,thumbnail:2x2,small:3x3,medium:4x4,medium_640:4x4,large:5x5,original:6x6"
-      data.to_s.downcase.gsub(/\s+/,'').split(',').each do |fields|
+      data = data.to_s.downcase
+
+      raise ArgumentError, "Format #{data} is incorrect must be: square:1x1,thumbnail:2x2" unless PhotoDimensions.size_regexp =~ data
+
+      data.gsub(/\s+/,'').split(',').each do |fields|
         size,dim = fields.split(':')
         size= size.to_sym
         width,height=dim.split(/x/)
