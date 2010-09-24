@@ -118,5 +118,52 @@ class TestFlickrMocks_PhotoDimensions < Test::Unit::TestCase
       assert !(@p.size_regexp =~ 'square1x11,thumbnail:2x12,'),'missing colons not acceptable'
     end
   end
+
+  context 'self.valid_dimensions?' do
+    setup do
+      @p = FlickrMocks::PhotoDimensions
+    end
+    should 'accept single size' do
+      assert @p.valid_dimensions?('thumbnail:2x12'),'single size should be allowed'
+    end
+    should 'accept multiple sizes' do
+      assert @p.valid_dimensions?('square:1x11,thumbnail:2x12'),'properly recognize multiple sizes'
+    end
+    should 'accept standard sizes' do
+      assert !@p.valid_dimensions?('square1x11,thumbnail:2x12'),'missing colon not allowed'
+    end
+    should 'not accept strings with extra commas' do
+       assert !@p.valid_dimensions?('square1x11,thumbnail:2x12,'),'extra commas are not allowed'
+    end
+    should 'give error on unrecognized sizes' do
+      assert !@p.valid_dimensions?('square:1x11,garbage:2x3,thumbnail:4x5'),'garbage size is caught'
+    end
+  end
+
+  context 'self.valid_size?' do
+    setup do
+      @p = FlickrMocks::PhotoDimensions
+    end
+
+    should 'accept string' do
+      @p.possible_sizes.each do |size|
+        assert @p.valid_size?(size.to_s), "string #{size} not recognized"
+      end
+    end
+
+    should 'accept symbols' do
+      @p.possible_sizes.each do |size|
+        assert @p.valid_size?(size.to_sym),"symbol #{size} not recognized"
+      end
+    end
+
+    should 'not accept garbage string' do
+      assert !@p.valid_size?('garbage'),"unrecognized string considered as valid"
+    end
+
+    should 'not accept garbage symbol' do
+      assert !@p.valid_size?(:garbage), "unrectognized symbol considered as valid"
+    end
+  end
   
 end

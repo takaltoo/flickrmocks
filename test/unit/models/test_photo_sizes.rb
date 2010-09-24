@@ -159,5 +159,18 @@ class TestFlickrMocks_PhotoSizes < Test::Unit::TestCase
     end
   end
 
+  context ':to_s' do
+    setup do
+      @package = FlickrMocks
+      fixtures = FlickrFixtures
+      @sizes = @package::PhotoSizes.new fixtures.photo_sizes
+    end
+
+    should 'return correct string for the sizes' do
+      assert_equal 'square:75x75,thumbnail:67x100,small:160x240,medium:333x500,medium_640:427x640,large:683x1024',@sizes.to_s,
+                                                                                                                'sizes not properly returned'
+    end
+  end
+
 end
 

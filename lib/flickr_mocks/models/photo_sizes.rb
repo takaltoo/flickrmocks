@@ -52,6 +52,14 @@ module FlickrMocks
       !!size_index(name)
     end
 
+    def to_s
+      result = []
+      @sizes.each do |size|
+        result.push "#{size.size}:#{size.width}x#{size.height}"
+      end
+      PhotoDimensions.new(result.join(',')).to_s
+    end
+
 
     private
     def available_sizes=(data)

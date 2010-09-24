@@ -79,6 +79,22 @@ module FlickrMocks
       result.join(',')
     end
 
+    def self.valid_dimensions?(string)
+      return false unless PhotoDimensions.size_regexp =~ string
+      string.split(',').each do |fields|
+        size,dim = fields.split(':')
+        size = size.to_sym
+        width,height = dim.split(/x/)
+        return false unless FlickrMocks::PhotoDimensions.possible_sizes.include?(size)
+      end
+      return true
+    end
+
+    def self.valid_size?(data)
+      PhotoDimensions.possible_sizes.include?(data.to_sym)
+    end
+
+
     private
 
     def sizes=(data)
@@ -86,19 +102,16 @@ module FlickrMocks
 
       @sizes={}
       # expecting strings of type: "square:1x1,thumbnail:2x2,small:3x3,medium:4x4,medium_640:4x4,large:5x5,original:6x6"
-      data = data.to_s.downcase
 
-      raise ArgumentError, "Format #{data} is incorrect must be: square:1x1,thumbnail:2x2" unless PhotoDimensions.size_regexp =~ data
+      raise ArgumentError, "Format #{data} is incorrect must be: square:1x1,thumbnail:2x2" unless PhotoDimensions.valid_dimensions?(data)
 
-      data.gsub(/\s+/,'').split(',').each do |fields|
+      data.to_s.split(',').each do |fields|
         size,dim = fields.split(':')
         size= size.to_sym
         width,height=dim.split(/x/)
-        raise ArgumentError, "Unrecognized size #{size}. Must be one of #{PhotoDimensions.possible_sizes}" unless FlickrMocks::PhotoDimensions.possible_sizes.include?(size)
         @sizes[size.to_sym] = OpenStruct.new :width => width.to_i,:height => height.to_i
       end
     end
-
 
   end
 end
