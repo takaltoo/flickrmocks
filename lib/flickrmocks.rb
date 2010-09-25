@@ -1,5 +1,4 @@
-require 'active_resource' unless defined?(ActiveResource)
-require 'chronic'
+#require 'chronic'
 
 require 'find'
 require 'delegate'

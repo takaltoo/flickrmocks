@@ -1,5 +1,4 @@
 
-
 module FlickrMocks
   class Photos
     attr_reader :current_page, :per_page, :total_entries, :search_terms,:owner_id

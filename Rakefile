@@ -21,9 +21,16 @@ begin
     gem.email = "pouya@lavabit.com"
     gem.homepage = "http://github.com/takaltoo/flickrmocks"
     gem.authors = ["Takaltoo"]
+
     gem.add_development_dependency "thoughtbot-shoulda", ">= 2.10"
+    gem.add_development_dependency "rspec", ">=2.0.0.beta.22"
+    gem.add_development_dependency "webrat"
+    gem.add_development_dependency 'ruby-debug19', :require => 'ruby-debug'
+    gem.add_development_dependency 'factory_girl_rails', ">=1.0"
+    gem.add_development_dependency 'mocha', '>=0.9.8'
+    gem.add_development_dependency 'faker','>=0.3.1'
+
     gem.add_dependency "flickraw", ">=0.8.2"
-    gem.add_dependency 'activeresource', "=2.3.9" 
     gem.add_dependency 'chronic'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

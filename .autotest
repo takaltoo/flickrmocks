@@ -1,0 +1,36 @@
+# Example taken from:  http://blog.davidchelimsky.net/category/autotest/
+#  	January 15th, 2008 entry
+#	
+#
+# Autotest.add_hook :initialize do |at|
+#  at.add_mapping(%r%^plugins/acts_as_currency/lib/.*\.rb$%) {
+#    at.files_matching %r%^spec/models/product_spec\.rb$% +
+#    at.files_matching %r%^plugins/acts_as_currency/spec/.*_spec\.rb$%
+#  }
+#end
+#
+# add_mapping: adds key/value pair to a hash that maps regexps to procs.
+#
+# Whenever autotest detects a file has changed it looks for a regexp that
+#	matches that file and runs ALL the files associated with the matching
+#	regular expression.
+#
+# In the example below any change to the plugins file directory will
+#	trigger all the specs in the plugin directory to run as well 
+#	as the spec for the product model.
+
+require 'autotest/timestamp'
+require 'autotest/restart'
+
+require 'test_notifier/runner/autotest'
+
+Autotest.add_hook(:initialize) do |at|
+  %w{.git .svn .hg tmp log doc .DS_Store ._* vendor nbproject}.each { |exception| autotest.add_exception(exception) }
+  
+  at.clear_mappings    # take out the default (test/test*rb)
+  
+  at.add_mappings %r%^lib/% do 
+  	at.files_matching %r%^spec/*/*_spec.rb% 
+  end
+end
+
