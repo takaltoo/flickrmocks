@@ -13,7 +13,7 @@ module FlickrMocks
     end
 
     def self.repository
-      File.expand_path(File.dirname(__FILE__) + '/../../test/fixtures') + '/'
+      File.expand_path(File.dirname(__FILE__) + '/../../spec/fixtures') + '/'
     end
 
     private
