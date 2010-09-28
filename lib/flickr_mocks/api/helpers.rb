@@ -8,5 +8,7 @@ module FlickrMocks
     def self.size(params={})
       params[:size] ? params[:size].downcase.to_sym : nil
     end
+
+
   end
 end

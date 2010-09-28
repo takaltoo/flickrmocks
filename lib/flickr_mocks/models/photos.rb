@@ -283,7 +283,7 @@ module FlickrMocks
       params.each_pair do |k,v|
         result[k] = v if v
       end
-      result.to_param
+      Helpers.to_param(result)
     end
 
 

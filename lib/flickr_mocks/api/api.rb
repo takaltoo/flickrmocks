@@ -37,6 +37,8 @@ module FlickrMocks
       photos = self.flickr_interestingness(params)
       Photos.new photos,self.interesting_params(params)
     end
+    
+
 
   end
 end

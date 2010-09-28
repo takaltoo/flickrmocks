@@ -50,6 +50,21 @@ describe APP::Helpers do
       end
     end
   end
+
+  describe "to_param" do
+    it "should be able to translate a basic hash to parameters" do
+      hash =  {:search_terms=>"iran", :page=>1}
+      @helpers.to_param(hash).should == "page=1&search_terms=iran"
+    end
+    it "should escape special characters in keys" do
+      hash = {:'search_&@#$terms'=>"iran"}
+      @helpers.to_param(hash).should == "search_%26%40%23%24terms=iran"
+    end
+    it "should escape special characters in value" do
+      hash = {:search_terms => 'iran!@#$%po&*()'}
+      @helpers.to_param(hash).should == "search_terms=iran%21%40%23%24%25po%26%2A%28%29"
+    end
+  end
   
 end
     

@@ -47,6 +47,15 @@ module FlickrMocks
           f.close
         end
       end
+      
+      def to_param(hash)
+        params = []
+
+        hash.keys.sort.each do |key|
+          params.push(CGI.escape(key.to_s) + '=' + CGI.escape(hash[key].to_s))
+        end
+        params.join('&')
+      end
 
     end
   end

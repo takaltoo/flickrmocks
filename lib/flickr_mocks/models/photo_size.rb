@@ -10,6 +10,9 @@ module FlickrMocks
     def id
       source.split('/')[-1].split('_')[0]
     end
+    def secret
+      source.split('/')[-1].split('_')[1]
+    end
 
   end
 end
