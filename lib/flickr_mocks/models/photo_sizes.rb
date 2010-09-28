@@ -23,6 +23,10 @@ module FlickrMocks
     def first
       @sizes[0]
     end
+    
+    def id
+      @sizes.first.id
+    end
 
     def method_missing(name,*args)
       return @sizes[size_index :'medium 640'] if name.downcase.to_sym == :medium_640

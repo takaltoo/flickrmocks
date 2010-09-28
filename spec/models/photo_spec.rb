@@ -90,4 +90,5 @@ describe APP::Api do
       @photo.owner.should == @photo_fixture['owner']
     end
   end
+  
 end
