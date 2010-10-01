@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.7.9"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-09-07}
+  s.date = %q{2010-10-01}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -20,12 +20,14 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
-    ".document",
+    ".autotest",
+     ".document",
      ".gitignore",
      "MIT-LICENSE",
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "autotest/discover.rb",
      "flickrmocks.gemspec",
      "lib/flickr_mocks/api/api.rb",
      "lib/flickr_mocks/api/flickr.rb",
@@ -41,11 +43,38 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/models/photo.rb",
      "lib/flickr_mocks/models/photo_details.rb",
      "lib/flickr_mocks/models/photo_dimensions.rb",
+     "lib/flickr_mocks/models/photo_search.rb",
      "lib/flickr_mocks/models/photo_size.rb",
      "lib/flickr_mocks/models/photo_sizes.rb",
      "lib/flickr_mocks/models/photos.rb",
      "lib/flickr_mocks/version.rb",
      "lib/flickrmocks.rb",
+     "spec/api/api_spec.rb",
+     "spec/api/helper_spec.rb",
+     "spec/api/options_spec.rb",
+     "spec/api/sanitize_spec.rb",
+     "spec/api/time_spec.rb",
+     "spec/base/custom_marshal_spec.rb",
+     "spec/base/fixtures_spec.rb",
+     "spec/base/helpers_spec.rb",
+     "spec/base/version_spec.rb",
+     "spec/fixtures/author_photos.marshal",
+     "spec/fixtures/expected_methods.marshal",
+     "spec/fixtures/interesting_photos.marshal",
+     "spec/fixtures/photo.marshal",
+     "spec/fixtures/photo_details.marshal",
+     "spec/fixtures/photo_size.marshal",
+     "spec/fixtures/photo_sizes.marshal",
+     "spec/fixtures/photos.marshal",
+     "spec/models/pages_spec.rb",
+     "spec/models/photo_details_spec.rb",
+     "spec/models/photo_dimensions_spec.rb",
+     "spec/models/photo_search_spec.rb",
+     "spec/models/photo_size_spec.rb",
+     "spec/models/photo_sizes_spec.rb",
+     "spec/models/photo_spec.rb",
+     "spec/models/photos_spec.rb",
+     "spec/spec_helper.rb",
      "tasks/fixtures.rb",
      "test/fixtures/author_photos.marshal",
      "test/fixtures/interesting_photos.marshal",
@@ -53,22 +82,7 @@ Gem::Specification.new do |s|
      "test/fixtures/photo_sizes.marshal",
      "test/fixtures/photos.marshal",
      "test/helper.rb",
-     "test/unit/api/test_api.rb",
-     "test/unit/api/test_helper.rb",
-     "test/unit/api/test_options.rb",
-     "test/unit/api/test_sanitize.rb",
-     "test/unit/api/test_time.rb",
-     "test/unit/models/test_pages.rb",
-     "test/unit/models/test_photo.rb",
-     "test/unit/models/test_photo_details.rb",
-     "test/unit/models/test_photo_dimensions.rb",
-     "test/unit/models/test_photo_size.rb",
-     "test/unit/models/test_photo_sizes.rb",
-     "test/unit/models/test_photos.rb",
-     "test/unit/test_custom_marshal.rb",
-     "test/unit/test_fixtures.rb",
-     "test/unit/test_helpers.rb",
-     "test/unit/test_version.rb"
+     "test/unit/models/test_photos.rb"
   ]
   s.homepage = %q{http://github.com/takaltoo/flickrmocks}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -76,22 +90,25 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Enables FlickRaw responses to be Marshaled.}
   s.test_files = [
-    "test/unit/test_fixtures.rb",
-     "test/unit/models/test_photo_details.rb",
-     "test/unit/models/test_pages.rb",
-     "test/unit/models/test_photo_dimensions.rb",
+    "spec/models/photo_details_spec.rb",
+     "spec/models/photo_size_spec.rb",
+     "spec/models/photo_sizes_spec.rb",
+     "spec/models/pages_spec.rb",
+     "spec/models/photos_spec.rb",
+     "spec/models/photo_dimensions_spec.rb",
+     "spec/models/photo_spec.rb",
+     "spec/models/photo_search_spec.rb",
+     "spec/api/api_spec.rb",
+     "spec/api/time_spec.rb",
+     "spec/api/options_spec.rb",
+     "spec/api/sanitize_spec.rb",
+     "spec/api/helper_spec.rb",
+     "spec/base/helpers_spec.rb",
+     "spec/base/version_spec.rb",
+     "spec/base/custom_marshal_spec.rb",
+     "spec/base/fixtures_spec.rb",
+     "spec/spec_helper.rb",
      "test/unit/models/test_photos.rb",
-     "test/unit/models/test_photo_size.rb",
-     "test/unit/models/test_photo.rb",
-     "test/unit/models/test_photo_sizes.rb",
-     "test/unit/test_version.rb",
-     "test/unit/api/test_helper.rb",
-     "test/unit/api/test_time.rb",
-     "test/unit/api/test_api.rb",
-     "test/unit/api/test_sanitize.rb",
-     "test/unit/api/test_options.rb",
-     "test/unit/test_helpers.rb",
-     "test/unit/test_custom_marshal.rb",
      "test/helper.rb"
   ]
 
@@ -101,19 +118,31 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
+      s.add_development_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
+      s.add_development_dependency(%q<webrat>, [">= 0"])
+      s.add_development_dependency(%q<factory_girl_rails>, [">= 1.0"])
+      s.add_development_dependency(%q<mocha>, [">= 0.9.8"])
+      s.add_development_dependency(%q<faker>, [">= 0.3.1"])
       s.add_runtime_dependency(%q<flickraw>, [">= 0.8.2"])
-      s.add_runtime_dependency(%q<activeresource>, ["= 2.3.9"])
       s.add_runtime_dependency(%q<chronic>, [">= 0"])
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
+      s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
+      s.add_dependency(%q<webrat>, [">= 0"])
+      s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
+      s.add_dependency(%q<mocha>, [">= 0.9.8"])
+      s.add_dependency(%q<faker>, [">= 0.3.1"])
       s.add_dependency(%q<flickraw>, [">= 0.8.2"])
-      s.add_dependency(%q<activeresource>, ["= 2.3.9"])
       s.add_dependency(%q<chronic>, [">= 0"])
     end
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
+    s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
+    s.add_dependency(%q<webrat>, [">= 0"])
+    s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
+    s.add_dependency(%q<mocha>, [">= 0.9.8"])
+    s.add_dependency(%q<faker>, [">= 0.3.1"])
     s.add_dependency(%q<flickraw>, [">= 0.8.2"])
-    s.add_dependency(%q<activeresource>, ["= 2.3.9"])
     s.add_dependency(%q<chronic>, [">= 0"])
   end
 end
