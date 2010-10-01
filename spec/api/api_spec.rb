@@ -99,8 +99,7 @@ describe APP::Api do
     end
     it "should return a photo with proper id" do
       subject.id.should eq(photo["id"])
-    end
-    
+    end 
   end
 
   describe "interesting_photos" do
