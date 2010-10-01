@@ -1,31 +1,29 @@
 require 'spec_helper'
 
 describe APP::Api do
-  before(:each) do
-    @fixtures = APP::Fixtures.new
-    @api = APP::Api
-  end
+  let(:api) {APP::Api}
+
   describe "default" do
     it "should give proper value if string given" do
-      @api.default(:per_page).should == @api.defaults[:per_page]
+      api.default(:per_page).should eq(api.defaults[:per_page])
     end
     it "should give proper valie if symbol given" do
-      @api.default('per_page').should == @api.defaults[:per_page]
+      api.default('per_page').should  eq(api.defaults[:per_page])
     end
   end
   
   describe "size" do
     it "should return proper size with symbol" do
-      @api.size(:size => 'small').should == :small
+      api.size(:size => 'small').should eq(:small)
     end
     it "should return lowercase version of the key" do
-      @api.size({:size => 'HeLlO'}).should == :hello
+      api.size({:size => 'HeLlO'}).should eq(:hello)
     end
     it "should return nil if no size given" do
-      @api.size.should == nil
+      api.size.should be_nil
     end
     it "should symbolize keys with spaces" do
-      @api.size(:size => 'medium 640').should == :'medium 640'
+      api.size(:size => 'medium 640').should  eq(:'medium 640')
     end
   end
 end

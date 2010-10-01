@@ -15,27 +15,27 @@ module FlickrMocks
     end
 
     def self.photos(params)
-      photos = self.flickr_photos(params)
-      Photos.new photos,self.search_params(params)
+      photos = Api.flickr_photos(params)
+      PhotoSearch.new photos,Api.search_params(params)
     end
 
     def self.photo_details(params)
-      photo = self.flickr_photo(params)
-      sizes = self.flickr_photo_sizes(params)
+      photo = Api.flickr_photo(params)
+      sizes = Api.flickr_photo_sizes(params)
       @this = @photo = PhotoDetails.new(photo,sizes)
     end
 
     def self.photo(params)
-      Photo.new self.flickr_photo(params)
+      Photo.new Api.flickr_photo(params)
     end
 
     def self.photo_sizes(params)
-      PhotoSizes.new self.flickr_photo_sizes(params)
+      PhotoSizes.new Api.flickr_photo_sizes(params)
     end
 
     def self.interesting_photos(params)
-      photos = self.flickr_interestingness(params)
-      Photos.new photos,self.interesting_params(params)
+      photos = Api.flickr_interestingness(params)
+      PhotoSearch.new photos,Api.interesting_params(params)
     end
     
 

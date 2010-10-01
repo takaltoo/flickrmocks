@@ -4,11 +4,11 @@ module FlickrMocks
   class PhotoDimensions
     # sizes that are recognized by class. The sizes are in order from smallest to largest
     @possible_sizes =  [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
-    @size_regexp = /^[a-z]+(_\d+)?:\d+x\d+(,[a-z]+(_\d+)?:\d+x\d+)*$/
+    @regexp_size = /^[a-z]+(_\d+)?:\d+x\d+(,[a-z]+(_\d+)?:\d+x\d+)*$/
 
     class << self
       attr_accessor :possible_sizes
-      attr_reader :size_regexp
+      attr_reader :regexp_size
     end
     
     attr_accessor :sizes
@@ -79,8 +79,12 @@ module FlickrMocks
       result.join(',')
     end
 
+    def self.valid_size?(data)
+      PhotoDimensions.possible_sizes.include?(data.to_sym)
+    end
+
     def self.valid_dimensions?(string)
-      return false unless PhotoDimensions.size_regexp =~ string
+      return false unless PhotoDimensions.regexp_size =~ string
       string.split(',').each do |fields|
         size,dim = fields.split(':')
         size = size.to_sym
@@ -89,14 +93,8 @@ module FlickrMocks
       end
       return true
     end
-
-    def self.valid_size?(data)
-      PhotoDimensions.possible_sizes.include?(data.to_sym)
-    end
-
-
+    
     private
-
     def sizes=(data)
       raise ArgumentEror, "Invalid #{data} must respond to :to_s" unless data.respond_to?(:to_s)
 
@@ -112,6 +110,10 @@ module FlickrMocks
         @sizes[size.to_sym] = OpenStruct.new :width => width.to_i,:height => height.to_i
       end
     end
+
+
+
+
 
   end
 end

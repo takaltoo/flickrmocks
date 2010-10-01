@@ -1,10 +1,21 @@
-
 module FlickrMocks
-  class Photo < SimpleDelegator
+  class Photo 
+    @delegated_methods = [:id, :owner, :secret, :server, :farm, :title, :ispublic,
+      :isfriend, :isfamily,:license, :flickr_type]
+    
+    @delegated_methods_extended = [:id, :secret, :server, :farm, :dateuploaded,
+      :isfavorite, :license, :rotation, :originalsecret, :originalformat, :owner,
+      :title, :description, :visibility, :dates, :views, :editability, :usage,
+      :comments, :notes, :tags, :location, :geoperms, :urls, :media,:flickr_type]
+    
+    class<< self
+      attr_accessor :delegated_methods,:delegated_methods_extended
+    end
 
-    def initialize(photos)
-      raise TypeError, 'FlickRaw::Response expected' unless photos.is_a? FlickRaw::Response
-      super
+    def initialize(photo)
+      raise TypeError, 'FlickRaw::Response expected' unless photo.is_a? FlickRaw::Response
+      @__delegated_to_object__= photo
+      @extended_photo = (Photo.delegated_methods_extended - photo.methods).empty? ? true : false
     end
 
     # Return urls for various sizes
@@ -48,18 +59,27 @@ module FlickrMocks
 
 
     def method_missing(id,*args,&block)
+      return @__delegated_to_object__.send(id,*args,&block) if delegated_methods.include?(id)
       return medium_640 if id.to_sym == :'medium 640'
       super
     end
 
     def respond_to?(method,type=false)
       return true if method.to_sym == :'medium 640'
-      if type
-        return self.class.public_instance_methods(false).include?(method.to_sym) || super
-      else
-        return self.class.instance_methods(false).include?(method.to_sym) || super
-      end
+      return true if delegated_methods.include?(method)
+      super
     end
 
+    def methods
+      delegated_methods + super
+    end
+
+    def public_methods(all=true)
+      delegated_methods + super(all)
+    end
+
+    def delegated_methods
+      @extended_photo ? Photo.delegated_methods_extended : Photo.delegated_methods
+    end
   end
 end

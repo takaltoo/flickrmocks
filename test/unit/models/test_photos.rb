@@ -1,63 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../helper')
 
 class TestFlickrMocks_Photos < Test::Unit::TestCase
-  context ':defaults class variable' do
-    setup do
-      @package = FlickrMocks
-      fixtures = FlickrFixtures
-      @photos = @package::Photos.new fixtures.photos,{:search_terms => 'iran'}
-      @interesting = @package::Photos.new fixtures.photos,{:date => '2009-10-02'}
-    end
 
-    should 'be able to get/set Flickr::Photos.defaults class instance variable' do
-      def check_attribute_write(*attributes)
-        attributes.each do |attribute|
-          begin
-            default=@package::Photos.defaults[attribute]
-            value = default.is_a?(String) ? default + 'xyz' : default + 121
-            @package::Photos.defaults[attribute]=value
-            assert_equal value,@package::Photos.defaults[attribute],'default attribute: #{attribute} can be set.'
-          ensure
-            @package::Photos.defaults[attribute] = default
-          end
-        end
-      end
-      # can write attributes
-      check_attribute_write :max_entries,:per_page,:base_url
-    end
-
-    should 'be able to read :max_entries' do
-      assert_equal 4000, @package::Photos.defaults[:max_entries],'can read :max_entries'
-    end
-    should 'be able to access :per_page' do
-      assert_equal 50,@package::Photos.defaults[:per_page],'can read :per_page'
-    end
-    should 'be able to access :base_url' do
-      assert_equal '/flickr/search',@package::Photos.defaults[:base_url],'can read :base_url'
-    end
-
-    should 'be able to read current_page' do
-      assert_equal 1,@photos.current_page,':current_page properly set'
-    end
-    should 'be able to access :per_page' do
-      assert_equal 5,@photos.per_page,':per_page properly set'
-    end
-    should 'be able to access :total_entries' do
-      assert_equal 276362,@photos.total_entries,':total_entries properly set'
-    end
-    should 'be able to access :search_terms' do
-      assert_equal 'iran',@photos.search_terms,':search_terms properly set'
-    end
-    should 'be able to access :max_entries' do
-      assert_equal 4000, @photos.max_entries,':max_entries properly set'
-    end
-    should 'be able to access :collection' do
-      assert_equal @photos.photos,@photos.collection,':collection is equal to :photos'
-    end
-    should 'be able to access :date' do
-      assert_equal '2009-10-02',@interesting.date,':date is accessible'
-    end
-  end
 
   context ':each_page' do
     setup do

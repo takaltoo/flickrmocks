@@ -1,50 +1,67 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/flickrmocks')
 require 'fileutils'
 
+
 # used for providing fixtures to users of the gem
 namespace :fixtures do
   desc 'generate all fixtures for USERS of the GEM'
-  task :all => [:photos,:sizes,:details,:interesting, :author_photos]
-
-  desc 'generate fixture for flickr.interestingness.getList'
-  task :interesting => :repository do
-    puts 'generating interesting photos'
-    config_flickr
-    data = flickr.interestingness.getList :date => '2010-08-18', :per_page => '50', :extras=>'license'
-    dump data,repo_dir + 'interesting_photos.marshal'
-  end
-
-
+  task :all => [:photos,:interesting_photos,:author_photos,:photo,:photo_details,
+                   :photo_sizes,:photo_size,:expected_methods]
+  
   desc 'generate fixture for flickr.photos.search'
   task :photos => :repository do
-    puts "generating photos"
     config_flickr
-    data = flickr.photos.search :tags => 'iran', :per_page => '5', :extras=>'license'
-    dump data,repo_dir + 'photos.marshal'
-  end
-  
-  desc 'generate fixture for flickr.photos.search :author'
-  task :author_photos => :repository do
-    puts "generating photos"
-    config_flickr
-    data = flickr.photos.search :user_id => '8070463@N03', :per_page => '20', :extras=>'license'
-    dump data,repo_dir + 'author_photos.marshal'
+    dump default_photos,:photos
   end
 
-  desc 'generate fixture for flickr.photos.getSizes'
-  task :sizes => :repository do
-    puts "generating sizes"
+  desc 'generate fixture for flickr.interestingness.getList'
+  task :interesting_photos => :repository do
     config_flickr
-    data = flickr.photos.getSizes :photo_id => '4877807944', :extras=>'license'
-    dump data,repo_dir + 'photo_sizes.marshal'
+    dump default_interesting_photos,:interesting_photos
+  end
+
+  desc 'generate fixture for flickr.photos.search :author'
+  task :author_photos => :repository do
+    config_flickr
+    dump default_author_photos,:author_photos
+  end
+
+  desc 'generating photo'
+  task :photo => :repository do
+    config_flickr
+    dump default_photo,:photo
   end
 
   desc 'generated fixture for flickr.photos.getInfo'
-  task :details => :repository do
-    puts "generating photo details"
+  task :photo_details => :repository do
     config_flickr
-    data = flickr.photos.getInfo :photo_id => '4877807944', :extras=>'license'
-    dump data,repo_dir + 'photo_details.marshal'
+    dump default_photo_details,:photo_details
+  end
+
+  desc 'generate fixture for flickr.photos.getSizes'
+  task :photo_sizes => :repository do
+    config_flickr
+    dump default_photo_sizes,:photo_sizes
+  end
+
+  desc 'generated fixture for single size'
+  task :photo_size => :repository do
+    config_flickr
+    dump default_photo_sizes[0],:photo_size
+  end
+
+  desc 'expected methods'
+  task :expected_methods => :repository do
+    data = OpenStruct.new
+    config_flickr
+    data.photos = default_methods(default_photos)
+    data.interesting_photos = default_methods(default_interesting_photos)
+    data.author_photos = default_methods(default_author_photos)
+    data.photo = default_methods(default_photo)
+    data.photo_details = default_methods(default_photo_details)
+    data.photo_sizes = default_methods(default_photo_sizes)
+    data.photo_size = default_methods(default_photo_size)
+    dump data,:expected_methods
   end
 
   desc 'create directory for string Fixtures for Users of gem'
@@ -68,6 +85,7 @@ namespace :fixtures do
   end
 
 
+
   # helper methods for configuration
 
   def config_flickr
@@ -84,7 +102,49 @@ namespace :fixtures do
 
   def dump(data,fname)
     puts "generating file #{fname}"
-    FlickrMocks::Helpers.dump data,fname
+    file = repo_dir + fname.to_s + '.marshal'
+    FlickrMocks::Helpers.dump data,file
   end
 
+  def default_photos
+    @default_photos ||= flickr.photos.search :tags => 'iran', :per_page => '50', :extras=>'license'
+    @default_photos
+  end
+
+  def default_interesting_photos
+    @default_intesting_photos ||= flickr.interestingness.getList :date => '2010-08-18', :per_page => '50', :extras=>'license'
+    @default_intesting_photos
+  end
+
+  def default_author_photos
+    @default_author_photos ||= flickr.photos.search :user_id => default_photo.owner, :per_page => '20', :extras=>'license'
+    @default_author_photos
+  end
+
+  def default_photo
+    @default_photo ||=  default_photos[0]
+    @default_photo
+  end
+
+  def default_photo_details
+    @default_photo_details ||= flickr.photos.getInfo :photo_id => default_photo.id, :extras=>'license'
+    @default_photo_details
+  end
+
+  def default_photo_sizes
+    @default_photo_sizes ||=flickr.photos.getSizes :photo_id => default_photo.id, :extras=> 'license'
+    @default_photo_sizes
+  end
+
+  def default_photo_size
+    @default_photo_size ||= default_photo_sizes[0]
+    @default_photo_size
+  end
+
+  def default_methods(obj)
+    obj.methods(false).push(:flickr_type)
+  end
+
+
+  
 end

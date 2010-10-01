@@ -28,6 +28,10 @@ module FlickrMocks
       @sizes.first.id
     end
 
+    def secret
+      @sizes.first.secret
+    end
+
     def method_missing(name,*args)
       return @sizes[size_index :'medium 640'] if name.downcase.to_sym == :medium_640
       return @sizes[size_index name] if size_index? name
@@ -48,13 +52,7 @@ module FlickrMocks
     def member_class
     end
 
-    def size_index(name)
-      @available_sizes.find_index name.to_s.downcase.sub(/\s+/,'_').to_sym
-    end
 
-    def size_index?(name)
-      !!size_index(name)
-    end
 
     def to_s
       result = []
@@ -78,6 +76,13 @@ module FlickrMocks
       data.each do |datum|
         @sizes.push PhotoSize.new datum
       end
+    end
+    def size_index(name)
+      @available_sizes.find_index name.to_s.downcase.sub(/\s+/,'_').to_sym
+    end
+
+    def size_index?(name)
+      !!size_index(name)
     end
 
   end

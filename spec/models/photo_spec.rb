@@ -1,94 +1,145 @@
 require 'spec_helper'
 
-describe APP::Api do
-  before(:each) do
-    @api = APP::Api
-    @pages = APP::Pages
-    @fixtures = APP::Fixtures.new
-    @photo_fixture = @fixtures.photo
-    @photo = APP::Photo.new @photo_fixture
-  end
-
-
-
+describe APP::Photo do
+  let(:klass){APP::Photo}
+  let(:fixtures){APP::Fixtures.new}
+  let(:photo_fixture){fixtures.photo}
+  let(:photo_detail_fixture){fixtures.photo_details}
+  let(:subject){klass.new photo_fixture}
+  
   describe "delegated methods" do
-    it "should be object of the proper class" do
-      @photo.should be_a(APP::Photo)
+    describe "basic photo" do
+      let(:subject){klass.new photo_fixture}
+      let(:expected_methods){fixtures.expected_methods.photo}
+
+      it "should be object of the proper class" do
+        subject.should be_a(klass)
+      end
+      it "should respond properly to all delegated methods" do
+        expected_methods.each do |method|
+          subject.send(method).should eq(photo_fixture.send(method))
+        end
+      end
     end
-    it "should return proper :id" do
-      @photo.id.should == @photo_fixture['id']
-    end
-    it "should return proper :owner" do
-      @photo.owner.should == @photo_fixture['owner']
-    end
-    it "should return correct server" do
-      @photo.server.should == @photo_fixture['server']
-    end
-    it "should return correct farm" do
-      @photo.farm.should == @photo_fixture['farm']
-    end
-    it "should return correct :ispublic" do
-      @photo.ispublic.should == @photo_fixture['ispublic']
-    end
-    it "should give correct :isfamily" do
-      @photo.isfamily.should == @photo_fixture['isfamily']
-    end
-    it "should give correct :flickr_type" do
-      @photo.flickr_type.should == 'photo'
+
+    describe "extended photo" do
+      let(:subject){klass.new photo_detail_fixture}
+      let(:expected_methods){fixtures.expected_methods.photo_details}
+
+      it "should be of object of proper class" do
+        subject.should be_a(klass)
+      end
+      it "should respond properly to all delegated methods" do
+        expected_methods.each do |method|
+          subject.send(method).should eq(photo_detail_fixture.send(method))
+        end
+      end
     end
   end
 
   describe "photo url methods" do
-    before(:each) do
-      @base_url = "http://farm#{@photo_fixture['farm']}.static.flickr.com/#{@photo_fixture['server']}/#{@photo_fixture['id']}_#{@photo_fixture['secret']}"
-    end
+    let(:base_url){"http://farm#{photo_fixture['farm']}.static.flickr.com/#{photo_fixture['server']}/#{photo_fixture['id']}_#{photo_fixture['secret']}"}
     it "should return :square url" do
-      @photo.square.should == "#{@base_url}_s.jpg"
+      subject.square.should eql("#{base_url}_s.jpg")
     end
     it "should return :thumbnail url" do
-      @photo.thumbnail.should == "#{@base_url}_t.jpg"
+      subject.thumbnail.should eql("#{base_url}_t.jpg")
     end
     it "should return :small url" do
-      @photo.small.should == "#{@base_url}_m.jpg"
+      subject.small.should eql("#{base_url}_m.jpg")
     end
     it "should return :medium url" do
-      @photo.medium.should == "#{@base_url}.jpg"
+      subject.medium.should eql("#{base_url}.jpg")
     end
     it "should return :large url" do
-      @photo.large.should == "#{@base_url}_b.jpg"
+      subject.large.should eql("#{base_url}_b.jpg")
     end
     it "should return :medium_640 url" do
-      @photo.medium_640.should == "#{@base_url}_z.jpg"
+      subject.medium_640.should eql("#{base_url}_z.jpg")
     end
     it "should return :medium 640 url" do
-      @photo.send(:'medium 640').should == "#{@base_url}_z.jpg"
+      subject.send(:'medium 640').should eql("#{base_url}_z.jpg")
     end
   end
 
   describe "owner_url" do
     it "should respond to :owner_url" do
-      @photo.should respond_to(:owner_url)
+      subject.should respond_to(:owner_url)
     end
     it "should return proper :owner_url" do
-      @photo.owner_url.should == "http://www.flickr.com/photos/#{@photo_fixture['owner']}/#{@photo_fixture['id']}"
+      subject.owner_url.should eql("http://www.flickr.com/photos/#{photo_fixture['owner']}/#{photo_fixture['id']}")
     end
   end
 
   describe "owner_id" do
     it "should respond to :owner_id" do
-      @photo.should respond_to(:owner_id)
+      subject.should respond_to(:owner_id)
     end
     it "should return :owner_id" do
-      @photo.owner_id.should == @photo_fixture['owner']
+      subject.owner_id.should eql(photo_fixture['owner'])
     end
   end
+
   describe "owner" do
     it "should respond to :owner" do
-      @photo.should respond_to(:owner)
+      subject.should respond_to(:owner)
     end
     it "should return :owner" do
-      @photo.owner.should == @photo_fixture['owner']
+      subject.owner.should eql(photo_fixture['owner'])
     end
+  end
+
+  describe "metaprogramming methods" do
+    describe "with basic photo" do
+      let(:subject) {klass.new(photo_fixture)}
+
+      describe ":respond_to?" do
+        it "should respond to all basic methods" do
+          photo_fixture.methods(false).push(:flickr_type).each do |method|
+            subject.should respond_to(method)
+          end
+        end
+      end
+
+      describe "public_methods" do
+        it "should include all basic methods" do
+          (photo_fixture.methods(false).push(:flickr_type) - subject.public_methods).should be_empty
+        end
+        it "should not include extended methods" do
+          (photo_detail_fixture.methods(false).push(:flickr_type) - subject.public_methods).should_not be_empty
+        end
+      end
+
+      describe "delegated_methods" do
+        it "should include all basic methods" do
+          photo_fixture.methods(false).push(:flickr_type).sort.should eq(subject.delegated_methods.sort)
+        end
+      end
+    end
+
+    describe "with detailed photo" do
+      let(:subject) {klass.new(photo_detail_fixture)}
+
+      describe "respond_to?" do
+        it "should respond to all detailed photos" do
+          photo_detail_fixture.methods(false).push(:flickr_type).each do |method|
+            subject.should respond_to(method)
+          end
+        end
+      end
+      describe "public_methods" do
+        it "should inlcude all extended methods" do
+          (photo_detail_fixture.methods(false).push(:flickr_type) - subject.public_methods).should be_empty
+        end
+      end
+
+      describe "delegated_methods" do
+        it "should include all extended methods" do
+          photo_detail_fixture.methods(false).push(:flickr_type).sort.should eq(subject.delegated_methods.sort)
+        end
+      end
+    end
+
   end
   
 end
