@@ -57,6 +57,15 @@ module FlickrMocks
       end
     end
 
+    def ==(other)
+       @__delegated_to_object__ == other.instance_eval('@__delegated_to_object__')
+    end
+
+    def initialize_copy(orig)
+      super
+      @__delegated_to_object__ = @__delegated_to_object__.clone
+    end
+
 
     def method_missing(id,*args,&block)
       return @__delegated_to_object__.send(id,*args,&block) if delegated_methods.include?(id)

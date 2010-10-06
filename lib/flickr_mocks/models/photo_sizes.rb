@@ -3,8 +3,11 @@ module FlickrMocks
   class PhotoSizes
     attr_reader :sizes,:available_sizes
     alias_method :all, :sizes
+    @possible_sizes = [:square, :thumbnail, :small, :medium, :medium_640, :large, :original]
 
-
+    class << self
+      attr_accessor :possible_sizes
+    end
 
     def initialize(object)
       raise TypeError, 'FlickRaw::Response expected' unless object.is_a? FlickRaw::Response
@@ -32,10 +35,14 @@ module FlickrMocks
       @sizes.first.secret
     end
 
-    def method_missing(name,*args)
-      return @sizes[size_index :'medium 640'] if name.downcase.to_sym == :medium_640
+    def method_missing(name,*args,&block)
       return @sizes[size_index name] if size_index? name
+      return nil if PhotoSizes.possible_sizes.include?(name)
       super
+    end
+    
+    def methods
+      PhotoSizes.possible_sizes + super
     end
 
     def each
@@ -62,6 +69,26 @@ module FlickrMocks
       PhotoDimensions.new(result.join(',')).to_s
     end
 
+    def ==(other)
+      return false unless @available_sizes == (other.respond_to?(:available_sizes) ? other.available_sizes : nil)
+      return false unless other.respond_to?(:sizes)
+      index = -1
+      sizes.map do |size|
+        index += 1
+        size == other[index]
+      end.inject(true) do |previous,current|
+        previous && current
+      end
+    end
+
+    def initialize_copy(orig)
+      super
+      @sizes = @sizes.clone.map do |data|
+        data.clone
+      end
+      @available_sizes = @available_sizes.clone
+    end
+
 
     private
     def available_sizes=(data)
@@ -77,6 +104,7 @@ module FlickrMocks
         @sizes.push PhotoSize.new datum
       end
     end
+    
     def size_index(name)
       @available_sizes.find_index name.to_s.downcase.sub(/\s+/,'_').to_sym
     end

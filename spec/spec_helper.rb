@@ -2,6 +2,8 @@ require 'rubygems'
 require 'rspec'
 require 'mocha'
 
+require 'faker'
+
 require 'chronic_duration'
 require 'flickraw-cached'
 require 'ruby-debug'

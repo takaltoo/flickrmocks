@@ -93,6 +93,18 @@ module FlickrMocks
       end
       return true
     end
+
+    def initialize_copy(other)
+      super
+      @sizes = @sizes.clone.each_pair do |key,value|
+        @sizes[key] = value.clone
+      end
+    end
+
+    def ==(other)
+      to_s == other.to_s
+    end
+
     
     private
     def sizes=(data)

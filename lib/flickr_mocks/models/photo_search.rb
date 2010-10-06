@@ -74,6 +74,30 @@ module FlickrMocks
       Helpers.to_param(options)
     end
 
+    def initialize_copy(other)
+      super
+      @photos = @photos.clone
+    end
+
+    def ==(other)
+      return false if other.nil?
+      return false unless other.is_a?(self.class)
+
+      match = [:search_terms,:page,:date].map do |method|
+        self.send(method) == other.send(method)
+      end.inject(true) do |previous,current| previous && current end
+      
+      return false unless match
+
+      match = []
+      index=-1
+      photos.each do |photo|
+        index += 1
+        match.push(photo == other.photos[index])
+      end
+      match.inject(true) do |previous,current| previous && current end
+    end
+
 
 
     private

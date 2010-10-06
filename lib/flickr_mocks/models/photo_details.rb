@@ -50,5 +50,28 @@ module FlickrMocks
       @__delegated_methods__
     end
 
+    def initialize_copy(orig)
+      super
+      @sizes = @sizes.clone
+      @__delegated_methods__ = @__delegated_methods__.clone
+      @__delegated_to_object__ = @__delegated_to_object__.clone
+    end
+
+    def ==(other)
+      if other.nil?
+        false 
+      elsif !other.is_a?(self.class)
+        false
+      elsif @__delegated_methods__.sort != other.instance_eval('@__delegated_methods__.sort')
+        false
+      elsif @sizes != other.sizes
+        false
+      elsif @__delegated_to_object__ != other.instance_eval('@__delegated_to_object__')
+        false
+      else
+        true
+      end
+    end
+
   end
 end

@@ -75,14 +75,7 @@ Gem::Specification.new do |s|
      "spec/models/photo_spec.rb",
      "spec/models/photos_spec.rb",
      "spec/spec_helper.rb",
-     "tasks/fixtures.rb",
-     "test/fixtures/author_photos.marshal",
-     "test/fixtures/interesting_photos.marshal",
-     "test/fixtures/photo_details.marshal",
-     "test/fixtures/photo_sizes.marshal",
-     "test/fixtures/photos.marshal",
-     "test/helper.rb",
-     "test/unit/models/test_photos.rb"
+     "tasks/fixtures.rb"
   ]
   s.homepage = %q{http://github.com/takaltoo/flickrmocks}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -107,9 +100,7 @@ Gem::Specification.new do |s|
      "spec/base/version_spec.rb",
      "spec/base/custom_marshal_spec.rb",
      "spec/base/fixtures_spec.rb",
-     "spec/spec_helper.rb",
-     "test/unit/models/test_photos.rb",
-     "test/helper.rb"
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then

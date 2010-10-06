@@ -55,6 +55,35 @@ module FlickrMocks
       max_pages = default(:max_entries)/perpage
       total_pages > max_pages ? max_pages : total_pages
     end
+
+    def initialize_copy(orig)
+      super
+      @photos = @photos.map do |photo|
+        photo.clone
+      end
+    end
+
+    def ==(other)
+      return false if other.nil?
+      # check basic methods to see if they are equal
+      match = [:current_page, :per_page, :total_entries, :total_pages, :perpage].map do |method|
+        return false unless other.respond_to?(method)
+        self.send(method) == other.send(method)
+      end.inject(true) do |previous,current|
+        previous && current
+      end
+      
+      return false unless match
+      
+      # check photos
+      index = -1
+      photos.map do |photo|
+        index +=1
+        photo == other.photos[index]
+      end.inject(true) do |previous,current|
+        previous && current
+      end
+    end
     
     private
     def current_page=(value)

@@ -156,5 +156,31 @@ describe APP::PhotoDimensions do
     end
   end
 
+  describe "initialize_copy" do
+    it "should have a independent @sizes attribute"do
+      subject.sizes.__id__.should_not eq(subject.clone.sizes.__id__)
+    end
+    it "should have an independent @sizes elements" do
+      other = subject.clone
+      subject.sizes.keys.each do |key|
+        subject.sizes[key].__id__.should_not eq(other.sizes[key].__id__)
+      end
+    end
+  end
+
+  describe ":==" do
+    it "should == to itself" do
+      subject.should eq(subject)
+    end
+    it "should == its clone" do
+      subject.should eq(subject.clone)
+    end
+    it "should not == its clone if a single element is different" do
+      other = subject.clone
+      other.sizes[:square].stubs(:width).returns(77123)
+      subject.should_not eq(other)
+    end
+  end
+
 end
 

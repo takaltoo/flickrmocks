@@ -8,6 +8,15 @@ describe APP::PhotoSizes do
   let(:photo_size_fixture){fixtures.photo_size}
 
   let(:expected_methods){fixtures.expected_methods.photo_sizes}
+  
+  let(:photo_sizes_square){
+        subject  = APP::PhotoSizes.new photo_sizes_fixture
+        # Generate an object that DOES not have all the sizes to see if all sizes
+        subject.instance_eval "@available_sizes = [:square]"
+        subject.instance_eval "@sizes = [@sizes[0]]"
+        subject
+  }
+
   let(:subject){APP::PhotoSizes.new photo_sizes_fixture}
   
 
@@ -25,7 +34,7 @@ describe APP::PhotoSizes do
       subject.available_sizes.should ==
         subject.sizes.map(&:label).map(&:downcase).map do |m|  m.sub(" ","_") end.map(&:to_sym)
     end
-  end
+   end
   describe "id" do
     it "should respond to :id" do
       subject.should respond_to(:id)
@@ -146,4 +155,88 @@ describe APP::PhotoSizes do
       subject.to_s.should eql(expected)
     end
   end
+
+  describe "meta-programming methods" do
+    describe "methods" do
+      it "should respond_to methods" do
+        subject.should respond_to(:methods)
+      end
+      it "should return proer list of methods with fully specified object" do
+        subject = klass.new(photo_sizes_fixture)
+        (klass.possible_sizes - subject.methods).should be_empty
+      end
+      it "should return proper list of methods when not all sizes available" do
+        (klass.possible_sizes - subject.methods).should be_empty
+      end
+    end
+  end
+
+  describe "klass.possible_sizes" do
+    let(:possible_sizes){[:square, :thumbnail, :small, :medium, :medium_640, :large, :original]}
+
+    it "should respond to method" do
+      klass.should respond_to(:possible_sizes)
+    end
+
+    it "should return expected results" do
+      (klass.possible_sizes - possible_sizes).should be_empty
+      klass.possible_sizes.length.should eq(possible_sizes.length)
+    end
+
+  end
+
+  describe "size retrieval methods" do
+    it "should return size for all available sizes" do
+      index = 0
+      subject.available_sizes.each do |size|
+        subject.send(size).should eq(APP::PhotoSize.new(photo_sizes_fixture[index]))
+        index += 1
+      end
+    end
+    it "should return nil for all sizes that are NOT available" do
+      subject = photo_sizes_square
+      (klass.possible_sizes -  photo_sizes_square.available_sizes).each do |size|
+        subject.send(size).should be_nil
+      end
+    end
+  end
+
+  describe "==" do
+    it "should be == to itself" do
+      subject.should eq(subject)
+    end
+    it "should be == to clone of itself" do
+      subject.should eq(subject.clone)
+    end
+    it "should not be equal to wrong class" do
+      subject.should_not eq(2)
+    end
+    it "should not be equal if available sizes is different" do
+      other = subject.clone
+      other.stubs(:available_sizes).returns(subject.available_sizes[-1])
+      subject.should_not eq(other)
+    end
+    it "should not be equal if one element of the sizes object is different" do
+      other = subject.clone
+      other.sizes[0].instance_eval('@__delegated_to_object__').instance_eval('@h["label"] = "random size"')
+      subject.should_not eq(other)
+    end
+
+  end
+
+  describe "initialize_copy" do
+    it "should create a duplicate copy of @sizes" do
+      other = subject.clone
+      index = 0
+      subject.each do |size|
+        size.__id__.should_not eq(other[index].__id__)
+        index+=1
+      end
+    end
+    it "should create a duplicate copy of @available_sizes" do
+      other = subject.clone
+      subject.available_sizes.__id__.should_not eq(other.available_sizes.__id__)
+    end
+  end
+
 end

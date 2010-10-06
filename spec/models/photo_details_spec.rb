@@ -137,7 +137,39 @@ describe APP::PhotoDetails do
       end
     end
 
+    describe "clone" do
+      it "should have independent @sizes" do
+        subject.sizes.__id__.should_not eq(subject.clone.sizes.__id__)
+      end
+      it "should have an independent @__delegated_methods__" do
+        subject.instance_eval("@__delegated_methods__.__id__").should_not eq(
+          subject.clone.instance_eval("@__delegated_methods__.__id__"))
+      end
+      it "should have an independent @__delegated_to_object__" do
+        subject.instance_eval("@__delegated_to_object__.__id__").should_not eq(
+          subject.clone.instance_eval("@__delegated_to_object__.__id__")
+        )
+      end
+    end
+
+    describe ":==" do
+      it "should be :== to itself" do
+        subject.should eq(subject)
+      end
+      it "should be :== to its clone" do
+        subject.should eq(subject.clone)
+      end
+
+      it "should not == when one of delegated_to methods is different" do
+        other = subject.clone
+        other.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h')["location"]["country"].instance_eval('@h["place_id"]="new old place"')
+        subject.should_not eq(other)
+        # should equal when subject also set to new value
+        subject.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h')["location"]["country"].instance_eval('@h["place_id"]="new old place"')
+        subject.should eq(other)
+      end
+    end
+
   end
 
-  
 end

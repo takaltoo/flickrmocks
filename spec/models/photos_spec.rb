@@ -199,4 +199,39 @@ describe APP::Photos do
     end
   end
 
+  describe "initialize_copy" do
+    it "should have a different photo_id on cloned object" do
+      other = subject.clone
+      index = 0
+      subject.photos.each do |photo|
+        photo.__id__.should_not eq(other.photos[index].__id__)
+        index += 1
+      end
+    end
+  end
+
+  describe "==" do
+    it "should respond to :==" do
+      subject.should respond_to(:==)
+    end
+    it "should be :== to itself" do
+      subject.should eq(subject)
+    end
+    it "should be :== to clone of itself" do
+      subject.should eq(subject.clone)
+    end
+    it "should not == random class" do
+      subject.should_not eq([1,2,3,4])
+    end
+    it "should not == nil" do
+      subject.should_not eq(nil)
+    end
+
+    it "should not equal class when single element of one photo is different" do
+      other = subject.clone
+      other.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["farm"]=1234321')
+      subject.should_not eq(other)
+    end
+  end
+
 end

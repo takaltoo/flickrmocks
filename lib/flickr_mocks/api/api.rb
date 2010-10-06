@@ -37,8 +37,6 @@ module FlickrMocks
       photos = Api.flickr_interestingness(params)
       PhotoSearch.new photos,Api.interesting_params(params)
     end
-    
-
 
   end
 end

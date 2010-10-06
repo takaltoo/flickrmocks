@@ -49,4 +49,35 @@ describe APP::PhotoSize do
     end
   end
 
+  describe "==" do
+
+    it "should be == to clone of itself" do
+      size.should eq(size.clone)
+    end
+    it "should not == to another class" do
+      size.should_not eq([1,2,3,4])
+    end
+    it "should detect a single attribute error" do
+
+      APP::PhotoSize.delegated_methods do |method|
+        value = case size.send(method)
+        when String then Faker::Lorem.sentence(3)
+        when FixNum then Random.rand
+        else size.send(method)
+        end
+        other = size.clone
+        other.stub(method).returns(value)
+        size.should_not eq(other)
+      end
+    end
+  end
+
+  describe "clone" do
+    it "should be have unique ids compared to clone" do
+      subject = size
+      other = subject.clone
+      subject.instance_eval('@__delegated_to_object__.__id__').should_not eq(other.instance_eval('@__delegated_to_object__.__id__'))
+    end
+  end
+
 end

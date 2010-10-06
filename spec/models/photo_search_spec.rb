@@ -253,6 +253,33 @@ describe APP::PhotoSearch do
     end
   end
 
+  describe "clone" do
+    it "should have photos that are independent of itself" do
+      other = subject.clone
+      index = -1
+      subject.photos.each do |photo|
+        index +=1
+        photo.__id__.should_not eq(other.photos[index].__id__)
+      end
+    end
+  end
+
+  describe "==" do
+    it "should be equal to itself" do
+      subject.should eq(subject)
+    end
+    it "should be equal to clone of itself" do
+      subject.should eq(subject.clone)
+    end
+    it "should not equal when one element of photo is different" do
+      other = subject.clone
+      other.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["server"]="1234321"')
+      subject.should_not eq(other)
+      subject.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["server"]="1234321"')
+      subject.should eq(other)
+    end
+  end
+
 
 end
 

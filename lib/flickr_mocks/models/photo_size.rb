@@ -1,4 +1,5 @@
 module FlickrMocks
+
   class PhotoSize
     @delegated_methods = [:label, :width, :height, :source, :url, :media, :flickr_type]
     class<< self
@@ -21,6 +22,15 @@ module FlickrMocks
       source.split('/')[-1].split('_')[1]
     end
 
+    def ==(other)
+      @__delegated_to_object__ == other.instance_eval('@__delegated_to_object__')
+    end
+
+    def initialize_copy(orig)
+      super
+      @__delegated_to_object__ = @__delegated_to_object__.clone
+    end
+
     def method_missing(id,*args,&block)
       return @__delegated_to_object__.send(id,*args,&block) if PhotoSize.delegated_methods.include?(id)
       super
@@ -39,5 +49,7 @@ module FlickrMocks
       PhotoSize.delegated_methods + super(all)
     end
   end
+
+
 
 end
