@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-10-01}
+  s.date = %q{2010-10-05}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -35,11 +35,12 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/api/options.rb",
      "lib/flickr_mocks/api/sanitize.rb",
      "lib/flickr_mocks/api/time.rb",
-     "lib/flickr_mocks/custom_marshal.rb",
      "lib/flickr_mocks/fixtures.rb",
-     "lib/flickr_mocks/flickraw.rb",
+     "lib/flickr_mocks/flickraw/custom_clone.rb",
+     "lib/flickr_mocks/flickraw/custom_compare.rb",
+     "lib/flickr_mocks/flickraw/custom_marshal.rb",
+     "lib/flickr_mocks/flickraw/flickraw.rb",
      "lib/flickr_mocks/helpers.rb",
-     "lib/flickr_mocks/models/pages.rb",
      "lib/flickr_mocks/models/photo.rb",
      "lib/flickr_mocks/models/photo_details.rb",
      "lib/flickr_mocks/models/photo_dimensions.rb",
@@ -54,8 +55,10 @@ Gem::Specification.new do |s|
      "spec/api/options_spec.rb",
      "spec/api/sanitize_spec.rb",
      "spec/api/time_spec.rb",
-     "spec/base/custom_marshal_spec.rb",
      "spec/base/fixtures_spec.rb",
+     "spec/base/flickraw/custom_clone_spec.rb",
+     "spec/base/flickraw/custom_compare_spec.rb",
+     "spec/base/flickraw/custom_marshal_spec.rb",
      "spec/base/helpers_spec.rb",
      "spec/base/version_spec.rb",
      "spec/fixtures/author_photos.marshal",
@@ -66,7 +69,6 @@ Gem::Specification.new do |s|
      "spec/fixtures/photo_size.marshal",
      "spec/fixtures/photo_sizes.marshal",
      "spec/fixtures/photos.marshal",
-     "spec/models/pages_spec.rb",
      "spec/models/photo_details_spec.rb",
      "spec/models/photo_dimensions_spec.rb",
      "spec/models/photo_search_spec.rb",
@@ -86,7 +88,6 @@ Gem::Specification.new do |s|
     "spec/models/photo_details_spec.rb",
      "spec/models/photo_size_spec.rb",
      "spec/models/photo_sizes_spec.rb",
-     "spec/models/pages_spec.rb",
      "spec/models/photos_spec.rb",
      "spec/models/photo_dimensions_spec.rb",
      "spec/models/photo_spec.rb",
@@ -98,7 +99,9 @@ Gem::Specification.new do |s|
      "spec/api/helper_spec.rb",
      "spec/base/helpers_spec.rb",
      "spec/base/version_spec.rb",
-     "spec/base/custom_marshal_spec.rb",
+     "spec/base/flickraw/custom_clone_spec.rb",
+     "spec/base/flickraw/custom_compare_spec.rb",
+     "spec/base/flickraw/custom_marshal_spec.rb",
      "spec/base/fixtures_spec.rb",
      "spec/spec_helper.rb"
   ]
