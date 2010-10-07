@@ -9,106 +9,87 @@ describe APP::CustomCompare do
   let(:photo_sizes){fixtures.photo_sizes}
   let(:photo_size){fixtures.photo_size}
 
-  describe "photo" do
+  shared_examples_for "any flickraw response fixture" do
     it "should be equal to itself" do
-      photo.should eq(photo)
+      subject.should eq(subject)
     end
     it "should not be equal to nil" do
-      photo.should_not eq(nil)
+      subject.should_not eq(nil)
     end
     it "should be equal to clone of itself" do
-      photo.should eq(photo.clone)
+      subject.should eq(subject.clone)
     end
     it "should not equal a different class" do
-      photo.should_not eq([1,2,3,4])
-    end
-    it "should not equal another of same class" do
-      photo.should_not eq(photo_size)
-    end
-    it "should not equal when single element is different" do
-      other = photo.clone
-      other.stubs(:title).returns(Faker::Lorem.sentence(3))
-      photo.should_not eq(other)
-    end
-  end
-
-  describe "photos" do
-    it "should equal itself" do
-      photos.should eq(photos)
-    end
-    it "should equal clone of itself" do
-      photos.should eq(photos.clone)
-    end
-    it "should not eq another response list" do
-      photos.should_not eq(photo_sizes)
-    end
-    it "should not eq nil" do
-      photos.should_not eq(nil)
-    end
-    it "should not eq itself with one field difference" do
-      other = photos.clone
-      other.stubs(:total).returns('123454321')
-      photos.should_not eq(other)
-    end
-  end
-
-  describe "photo_details" do
-    it "should equal itself" do
-      photo_details.should eq(photo_details)
-    end
-    it "should equal clone of itself" do
-      photo_details.should eq(photo_details.clone)
-    end
-    it "should not eq nil" do
-      photo_details.should_not eq(nil)
-    end
-    it "should not eq random class" do
-      photo_details.should_not eq([1,2,3,4])
-    end
-    it "should not eq itself with a single element different" do
-      other = photo_details.clone
-      photo_details.stubs(:farm).returns(123421)
-      photo_details.should_not eq(other)
+      subject.should_not eq([1,2,3,4])
     end
     it "should not eq another response" do
-      photo_details.should_not eq(photo)
+      subject.should_not eq(other)
     end
   end
 
-  describe "photo_sizes" do
-    it "should equal itself" do
-      photo_sizes.should eq(photo_sizes)
+  context "photo" do
+    let(:subject){photo}
+    let(:other){photo_details}
+
+    it_behaves_like "any flickraw response fixture"
+
+    it "should not equal when single element is different" do
+      other = subject.clone
+      other.stubs(:title).returns(Faker::Lorem.sentence(3))
+      subject.should_not eq(other)
     end
-    it "should eq clone of itself" do
-      photo_sizes.should eq(photo_sizes.clone)
+  end
+
+  context "photos" do
+    let(:subject){photos}
+    let(:other){photo_details}
+    
+    it_behaves_like "any flickraw response fixture"
+
+    it "should not eq itself with one field difference" do
+      other = subject.clone
+      other.stubs(:total).returns('123454321')
+      subject.should_not eq(other)
     end
-    it "should not eq random class" do
-      photo_sizes.should_not eq([1,2,3,4])
+  end
+
+  context "photo_details" do
+    let(:subject){photo_details}
+    let(:other){photo_sizes}
+
+    it_behaves_like "any flickraw response fixture"
+
+    it "should not eq itself with a single element different" do
+      other = subject.clone
+      subject.stubs(:farm).returns(123421)
+      subject.should_not eq(other)
     end
+  end
+
+   context "photo_sizes" do
+    let(:subject){photo_sizes}
+    let(:other){photo_details}
+
+    it_behaves_like "any flickraw response fixture"
+
     it "should not eq itself with single element difference" do
-      other = photo_sizes.clone
+      other = subject.clone
       other.stubs(:canprint).returns(1234321)
-      photo_sizes.should_not eq(other)
+      subject.should_not eq(other)
     end
   end
 
-  describe "photo_size" do
-    it "should equal itself" do
-      photo_size.should eq(photo_size)
-    end
-    it "should equal clone of itself" do
-      photo_size.should eq(photo_size.clone)
-    end
-    it "should not equal random class" do
-      photo_size.should_not eq([1,2,3,4])
-    end
+  context "photo_size" do
+    let(:subject){photo_size}
+    let(:other){photo_details}
+
+    it_behaves_like "any flickraw response fixture"
+
     it "should not eq itself with single element difference" do
-      other = photo_size.clone
+      other = subject.clone
       other.stubs(:width).returns(1234321)
-      photo_size.should_not eq(other)
+      subject.should_not eq(other)
     end
   end
-
-
 
 end

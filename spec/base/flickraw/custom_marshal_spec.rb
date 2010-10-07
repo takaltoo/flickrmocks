@@ -5,35 +5,36 @@ describe APP::CustomMarshal do
   let(:helpers) {APP::Helpers}
   let(:fixtures) {APP::Fixtures.new}
 
+  shared_examples_for "any object wrapper" do
+    it "should properly marshal/unmarshal Photos object" do
+      marshalled = Marshal.load(Marshal.dump(subject))
+      helpers.equivalent?(subject,marshalled).should be_true
+    end
+  end
+
+  context "Photos" do
+    let(:subject){fixtures.photos}
+    it_behaves_like "any object wrapper"
+  end
+
+  context "PhotoSizes" do
+    let(:subject){fixtures.photo_sizes}
+    it_behaves_like "any object wrapper"
+  end
   
-  it "should properly marshal/unmarshal Photos object" do
-    original = fixtures.photos
-    marshalled = Marshal.load(Marshal.dump(original))
-    helpers.equivalent?(original,marshalled).should be_true
+  context "PhotoDetails" do
+    let(:subject){fixtures.photo_details}
+    it_behaves_like "any object wrapper"
   end
 
-  it "should properly marshal/unmarshal PhotoSizes object" do
-    original = fixtures.photo_sizes
-    marshalled = Marshal.load(Marshal.dump(original))
-    helpers.equivalent?(original,marshalled).should be_true
+  context "Photo" do
+    let(:subject){fixtures.photo}
+    it_behaves_like "any object wrapper"
   end
 
-  it "should properly marshal/unmarshal PhotoDetails object" do
-    original = fixtures.photo_details
-    marshalled = Marshal.load(Marshal.dump(original))
-    helpers.equivalent?(original,marshalled).should be_true
-  end
-
-  it "should properly marshal/unmarshal Photo objects" do
-    original = fixtures.photo
-    marshalled = Marshal.load(Marshal.dump(original))
-    helpers.equivalent?(original,marshalled).should be_true
-  end
-
-  it "should properly marshal/unmarshal interesting photos" do
-    original = fixtures.interesting_photos
-    marshalled = Marshal.load(Marshal.dump(original))
-    helpers.equivalent?(original,marshalled).should be_true
+  context "InterestingPhotos" do
+    let(:subject){fixtures.interesting_photos}
+    it_behaves_like "any object wrapper"
   end
 
 end

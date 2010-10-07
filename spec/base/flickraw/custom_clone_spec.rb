@@ -31,55 +31,41 @@ describe APP::CustomClone do
     end
   end
 
-  describe "photo" do
-    it "should have distinct id for clone" do
-      other = photo.clone
-      same_ids?(photo,other).should be_false
+  describe "clone" do
+    shared_examples_for "cloning any flickraw response" do
+      it "has distinct ids for clone" do
+        other = subject.clone
+        same_ids?(photo,other).should be_false
+      end
+      it "has same id with itself" do
+        same_ids?(photo,photo).should be_true
+      end
     end
-    it "should have same id with itself" do
-      same_ids?(photo,photo).should be_true
+
+    context "photo" do
+      let(:subject){ photo}
+      it_behaves_like "cloning any flickraw response"
+    end
+
+    context "photos" do
+      let(:subject) { photos }
+      it_behaves_like "cloning any flickraw response"
+    end
+
+    context "photo_details" do
+      let(:subject) {photo_details}
+      it_behaves_like "cloning any flickraw response"
+    end
+
+    context "photo_sizes" do
+      let(:subject) { photo_sizes }
+      it_behaves_like "cloning any flickraw response"
+    end
+
+    context "photo_size" do
+      let(:subject) {photo_size}
+      it_behaves_like "cloning any flickraw response"
     end
   end
-
-  describe "photos" do
-    it "should have __id__ that is unique for clone"  do
-      other = photos.clone
-      same_ids?(photo,other).should be_false
-    end
-    it "should have same id with itself" do
-      same_ids?(photo,photo)
-    end
-  end
-
-  describe "photo_details" do
-    it "should have id that is unique for clone" do
-      other = photo_details.clone
-      same_ids?(photo_details,other).should be_false
-    end
-    it "should have same id with itself" do
-      same_ids?(photo_details,photo_details).should be_true
-    end
-  end
-
-  describe "photo_sizes" do
-    it "should have id that is unique for clone" do
-      other  = photo_sizes.clone
-      same_ids?(photo_sizes,other).should be_false
-    end
-    it "should have same id with itself" do
-      same_ids?(photo_sizes,photo_sizes)
-    end
-  end
-
-  describe "photo_size" do
-    it "should have id that is unique for clone" do
-      other = photo_size.clone
-      same_ids?(photo_size,other).should be_false
-    end
-    it "should have same id with itself" do
-      same_ids?(photo_size,photo_size)
-    end
-  end
-
 
 end
