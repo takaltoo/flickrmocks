@@ -57,6 +57,12 @@ module FlickrMocks
       @__delegated_to_object__ = @__delegated_to_object__.clone
     end
 
+    def owner_id
+      # keeping this away from delegated to methods because it is not a native
+      # FlickRaw::Response method
+      @__delegated_to_object__.owner_id
+    end
+
     def ==(other)
       if other.nil?
         false 

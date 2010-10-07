@@ -170,6 +170,15 @@ describe APP::PhotoDetails do
       end
     end
 
+    describe ":owner_id" do
+      it "should respond to :owner_id" do
+        subject.should respond_to(:owner_id)
+      end
+      it "should return proper owner_id" do
+        subject.owner_id.should eq(photo.owner_id)
+      end
+    end
+
   end
 
 end

@@ -12,6 +12,8 @@ module FlickrMocks
       attr_accessor :delegated_methods,:delegated_methods_extended
     end
 
+
+
     def initialize(photo)
       raise TypeError, 'FlickRaw::Response expected' unless photo.is_a? FlickRaw::Response
       @__delegated_to_object__= photo
@@ -55,6 +57,10 @@ module FlickrMocks
         return owner.nsid if owner.respond_to?(:nsid)
         return owner.to_s
       end
+    end
+
+    def photo_id
+      id
     end
 
     def ==(other)

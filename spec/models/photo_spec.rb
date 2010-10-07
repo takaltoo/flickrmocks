@@ -192,5 +192,14 @@ describe APP::Photo do
       subject.instance_eval("@__delegated_to_object__.__id__").should_not eq(other.instance_eval("@__delegated_to_object__.__id__"))
     end
   end
+
+  describe "photo_id" do
+    it "should respond to :photo_id" do
+      subject.should respond_to(:photo_id)
+    end
+    it "should give correct photo_id" do
+      subject.photo_id.should eq(subject.id)
+    end
+  end
   
 end
