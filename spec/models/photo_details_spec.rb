@@ -16,7 +16,7 @@ describe APP::PhotoDetails do
   let(:photo_details) { APP::Photo.new photo_details_fixture }
   let(:sizes) { APP::PhotoSizes.new fixtures.photo_sizes }
 
-  let(:subject){ APP::PhotoDetails.new photo_details,sizes}
+ subject { APP::PhotoDetails.new photo_details,sizes}
 
 
   describe "initialization" do
@@ -30,16 +30,16 @@ describe APP::PhotoDetails do
     end
     describe "success" do
       it "should accept Photo object for photo" do
-        lambda{APP::PhotoDetails.new photo_details,sizes}.should_not raise_error
+        expect {APP::PhotoDetails.new photo_details,sizes}.to_not raise_error
       end
       it "should accept Flickr response for photo" do
-        lambda{APP::PhotoDetails.new photo_details_fixture,sizes}.should_not raise_error
+        expect {APP::PhotoDetails.new photo_details_fixture,sizes}.to_not raise_error
       end
       it "should accept PhotoSize for size" do
-        lambda{APP::PhotoDetails.new photo_details,sizes}
+        expect {APP::PhotoDetails.new photo_details,sizes}.to_not raise_error
       end
       it "should accept Flickr response for size" do
-        lambda{APP::PhotoDetails.new photo_details,photo_sizes_fixture}.should_not raise_error
+        expect {APP::PhotoDetails.new photo_details,photo_sizes_fixture}.to_not raise_error
       end
 
     end
@@ -48,7 +48,7 @@ describe APP::PhotoDetails do
   describe "delegation methods to photo" do
     it "should properly delegate to photo methods" do
       subject.delegated_methods.each do |method|
-        subject.send(method).should eq(photo_details_fixture.send(method))
+        subject.send(method).should == photo_details_fixture.send(method)
       end
     end
   end
@@ -71,7 +71,7 @@ describe APP::PhotoDetails do
       subject.should respond_to(:owner_name)
     end
     it "should return proper :owner_name" do
-      subject.owner_name.should eql(fixtures.photo_details.owner.realname)
+      subject.owner_name.should == fixtures.photo_details.owner.realname
     end
   end
   
@@ -80,7 +80,7 @@ describe APP::PhotoDetails do
       subject.should respond_to(:owner_username)
     end
     it "should return proper :owner_username" do
-      subject.owner_username.should eql(fixtures.photo_details.owner.username)
+      subject.owner_username.should == fixtures.photo_details.owner.username
     end
   end
   
@@ -96,14 +96,14 @@ describe APP::PhotoDetails do
       describe "respond_to?" do
         it "should recognize delegated methods" do
           extended_delegated_methods.each do |method|
-            subject.send(method).should eq(photo_details_fixture.send(method))
+            subject.send(method).should == photo_details_fixture.send(method)
           end
         end
       end
 
       describe "delegated_methods" do
         it "should contain all methods from photo_details" do
-          subject.delegated_methods.sort.should eq(extended_delegated_methods.sort)
+          subject.delegated_methods.sort.should == extended_delegated_methods.sort
         end
       end
 
@@ -119,7 +119,7 @@ describe APP::PhotoDetails do
       describe "respond_to?" do
         it "should recognize delegated methods" do
           delegated_methods.each do |method|
-            subject.send(method).should eq(photo_fixture.send(method))
+            subject.send(method).should == photo_fixture.send(method)
           end
         end
       end
@@ -139,34 +139,33 @@ describe APP::PhotoDetails do
 
     describe "clone" do
       it "should have independent @sizes" do
-        subject.sizes.__id__.should_not eq(subject.clone.sizes.__id__)
+        subject.sizes.__id__.should_not == subject.clone.sizes.__id__
       end
       it "should have an independent @__delegated_methods__" do
-        subject.instance_eval("@__delegated_methods__.__id__").should_not eq(
-          subject.clone.instance_eval("@__delegated_methods__.__id__"))
+        subject.instance_eval("@__delegated_methods__.__id__").should_not ==
+          subject.clone.instance_eval("@__delegated_methods__.__id__")
       end
       it "should have an independent @__delegated_to_object__" do
-        subject.instance_eval("@__delegated_to_object__.__id__").should_not eq(
+        subject.instance_eval("@__delegated_to_object__.__id__").should_not ==
           subject.clone.instance_eval("@__delegated_to_object__.__id__")
-        )
       end
     end
 
     describe ":==" do
       it "should be :== to itself" do
-        subject.should eq(subject)
+        subject.should == subject
       end
       it "should be :== to its clone" do
-        subject.should eq(subject.clone)
+        subject.should == subject.clone
       end
 
       it "should not == when one of delegated_to methods is different" do
         other = subject.clone
         other.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h')["location"]["country"].instance_eval('@h["place_id"]="new old place"')
-        subject.should_not eq(other)
+        subject.should_not == other
         # should equal when subject also set to new value
         subject.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h')["location"]["country"].instance_eval('@h["place_id"]="new old place"')
-        subject.should eq(other)
+        subject.should == other
       end
     end
 
@@ -175,10 +174,10 @@ describe APP::PhotoDetails do
         subject.should respond_to(:owner_id)
       end
       it "should return proper owner_id" do
-        subject.owner_id.should eq(photo.owner_id)
+        subject.owner_id.should == photo.owner_id
       end
     end
 
   end
-
 end
+

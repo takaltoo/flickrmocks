@@ -17,7 +17,7 @@ describe APP::Photo do
       end
       it "should respond properly to all delegated methods" do
         expected_methods.each do |method|
-          subject.send(method).should eq(photo_fixture.send(method))
+          subject.send(method).should ==photo_fixture.send(method)
         end
       end
     end
@@ -31,7 +31,7 @@ describe APP::Photo do
       end
       it "should respond properly to all delegated methods" do
         expected_methods.each do |method|
-          subject.send(method).should eq(photo_detail_fixture.send(method))
+          subject.send(method).should == photo_detail_fixture.send(method)
         end
       end
     end
@@ -40,25 +40,25 @@ describe APP::Photo do
   describe "photo url methods" do
     let(:base_url){"http://farm#{photo_fixture['farm']}.static.flickr.com/#{photo_fixture['server']}/#{photo_fixture['id']}_#{photo_fixture['secret']}"}
     it "should return :square url" do
-      subject.square.should eql("#{base_url}_s.jpg")
+      subject.square.should == "#{base_url}_s.jpg"
     end
     it "should return :thumbnail url" do
-      subject.thumbnail.should eql("#{base_url}_t.jpg")
+      subject.thumbnail.should == "#{base_url}_t.jpg"
     end
     it "should return :small url" do
-      subject.small.should eql("#{base_url}_m.jpg")
+      subject.small.should == "#{base_url}_m.jpg"
     end
     it "should return :medium url" do
-      subject.medium.should eql("#{base_url}.jpg")
+      subject.medium.should == "#{base_url}.jpg"
     end
     it "should return :large url" do
-      subject.large.should eql("#{base_url}_b.jpg")
+      subject.large.should == "#{base_url}_b.jpg"
     end
     it "should return :medium_640 url" do
-      subject.medium_640.should eql("#{base_url}_z.jpg")
+      subject.medium_640.should == "#{base_url}_z.jpg"
     end
     it "should return :medium 640 url" do
-      subject.send(:'medium 640').should eql("#{base_url}_z.jpg")
+      subject.send(:'medium 640').should == "#{base_url}_z.jpg"
     end
   end
 
@@ -67,7 +67,7 @@ describe APP::Photo do
       subject.should respond_to(:owner_url)
     end
     it "should return proper :owner_url" do
-      subject.owner_url.should eql("http://www.flickr.com/photos/#{photo_fixture['owner']}/#{photo_fixture['id']}")
+      subject.owner_url.should == "http://www.flickr.com/photos/#{photo_fixture['owner']}/#{photo_fixture['id']}"
     end
   end
 
@@ -76,7 +76,7 @@ describe APP::Photo do
       subject.should respond_to(:owner_id)
     end
     it "should return :owner_id" do
-      subject.owner_id.should eql(photo_fixture['owner'])
+      subject.owner_id.should == photo_fixture['owner']
     end
   end
 
@@ -85,7 +85,7 @@ describe APP::Photo do
       subject.should respond_to(:owner)
     end
     it "should return :owner" do
-      subject.owner.should eql(photo_fixture['owner'])
+      subject.owner.should == photo_fixture['owner']
     end
   end
 
@@ -112,7 +112,7 @@ describe APP::Photo do
 
       describe "delegated_methods" do
         it "should include all basic methods" do
-          photo_fixture.methods(false).push(:flickr_type).sort.should eq(subject.delegated_methods.sort)
+          photo_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_methods.sort
         end
       end
     end
@@ -135,7 +135,7 @@ describe APP::Photo do
 
       describe "delegated_methods" do
         it "should include all extended methods" do
-          photo_detail_fixture.methods(false).push(:flickr_type).sort.should eq(subject.delegated_methods.sort)
+          photo_detail_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_methods.sort
         end
       end
     end
@@ -144,14 +144,14 @@ describe APP::Photo do
   describe "==" do
     describe "basic photo" do
       it "should equal itself" do
-        subject.should eq(subject)
+        subject.should == subject
       end
       it "should be equal to clone of itself" do
-        subject.should eq(subject.clone)
+        subject.should == subject.clone
       end
 
       it "should not be equal to an object of a different class" do
-        subject.should_not eq([1,2,3,4])
+        subject.should_not == [1,2,3,4]
       end
       it "should be not be equal if single element different" do
         subject.delegated_methods.find_all do |value| value != :flickr_type end.each do |method|
@@ -163,7 +163,7 @@ describe APP::Photo do
           else subject.send(method)
           end
           other.instance_eval('@__delegated_to_object__').instance_eval('@h[method.to_s]=value')
-          subject.should_not eq(other)
+          subject.should_not == other
         end
       end
     end
@@ -172,15 +172,15 @@ describe APP::Photo do
       let(:subject){klass.new photo_detail_fixture}
 
       it "should equal itself" do
-        subject.should eq(subject)
+        subject.should == subject
       end
       it "should be equal to clone of itself" do
-        subject.should eq(subject.clone)
+        subject.should == subject.clone
       end
       it "should be equal if single element different" do
        other = subject.clone
        other.instance_eval('@__delegated_to_object__').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
-       subject.should_not eq(other)      
+       subject.should_not == other
       end
     end
     
@@ -189,7 +189,7 @@ describe APP::Photo do
   describe "initialize_copy" do
     it "should have a @__delegated_to_object__ that is distinct when cloned" do
       other = subject.clone
-      subject.instance_eval("@__delegated_to_object__.__id__").should_not eq(other.instance_eval("@__delegated_to_object__.__id__"))
+      subject.instance_eval("@__delegated_to_object__.__id__").should_not == other.instance_eval("@__delegated_to_object__.__id__")
     end
   end
 
@@ -198,7 +198,7 @@ describe APP::Photo do
       subject.should respond_to(:photo_id)
     end
     it "should give correct photo_id" do
-      subject.photo_id.should eq(subject.id)
+      subject.photo_id.should == subject.id
     end
   end
   

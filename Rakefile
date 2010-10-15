@@ -24,7 +24,7 @@ begin
 
     gem.add_development_dependency "thoughtbot-shoulda", ">= 2.10"
     gem.add_development_dependency "rspec", ">=2.0.0.beta.22"
-    gem.add_development_dependency "webrat"
+    gem.add_development_dependency "capybara"
     #gem.add_development_dependency 'ruby-debug19', :require => 'ruby-debug'
     gem.add_development_dependency 'factory_girl_rails', ">=1.0"
     gem.add_development_dependency 'mocha', '>=0.9.8'

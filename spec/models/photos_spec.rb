@@ -27,7 +27,7 @@ describe APP::Photos do
         value = klass.defaults.send(:[],key)
         expected = value*2
         klass.defaults.send(:[]=,key,expected)
-        klass.defaults.send(:[],key).should eql(expected)
+        klass.defaults.send(:[],key).should == expected
       end
     end
     describe "max_entries" do
@@ -35,7 +35,7 @@ describe APP::Photos do
         klass.defaults.should have_key(:max_entries)
       end
       it "should return proper :max_entries" do
-        klass.defaults[:max_entries].should eql(4000)
+        klass.defaults[:max_entries].should == 4000
       end
     end
     describe "per_page" do
@@ -43,7 +43,7 @@ describe APP::Photos do
         klass.defaults.should have_key(:per_page)
       end
       it "should have proper default for :per_page" do
-        klass.defaults[:per_page].should eql(50)
+        klass.defaults[:per_page].should == 50
       end
     end  
   end
@@ -55,12 +55,12 @@ describe APP::Photos do
     end
     it "should be able to get default keys as string" do
       klass.defaults.each_pair do |key,value|
-        subject.default(key.to_s).should eq(value)
+        subject.default(key.to_s).should == value
       end
     end
     it "should be able to get default keys as symbol" do
       klass.defaults.each_pair do |key,value|
-        subject.default(key.to_sym).should eq(value)
+        subject.default(key.to_sym).should == value
       end
     end
   end
@@ -71,7 +71,7 @@ describe APP::Photos do
       subject.should respond_to(:current_page)
     end
     it "should give correct value" do
-      subject.current_page.should eql(photo_fixture.page)
+      subject.current_page.should == photo_fixture.page
     end
   end
   
@@ -80,7 +80,7 @@ describe APP::Photos do
       subject.should respond_to(:per_page)
     end
     it "should give correct :per_page" do
-      subject.per_page.should eql(photo_fixture.perpage)
+      subject.per_page.should == photo_fixture.perpage
     end
   end
 
@@ -89,7 +89,7 @@ describe APP::Photos do
       subject.should respond_to(:perpage)
     end
     it "should give correct :perpage" do
-      subject.perpage.should eql(photo_fixture.perpage)
+      subject.perpage.should == photo_fixture.perpage
     end
   end
   
@@ -98,7 +98,7 @@ describe APP::Photos do
       subject.should respond_to(:total_entries)
     end
     it "should properly return :total_entries" do
-      subject.total_entries.should eql(photo_fixture.total.to_i)
+      subject.total_entries.should == photo_fixture.total.to_i
     end
   end
   
@@ -108,7 +108,7 @@ describe APP::Photos do
       subject.should respond_to(:max_entries)
     end
     it "should return proper max_entries" do
-      subject.max_entries.should eql(subject.default(:max_entries))
+      subject.max_entries.should == subject.default(:max_entries)
     end
   end
   
@@ -125,7 +125,7 @@ describe APP::Photos do
       end
     end
     it "should contain correct number of photos" do
-      subject.photos.length.should eq(fixtures.photos.map(&:id).length)
+      subject.photos.length.should == fixtures.photos.map(&:id).length
     end
   end
 
@@ -150,7 +150,7 @@ describe APP::Photos do
     it "should yield the photos" do
       index = 0
       subject.each do |photo|
-        photo.should eq(subject.photos[index])
+        photo.should == subject.photos[index]
         index +=1
       end
     end
@@ -161,7 +161,7 @@ describe APP::Photos do
       subject.should respond_to(:first)
     end
     it "should return the first photo" do
-      subject.first.should eq(subject.photos[0])
+      subject.first.should == subject.photos[0]
     end
   end
 
@@ -170,7 +170,7 @@ describe APP::Photos do
       subject.should respond_to(:last)
     end
     it "should return last photo" do
-      subject.last.should eq(subject.photos[-1])
+      subject.last.should == subject.photos[-1]
     end
   end
 
@@ -181,7 +181,7 @@ describe APP::Photos do
     it "should be able to properly index all elements" do
       index = 0
       subject.each do |elem|
-        subject[index].should eq(elem)
+        subject[index].should == elem
         index +=1
       end
     end
@@ -190,12 +190,12 @@ describe APP::Photos do
   describe "pages" do
     it "should limit total pages if greater than max_pages" do
       subject.stubs(:total_pages).returns(max_pages+20)
-      subject.pages.should eq(max_pages)
+      subject.pages.should == max_pages
     end
     it "should return total pages if not greater than max_pages" do
       pages = max_pages() - 1
       subject.stubs(:total_pages).returns(pages)
-      subject.pages.should eq(pages)
+      subject.pages.should == pages
     end
   end
 
@@ -204,7 +204,7 @@ describe APP::Photos do
       other = subject.clone
       index = 0
       subject.photos.each do |photo|
-        photo.__id__.should_not eq(other.photos[index].__id__)
+        photo.__id__.should_not == other.photos[index].__id__
         index += 1
       end
     end
@@ -215,22 +215,22 @@ describe APP::Photos do
       subject.should respond_to(:==)
     end
     it "should be :== to itself" do
-      subject.should eq(subject)
+      subject.should == subject
     end
     it "should be :== to clone of itself" do
-      subject.should eq(subject.clone)
+      subject.should == subject.clone
     end
     it "should not == random class" do
-      subject.should_not eq([1,2,3,4])
+      subject.should_not == [1,2,3,4]
     end
     it "should not == nil" do
-      subject.should_not eq(nil)
+      subject.should_not == nil
     end
 
     it "should not equal class when single element of one photo is different" do
       other = subject.clone
       other.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["farm"]=1234321')
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 

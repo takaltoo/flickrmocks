@@ -47,8 +47,8 @@ describe APP::PhotoDimensions do
     it "should return proper dimensions for square" do
       index = 0
       expected_sizes.each do |size|
-        subject.send(size).width.should eql(expected_dimensions[index][0])
-        subject.send(size).height.should eql(expected_dimensions[index][1])
+        subject.send(size).width.should == expected_dimensions[index][0]
+        subject.send(size).height.should == expected_dimensions[index][1]
         index +=1
       end
     end
@@ -61,7 +61,7 @@ describe APP::PhotoDimensions do
     it "should yield sizes" do
       index = 0
       subject.  each do |size|
-        size.should eql(expected_sizes[index])
+        size.should == expected_sizes[index]
         index+=1
       end
     end
@@ -74,9 +74,9 @@ describe APP::PhotoDimensions do
     it "should yield expected results" do
       index =0
       subject.each_with_dimensions do |size,dimensions|
-        size.should eql(expected_sizes[index])
-        dimensions.width.should eql(expected_dimensions[index][0])
-        dimensions.height.should eql(expected_dimensions[index][1])
+        size.should == expected_sizes[index]
+        dimensions.width.should == expected_dimensions[index][0]
+        dimensions.height.should == expected_dimensions[index][1]
         index+=1
       end
     end
@@ -89,7 +89,7 @@ describe APP::PhotoDimensions do
     it "should yield proper strigns" do
       index=0
       subject.each_dimensions_string do |string|
-        string.should eql("#{expected_sizes[index]} (#{expected_dimensions[index][0]}x#{expected_dimensions[index][1]})")
+        string.should == "#{expected_sizes[index]} (#{expected_dimensions[index][0]}x#{expected_dimensions[index][1]})"
         index +=1
       end
     end
@@ -109,19 +109,19 @@ describe APP::PhotoDimensions do
 
   describe "self.valid_size?" do
     it "should return false on bogus symbol" do
-      klass.valid_size?(:bogus).should eql(false)
+      klass.valid_size?(:bogus).should == false
     end
     it "should return false on bogus string" do
-      klass.valid_size?('bogus').should eql(false)
+      klass.valid_size?('bogus').should == false
     end
     it "should return true on valid sizes provided as symbol" do
       expected_sizes.each do |size|
-        klass.valid_size?(size.to_sym).should eql(true)
+        klass.valid_size?(size.to_sym).should == true
       end
     end
       it "should return true on valid sizes provided as string" do
       expected_sizes.each do |size|
-        klass.valid_size?(size.to_s).should eql(true)
+        klass.valid_size?(size.to_s).should == true
       end
     end
   end
@@ -152,33 +152,33 @@ describe APP::PhotoDimensions do
       subject.should respond_to(:to_s)
     end
     it "should return proper to_s string" do
-      subject.to_s.should eql(dimensions_string)
+      subject.to_s.should == dimensions_string
     end
   end
 
   describe "initialize_copy" do
     it "should have a independent @sizes attribute"do
-      subject.sizes.__id__.should_not eq(subject.clone.sizes.__id__)
+      subject.sizes.__id__.should_not == subject.clone.sizes.__id__
     end
     it "should have an independent @sizes elements" do
       other = subject.clone
       subject.sizes.keys.each do |key|
-        subject.sizes[key].__id__.should_not eq(other.sizes[key].__id__)
+        subject.sizes[key].__id__.should_not == other.sizes[key].__id__
       end
     end
   end
 
   describe ":==" do
     it "should == to itself" do
-      subject.should eq(subject)
+      subject.should == subject
     end
     it "should == its clone" do
-      subject.should eq(subject.clone)
+      subject.should == subject.clone
     end
     it "should not == its clone if a single element is different" do
       other = subject.clone
       other.sizes[:square].stubs(:width).returns(77123)
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 

@@ -11,19 +11,19 @@ describe APP::CustomCompare do
 
   shared_examples_for "any flickraw response fixture" do
     it "should be equal to itself" do
-      subject.should eq(subject)
+      subject.should == subject
     end
     it "should not be equal to nil" do
-      subject.should_not eq(nil)
+      subject.should_not == nil
     end
     it "should be equal to clone of itself" do
-      subject.should eq(subject.clone)
+      subject.should == subject.clone
     end
     it "should not equal a different class" do
-      subject.should_not eq([1,2,3,4])
+      subject.should_not == [1,2,3,4]
     end
     it "should not eq another response" do
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 
@@ -36,7 +36,7 @@ describe APP::CustomCompare do
     it "should not equal when single element is different" do
       other = subject.clone
       other.stubs(:title).returns(Faker::Lorem.sentence(3))
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 
@@ -49,7 +49,7 @@ describe APP::CustomCompare do
     it "should not eq itself with one field difference" do
       other = subject.clone
       other.stubs(:total).returns('123454321')
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 
@@ -62,7 +62,7 @@ describe APP::CustomCompare do
     it "should not eq itself with a single element different" do
       other = subject.clone
       subject.stubs(:farm).returns(123421)
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 
@@ -75,7 +75,7 @@ describe APP::CustomCompare do
     it "should not eq itself with single element difference" do
       other = subject.clone
       other.stubs(:canprint).returns(1234321)
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 
@@ -88,7 +88,7 @@ describe APP::CustomCompare do
     it "should not eq itself with single element difference" do
       other = subject.clone
       other.stubs(:width).returns(1234321)
-      subject.should_not eq(other)
+      subject.should_not == other
     end
   end
 

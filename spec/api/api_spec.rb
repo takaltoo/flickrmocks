@@ -19,14 +19,14 @@ describe APP::Api do
       api.defaults = @defaults
     end
     it "should contain expected keys" do
-      api.defaults.keys.sort.should  eq([:per_page,:license,:media,:extras,:tag_mode,:flickr_tag_modes].sort)
+      api.defaults.keys.sort.should  == [:per_page,:license,:media,:extras,:tag_mode,:flickr_tag_modes].sort
     end
 
     it "should be able to set the values" do
       expected = "#{Random.srand}"
       api.defaults.keys.each do |k|
         api.defaults[k] = expected
-        api.defaults[k].should eq(expected)
+        api.defaults[k].should == expected
       end
     end
   end
@@ -35,7 +35,7 @@ describe APP::Api do
     let(:per_page) {'5'}
     let(:search_terms) {'iran'}
     let(:base_url) {'http://www.example.com/'}
-    let(:subject){
+    subject {
         flickr.photos.stubs(:search).returns(photos)
         api.photos({:per_page=>per_page,:search_terms => search_terms})
     }
@@ -43,12 +43,12 @@ describe APP::Api do
       subject.should be_instance_of(APP::PhotoSearch)
     end
     it "should return proper search_terms" do
-      subject.search_terms.should eq('iran')
+      subject.search_terms.should == 'iran'
     end
   end
 
   describe "photos" do
-    let(:subject) {
+    subject {
       flickr.photos.stubs(:getInfo).returns(photo)
       api.photo({:photo =>photo.id,:secret => photo.secret})
     }
@@ -57,16 +57,16 @@ describe APP::Api do
       subject.should be_an_instance_of(APP::Photo)
     end
     it "should return object with proper id" do
-      subject.id.should eq(photo.id)
+      subject.id.should == photo.id
     end
     it "should return object with proper secret" do
-      subject.secret.should eq(photo.secret)
+      subject.secret.should == photo.secret
     end
   end
 
   describe "photo_sizes" do
     let(:small_photo){APP::PhotoSize.new(sizes[0])}
-    let(:subject) {
+    subject {
       flickr.photos.stubs(:getSizes).returns(sizes)
       api.photo_sizes(:photo => small_photo.id, :secret => small_photo.secret)
     }
@@ -75,18 +75,18 @@ describe APP::Api do
       subject.should be_an_instance_of(APP::PhotoSizes)
     end
     it "should return object of proper id" do
-      subject[0].id.should eq(small_photo.id)
+      subject[0].id.should == small_photo.id
     end
     it "should return object with proper secret" do
-      subject[0].secret.should eq(small_photo.secret)
+      subject[0].secret.should == small_photo.secret
     end
     it "should return correct number of photo sizes" do
-       subject.available_sizes.count.should eq(sizes.count)
+       subject.available_sizes.count.should == sizes.count
     end
   end
 
   describe "photo_details" do
-      let(:subject) {
+      subject {
         flickr.photos.stubs(:getSizes).returns(sizes)
         flickr.photos.stubs(:getInfo).returns(photo)
          api.photo_details(:photo => photo.id,:secret => photo.secret)
@@ -98,14 +98,14 @@ describe APP::Api do
       subject.sizes.should be_instance_of(APP::PhotoSizes)
     end
     it "should return a photo with proper id" do
-      subject.id.should eq(photo["id"])
+      subject.id.should == photo["id"]
     end 
   end
 
   describe "interesting_photos" do
     let(:base_url) {'http:://www.example.com/'}
     let(:date){'2004-11-20'}
-    let(:subject) {
+    subject {
       flickr.interestingness.stubs(:getList).returns(interesting_photos)
       api.interesting_photos({:date => date,:base_url => base_url})
     }
@@ -114,7 +114,7 @@ describe APP::Api do
       subject.should be_an_instance_of(APP::PhotoSearch)
     end
     it "should return proper date for photo" do
-      subject.date.should eq(date)
+      subject.date.should == date
     end
   end
 

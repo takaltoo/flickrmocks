@@ -64,7 +64,7 @@ describe APP::Fixtures do
     end
     it "should return a proper :repository" do
       expected = File.expand_path(File.dirname(__FILE__) + '/../fixtures') + '/'
-      klass.repository.should eq(expected)
+      klass.repository.should == expected
     end
   end
 

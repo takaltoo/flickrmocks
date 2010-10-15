@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-10-06}
+  s.date = %q{2010-10-15}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -113,7 +113,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
       s.add_development_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
-      s.add_development_dependency(%q<webrat>, [">= 0"])
+      s.add_development_dependency(%q<capybara>, [">= 0"])
       s.add_development_dependency(%q<factory_girl_rails>, [">= 1.0"])
       s.add_development_dependency(%q<mocha>, [">= 0.9.8"])
       s.add_development_dependency(%q<faker>, [">= 0.3.1"])
@@ -122,7 +122,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
       s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
-      s.add_dependency(%q<webrat>, [">= 0"])
+      s.add_dependency(%q<capybara>, [">= 0"])
       s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
       s.add_dependency(%q<mocha>, [">= 0.9.8"])
       s.add_dependency(%q<faker>, [">= 0.3.1"])
@@ -132,7 +132,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
     s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
-    s.add_dependency(%q<webrat>, [">= 0"])
+    s.add_dependency(%q<capybara>, [">= 0"])
     s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
     s.add_dependency(%q<mocha>, [">= 0.9.8"])
     s.add_dependency(%q<faker>, [">= 0.3.1"])

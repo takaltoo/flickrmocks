@@ -8,14 +8,14 @@ describe APP::Helpers do
 
   describe 'extension method' do
     it "should have correct extension" do
-      helpers.extension.should eq('.marshal')
+      helpers.extension.should == '.marshal'
     end
   end
 
   describe "fname_fixture method" do
     it "should give correct fixture file when symbol provided" do
       expected_fname = 'sample_file' + helpers.extension
-      helpers.fname_fixture(:sample_file).should eq(expected_fname)
+      helpers.fname_fixture(:sample_file).should == expected_fname
     end
   end
 
@@ -44,7 +44,7 @@ describe APP::Helpers do
         expected = [Random.rand,Random.rand]
         helpers.dump(expected,fname)
         actual = helpers.load(fname)
-        actual.should eq(expected)
+        actual.should == expected
       ensure
         File.delete fname
       end
@@ -54,15 +54,15 @@ describe APP::Helpers do
   describe "to_param" do
     it "should be able to translate a basic hash to parameters" do
       hash =  {:search_terms=>"iran", :page=>1}
-      helpers.to_param(hash).should eq("page=1&search_terms=iran")
+      helpers.to_param(hash).should == "page=1&search_terms=iran"
     end
     it "should escape special characters in keys" do
       hash = {:'search_&@#$terms'=>"iran"}
-      helpers.to_param(hash).should eq("search_%26%40%23%24terms=iran")
+      helpers.to_param(hash).should == "search_%26%40%23%24terms=iran"
     end
     it "should escape special characters in value" do
       hash = {:search_terms => 'iran!@#$%po&*()'}
-      helpers.to_param(hash).should eq("search_terms=iran%21%40%23%24%25po%26%2A%28%29")
+      helpers.to_param(hash).should == "search_terms=iran%21%40%23%24%25po%26%2A%28%29"
     end
   end
   

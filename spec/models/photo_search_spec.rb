@@ -27,7 +27,7 @@ describe APP::PhotoSearch do
           value = klass.send[key]
           expected = value*2
           klass[key] = expected
-          klass[key].should eq(expected)
+          klass[key].should == expected
         end
       end
     end
@@ -98,12 +98,12 @@ describe APP::PhotoSearch do
     let(:subject) {klass.new(photos_fixture,{:search_terms => search_terms})}
 
     it "should return proper search terms" do
-      subject.search_terms.should eq(search_terms)
+      subject.search_terms.should == search_terms
     end
     describe "empty search terms" do
       let(:subject){ klass.new(photos_fixture,{}).search_terms}
       it "should return empty string when nil search terms provided" do
-        subject.should eq("")
+        subject.should == ""
       end
     end
   end
@@ -112,12 +112,12 @@ describe APP::PhotoSearch do
     let(:page) {20}
     let(:subject) {klass.new(photos_fixture,{:page => page})}
     it "should return proper page" do
-      subject.page.should eq(page)
+      subject.page.should == page
     end
     describe "empty page" do
       let(:subject) {klass.new(photos_fixture,{})}
       it "should return 1 if no page specified" do
-        subject.page.should eq(1)
+        subject.page.should == 1
       end
     end
   end
@@ -127,7 +127,7 @@ describe APP::PhotoSearch do
     let(:subject) {klass.new(photos_fixture,{:date => date})}
 
     it "should return proper date" do
-      subject.date.should eq(date)
+      subject.date.should == date
     end
     describe "empty date" do
       let(:subject) {klass.new(photos_fixture,{})}
@@ -144,7 +144,7 @@ describe APP::PhotoSearch do
     it "should be able to iterate through all items" do
       index = 0
       subject.photos.each do |photo|
-        subject[index].should eq(photo)
+        subject[index].should == photo
         index+=1
       end
     end
@@ -155,7 +155,7 @@ describe APP::PhotoSearch do
       subject.should respond_to(:first)
     end
     it "should give proper first item" do
-      subject.first.should eq(subject.photos[0])
+      subject.first.should == subject.photos[0]
     end
   end
 
@@ -164,7 +164,7 @@ describe APP::PhotoSearch do
       subject.should respond_to(:last)
     end
     it "should give proper last item" do
-      subject.last.should eq(subject.photos[-1])
+      subject.last.should == subject.photos[-1]
     end
   end
 
@@ -175,7 +175,7 @@ describe APP::PhotoSearch do
     it "should yield appropriate object" do
       index = 0
       subject.each do |photo|
-        photo.should eq(subject.photos[index])
+        photo.should == subject.photos[index]
         index+=1
       end
     end
@@ -189,7 +189,7 @@ describe APP::PhotoSearch do
       end
       it "should return correct value" do
         subject.delegated_methods.reject do |v| v==:photos end.each do |method|
-          subject.send(method).should  eq(subject.photos.send(method))
+          subject.send(method).should  == subject.photos.send(method)
         end
       end
     end
@@ -221,35 +221,35 @@ describe APP::PhotoSearch do
     describe "no page given"
     it "should return proper search params when all options specified" do
       options = {:page => 20, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params.should eq(options)
+      klass.new(photos_fixture,options).url_params.should == options
     end
     it "should not return :date if empty" do
       options = {:page => 20, :date => nil, :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params.should eq(:page => 20, :search_terms => 'iran,shiraz')
+      klass.new(photos_fixture,options).url_params.should == {:page => 20, :search_terms => 'iran,shiraz'}
     end
     it "should return page=1 if page is empty" do
       options = {:page => nil, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params.should eq(:date => '2010-12-20',
+      klass.new(photos_fixture,options).url_params.should == {:date => '2010-12-20',
         :search_terms => 'iran,shiraz',
-        :page=>1)
+        :page=>1}
     end
     it "should return yesterday for date if date is empty and search_terms is empty" do
       options = {:page => 2, :date => nil, :search_terms => nil}
-      klass.new(photos_fixture,options).url_params.should eq(:date => APP::Api.time, :page => 2)
+      klass.new(photos_fixture,options).url_params.should == {:date => APP::Api.time, :page => 2}
     end
   end
 
   describe "page given" do
     it "should take passed in page" do
       options = {:page => 20, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params(:page => 3).should eq(options.clone.merge(:page => 3))
+      klass.new(photos_fixture,options).url_params(:page => 3).should == options.clone.merge(:page => 3)
     end
   end
 
   describe "url_params_string" do
     it "should return proper search params when all options specified" do
       options = {:page => 20, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params_string(options).should eq('date=2010-12-20&page=20&search_terms=iran%2Cshiraz')
+      klass.new(photos_fixture,options).url_params_string(options).should == 'date=2010-12-20&page=20&search_terms=iran%2Cshiraz'
     end
   end
 
@@ -259,24 +259,24 @@ describe APP::PhotoSearch do
       index = -1
       subject.photos.each do |photo|
         index +=1
-        photo.__id__.should_not eq(other.photos[index].__id__)
+        photo.__id__.should_not == other.photos[index].__id__
       end
     end
   end
 
   describe "==" do
     it "should be equal to itself" do
-      subject.should eq(subject)
+      subject.should == subject
     end
     it "should be equal to clone of itself" do
-      subject.should eq(subject.clone)
+      subject.should == subject.clone
     end
     it "should not equal when one element of photo is different" do
       other = subject.clone
       other.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["server"]="1234321"')
-      subject.should_not eq(other)
+      subject.should_not == other
       subject.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["server"]="1234321"')
-      subject.should eq(other)
+      subject.should == other
     end
   end
 

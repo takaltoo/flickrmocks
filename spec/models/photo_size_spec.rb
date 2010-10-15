@@ -19,7 +19,7 @@ describe APP::PhotoSize do
       size.should respond_to :size
     end
     it "should return proper size" do
-      size.size.should eql(size_fixture.label.downcase.sub('_',' ').to_s)
+      size.size.should == size_fixture.label.downcase.sub('_',' ').to_s
     end
   end
 
@@ -28,7 +28,7 @@ describe APP::PhotoSize do
       size.should respond_to :id
     end
     it "should return proper :id" do
-      size.id.should eql(size_fixture.source.split('/')[-1].split('_')[0])
+      size.id.should == size_fixture.source.split('/')[-1].split('_')[0]
     end
   end
 
@@ -37,14 +37,14 @@ describe APP::PhotoSize do
       size.should respond_to :secret
     end
     it "should return :secret" do
-      size.secret.should eql(size_fixture.source.split('/')[-1].split('_')[1])
+      size.secret.should == size_fixture.source.split('/')[-1].split('_')[1]
     end
   end
 
   describe "delegation methods" do
     it "should delegate to FlickRaw::Response" do
       expected_methods.each do |method|
-        size.send(method).should eq(size_fixture.send(method))
+        size.send(method).should == size_fixture.send(method)
       end
     end
   end
@@ -52,10 +52,10 @@ describe APP::PhotoSize do
   describe "==" do
 
     it "should be == to clone of itself" do
-      size.should eq(size.clone)
+      size.should == size.clone
     end
     it "should not == to another class" do
-      size.should_not eq([1,2,3,4])
+      size.should_not == [1,2,3,4]
     end
     it "should detect a single attribute error" do
 
@@ -67,7 +67,7 @@ describe APP::PhotoSize do
         end
         other = size.clone
         other.stub(method).returns(value)
-        size.should_not eq(other)
+        size.should_not == other
       end
     end
   end
@@ -76,7 +76,7 @@ describe APP::PhotoSize do
     it "should be have unique ids compared to clone" do
       subject = size
       other = subject.clone
-      subject.instance_eval('@__delegated_to_object__.__id__').should_not eq(other.instance_eval('@__delegated_to_object__.__id__'))
+      subject.instance_eval('@__delegated_to_object__.__id__').should_not == other.instance_eval('@__delegated_to_object__.__id__')
     end
   end
 

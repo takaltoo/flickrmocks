@@ -40,7 +40,7 @@ describe APP::PhotoSizes do
       subject.should respond_to(:id)
     end
     it "should give correct id" do
-      subject.id.should eql(photo_size_fixture.source.split('/')[-1].split('_')[0])
+      subject.id.should == photo_size_fixture.source.split('/')[-1].split('_')[0]
     end
   end
   describe "secret" do
@@ -48,7 +48,7 @@ describe APP::PhotoSizes do
       subject.should respond_to(:secret)
     end
     it "should give correct secret" do
-      subject.secret.should eql(photo_size_fixture.source.split('/')[-1].split('_')[1])
+      subject.secret.should == photo_size_fixture.source.split('/')[-1].split('_')[1]
     end
   end
   describe "first" do
@@ -56,7 +56,7 @@ describe APP::PhotoSizes do
       subject.should respond_to(:first)
     end
     it "should have proper first method" do
-      subject.first.should eq(subject[0])
+      subject.first.should == subject[0]
     end
   end
 
@@ -65,7 +65,7 @@ describe APP::PhotoSizes do
       subject.should respond_to(:last)
     end
     it "should have proper last method" do
-      subject.last.should eq(subject[-1])
+      subject.last.should == subject[-1]
     end
   end
 
@@ -74,7 +74,7 @@ describe APP::PhotoSizes do
       subject.send(:'medium 640').should_not be_nil
     end
     it ":'medium 640' should return same as :medium_640" do
-      subject.send(:'medium 640').should eq(subject.send(:medium_640))
+      subject.send(:'medium 640').should == subject.send(:medium_640)
     end
   end
 
@@ -104,7 +104,7 @@ describe APP::PhotoSizes do
       subject.each do |size|
         count+=1
       end
-      count.should eq(photo_sizes_fixture.map(&:label).length)
+      count.should == photo_sizes_fixture.map(&:label).length
     end
   end
 
@@ -115,7 +115,7 @@ describe APP::PhotoSizes do
     it "should be able to shadow each" do
       index = 0
       subject.each do |v|
-        subject[index].should eq(v)
+        subject[index].should == v
         index+=1
       end
     end
@@ -126,7 +126,7 @@ describe APP::PhotoSizes do
       subject.should respond_to(:all)
     end
     it "should return the same object as :sizes" do
-      subject.all.should eq(subject.sizes)
+      subject.all.should == subject.sizes
     end
   end
 
@@ -152,7 +152,7 @@ describe APP::PhotoSizes do
     end
     it "should return expected string" do
       expected = subject.sizes.map do |size| "#{size.label.downcase.sub(' ','_')}:#{size.width}x#{size.height}" end.join(',')
-      subject.to_s.should eql(expected)
+      subject.to_s.should == expected
     end
   end
 
@@ -180,7 +180,7 @@ describe APP::PhotoSizes do
 
     it "should return expected results" do
       (klass.possible_sizes - possible_sizes).should be_empty
-      klass.possible_sizes.length.should eq(possible_sizes.length)
+      klass.possible_sizes.length.should == possible_sizes.length
     end
 
   end
@@ -189,7 +189,7 @@ describe APP::PhotoSizes do
     it "should return size for all available sizes" do
       index = 0
       subject.available_sizes.each do |size|
-        subject.send(size).should eq(APP::PhotoSize.new(photo_sizes_fixture[index]))
+        subject.send(size).should == APP::PhotoSize.new(photo_sizes_fixture[index])
         index += 1
       end
     end
@@ -203,23 +203,23 @@ describe APP::PhotoSizes do
 
   describe "==" do
     it "should be == to itself" do
-      subject.should eq(subject)
+      subject.should == subject
     end
     it "should be == to clone of itself" do
-      subject.should eq(subject.clone)
+      subject.should == subject.clone
     end
     it "should not be equal to wrong class" do
-      subject.should_not eq(2)
+      subject.should_not == 2
     end
     it "should not be equal if available sizes is different" do
       other = subject.clone
       other.stubs(:available_sizes).returns(subject.available_sizes[-1])
-      subject.should_not eq(other)
+      subject.should_not == other
     end
     it "should not be equal if one element of the sizes object is different" do
       other = subject.clone
       other.sizes[0].instance_eval('@__delegated_to_object__').instance_eval('@h["label"] = "random size"')
-      subject.should_not eq(other)
+      subject.should_not == other
     end
 
   end
@@ -229,13 +229,13 @@ describe APP::PhotoSizes do
       other = subject.clone
       index = 0
       subject.each do |size|
-        size.__id__.should_not eq(other[index].__id__)
+        size.__id__.should_not == other[index].__id__
         index+=1
       end
     end
     it "should create a duplicate copy of @available_sizes" do
       other = subject.clone
-      subject.available_sizes.__id__.should_not eq(other.available_sizes.__id__)
+      subject.available_sizes.__id__.should_not == other.available_sizes.__id__
     end
   end
 
