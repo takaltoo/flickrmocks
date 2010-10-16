@@ -234,4 +234,13 @@ describe APP::Photos do
     end
   end
 
+  describe "size" do
+    it "should respond to :size" do
+      subject.should respond_to(:size)
+    end
+    it "should give the correct size" do
+      subject.size.should == subject.photos.size
+    end
+  end
+
 end

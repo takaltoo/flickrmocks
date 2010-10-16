@@ -67,6 +67,15 @@ describe APP::PhotoDimensions do
     end
   end
 
+  describe "size" do
+    it "should respond to :size" do
+      subject.should respond_to(:size)
+    end
+    it "should return correct size" do
+      subject.size.should == subject.sizes.keys.length
+    end
+  end
+
   describe ":each_with_dimensions" do
     it "should respond to :each_with_dimensions" do
       subject.should respond_to(:each_with_dimensions)

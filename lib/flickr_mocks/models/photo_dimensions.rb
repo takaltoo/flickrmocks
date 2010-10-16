@@ -59,6 +59,10 @@ module FlickrMocks
       end
     end
 
+    def size
+      sizes.keys.length
+    end
+
     def each_with_dimensions
       PhotoDimensions.possible_sizes.each do |size|
         yield size.to_s,@sizes[size] if @sizes.has_key?(size)

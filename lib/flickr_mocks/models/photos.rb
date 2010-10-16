@@ -84,6 +84,10 @@ module FlickrMocks
         previous && current
       end
     end
+
+    def size
+      photos.size
+    end
     
     private
     def current_page=(value)

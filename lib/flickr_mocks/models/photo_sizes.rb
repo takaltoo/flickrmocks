@@ -55,8 +55,8 @@ module FlickrMocks
       @sizes.empty?
     end
 
-    # required for HOBO I think?
-    def member_class
+    def size
+      all.size
     end
 
 

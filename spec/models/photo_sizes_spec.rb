@@ -17,7 +17,7 @@ describe APP::PhotoSizes do
         subject
   }
 
-  let(:subject){APP::PhotoSizes.new photo_sizes_fixture}
+  subject {APP::PhotoSizes.new photo_sizes_fixture}
   
 
   describe ":class" do
@@ -236,6 +236,15 @@ describe APP::PhotoSizes do
     it "should create a duplicate copy of @available_sizes" do
       other = subject.clone
       subject.available_sizes.__id__.should_not == other.available_sizes.__id__
+    end
+  end
+
+  describe "size" do
+    it "should respond to method :size" do
+      subject.should respond_to(:size)
+    end
+    it "should return proper number of sizes" do
+      subject.size.should == subject.all.size
     end
   end
 
