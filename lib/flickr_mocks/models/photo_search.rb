@@ -42,6 +42,9 @@ module FlickrMocks
         yield photo
       end
     end
+    def size
+      photos.size
+    end
 
     def method_missing(id,*args,&block)
       return photos.send(id,*args,&block) if delegated_methods.include?(id)

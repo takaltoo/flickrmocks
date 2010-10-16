@@ -181,6 +181,15 @@ describe APP::PhotoSearch do
     end
   end
 
+  describe "#size" do
+    it "should respond to method" do
+      subject.should respond_to(:size)
+    end
+    it "should return the correct size" do
+      subject.size.should == subject.photos.size
+    end
+  end
+
 
   describe "metaprogramming methods" do
     describe "delegated_methods" do
