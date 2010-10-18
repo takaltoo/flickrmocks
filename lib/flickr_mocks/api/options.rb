@@ -30,8 +30,7 @@ module FlickrMocks
     end
 
     def self.author_options(params)
-      options = self.search_options(params)
-     
+      options = self.search_options(params)   
       options.delete :tags
       options
     end

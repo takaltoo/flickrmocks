@@ -48,7 +48,15 @@ describe APP::PhotoDetails do
   describe "delegation methods to photo" do
     it "should properly delegate to photo methods" do
       subject.delegated_methods.each do |method|
-        subject.send(method).should == photo_details_fixture.send(method)
+        subject.send(method).should == photo_details.send(method)
+      end
+    end
+  end
+
+  context "url helpers for photo should be available" do
+    it "should properly return image url for all sizes" do
+      [:square,:thumbnail,:small,:medium,:large,:medium_640,:owner_url].each do |method|
+        subject.send(method).should == photo.send(method)
       end
     end
   end
@@ -103,7 +111,7 @@ describe APP::PhotoDetails do
 
       describe "delegated_methods" do
         it "should contain all methods from photo_details" do
-          subject.delegated_methods.sort.should == extended_delegated_methods.sort
+          subject.delegated_methods.sort.should == (extended_delegated_methods + photo.url_methods).sort
         end
       end
 
@@ -126,7 +134,7 @@ describe APP::PhotoDetails do
 
       describe "delegated_methods" do
         it "should contain all methods from basic_photo" do
-          (subject.delegated_methods - delegated_methods).should be_empty
+          (subject.delegated_methods - delegated_methods - photo.url_methods).should be_empty
         end
       end
 
@@ -180,4 +188,5 @@ describe APP::PhotoDetails do
 
   end
 end
+
 

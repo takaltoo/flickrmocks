@@ -7,9 +7,11 @@ module FlickrMocks
       :isfavorite, :license, :rotation, :originalsecret, :originalformat, :owner,
       :title, :description, :visibility, :dates, :views, :editability, :usage,
       :comments, :notes, :tags, :location, :geoperms, :urls, :media,:flickr_type]
+
+    @url_methods =[:square,:thumbnail,:small,:medium,:large,:medium_640,:owner_url]
     
     class<< self
-      attr_accessor :delegated_methods,:delegated_methods_extended
+      attr_accessor :delegated_methods,:delegated_methods_extended,:url_methods
     end
 
 
@@ -95,6 +97,10 @@ module FlickrMocks
 
     def delegated_methods
       @extended_photo ? Photo.delegated_methods_extended : Photo.delegated_methods
+    end
+    
+    def url_methods
+      Photo.url_methods
     end
   end
 end

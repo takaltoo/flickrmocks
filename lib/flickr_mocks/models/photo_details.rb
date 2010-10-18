@@ -11,7 +11,7 @@ module FlickrMocks
       @sizes = sizes.class == FlickrMocks::PhotoSizes ?  sizes : PhotoSizes.new(sizes)
       @__delegated_to_object__ =  photo.is_a?(Photo) ?  photo : Photo.new(photo)
 
-      @__delegated_methods__ = @__delegated_to_object__.delegated_methods
+      @__delegated_methods__ = @__delegated_to_object__.delegated_methods + @__delegated_to_object__.url_methods
     end
 
     def owner_name

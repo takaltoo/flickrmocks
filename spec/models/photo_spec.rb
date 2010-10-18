@@ -37,6 +37,16 @@ describe APP::Photo do
     end
   end
 
+  describe "url_methods" do
+    it "should respond to :url_methods" do
+      subject.should respond_to(:url_methods)
+    end
+    it "should return expected methods" do
+      subject.url_methods.sort.should == [:square,:thumbnail,:small,:medium,
+        :large,:medium_640,:owner_url].sort
+    end
+  end
+
   describe "photo url methods" do
     let(:base_url){"http://farm#{photo_fixture['farm']}.static.flickr.com/#{photo_fixture['server']}/#{photo_fixture['id']}_#{photo_fixture['secret']}"}
     it "should return :square url" do
@@ -178,9 +188,9 @@ describe APP::Photo do
         subject.should == subject.clone
       end
       it "should be equal if single element different" do
-       other = subject.clone
-       other.instance_eval('@__delegated_to_object__').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
-       subject.should_not == other
+        other = subject.clone
+        other.instance_eval('@__delegated_to_object__').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
+        subject.should_not == other
       end
     end
     
