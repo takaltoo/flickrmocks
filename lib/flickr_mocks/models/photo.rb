@@ -19,7 +19,7 @@ module FlickrMocks
     def initialize(photo)
       raise TypeError, 'FlickRaw::Response expected' unless photo.is_a? FlickRaw::Response
       @__delegated_to_object__= photo
-      @extended_photo = (Photo.delegated_methods_extended - photo.methods).empty? ? true : false
+      @extended_photo = photo.methods.include?(:originalsecret)
     end
 
     # Return urls for various sizes
