@@ -5,7 +5,7 @@ require 'fileutils'
 # used for providing fixtures to users of the gem
 namespace :fixtures do
   desc 'generate all fixtures for USERS of the GEM'
-  task :all => [:photos,:interesting_photos,:author_photos,:photo,:photo_details,
+  task :all => [:photos,:empty_photos,:interesting_photos,:author_photos,:photo,:photo_details,
                    :photo_sizes,:photo_size,:expected_methods]
   
   desc 'generate fixture for flickr.photos.search'
@@ -13,6 +13,13 @@ namespace :fixtures do
     config_flickr
     dump default_photos,:photos
   end
+
+  desc 'generated fixture for empty flickr.photos.search'
+  task :empty_photos => :repository do
+    config_flickr
+    dump default_empty_photos, :empty_photos
+  end
+
 
   desc 'generate fixture for flickr.interestingness.getList'
   task :interesting_photos => :repository do
@@ -50,11 +57,13 @@ namespace :fixtures do
     dump default_photo_sizes[0],:photo_size
   end
 
+
   desc 'expected methods'
   task :expected_methods => :repository do
     data = OpenStruct.new
     config_flickr
     data.photos = default_methods(default_photos)
+    data.empty_photos = default_methods(default_empty_photos)
     data.interesting_photos = default_methods(default_interesting_photos)
     data.author_photos = default_methods(default_author_photos)
     data.photo = default_methods(default_photo)
@@ -107,7 +116,7 @@ namespace :fixtures do
   end
 
   def default_photos
-    @default_photos ||= flickr.photos.search :tags => 'iran', :per_page => '50', :extras=>'license'
+    @default_photos ||= flickr.photos.search :tags => 'france', :per_page => '50', :extras=>'license'
     @default_photos
   end
 
@@ -139,6 +148,11 @@ namespace :fixtures do
   def default_photo_size
     @default_photo_size ||= default_photo_sizes[0]
     @default_photo_size
+  end
+
+  def default_empty_photos
+    @default_empty_photos ||= flickr.photos.search :tags => 'xyzgoogohowdy'
+    @default_empty_photos
   end
 
   def default_methods(obj)

@@ -5,7 +5,8 @@ describe APP::Photo do
   let(:fixtures){APP::Fixtures.new}
   let(:photo_fixture){fixtures.photo}
   let(:photo_detail_fixture){fixtures.photo_details}
-  let(:subject){klass.new photo_fixture}
+
+  subject {klass.new photo_fixture}
   
   describe "delegated methods" do
     describe "basic photo" do

@@ -9,7 +9,7 @@ describe APP::Fixtures do
 
   describe "expected fixtures present" do
     shared_examples_for "any flickraw fixture" do
-      let(:subject) {fixtures.send(fixture)}
+      subject {fixtures.send(fixture)}
       let(:expected_methods){fixtures.expected_methods.send(fixture)}
 
       it "should respond to method" do
@@ -54,6 +54,11 @@ describe APP::Fixtures do
 
     context "photo_size" do
       let(:fixture) {:photo_size}
+      it_behaves_like "any flickraw fixture"
+    end
+
+    context "empty_photos" do
+      let(:fixture){:empty_photos}
       it_behaves_like "any flickraw fixture"
     end
   end

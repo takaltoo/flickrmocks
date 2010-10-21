@@ -3,7 +3,7 @@ require 'ostruct'
 module FlickrMocks
   class Fixtures
     attr_accessor :photos,:interesting_photos,:author_photos,:photo,:photo_details,
-                      :photo_sizes,:photo_size,:expected_methods
+                      :photo_sizes,:photo_size,:expected_methods,:empty_photos
 
     def initialize
       @photos = load_fixture(:photos)
@@ -15,6 +15,8 @@ module FlickrMocks
       
       @photo_sizes = load_fixture(:photo_sizes)
       @photo_size = load_fixture(:photo_size)
+      
+      @empty_photos = load_fixture(:empty_photos)
 
       @expected_methods = load_fixture(:expected_methods)
       

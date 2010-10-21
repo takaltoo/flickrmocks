@@ -169,10 +169,10 @@ describe APP::PhotoDetails do
 
       it "should not == when one of delegated_to methods is different" do
         other = subject.clone
-        other.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h')["location"]["country"].instance_eval('@h["place_id"]="new old place"')
+        other.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h["secret"]="howdydoodygoo"')
         subject.should_not == other
         # should equal when subject also set to new value
-        subject.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h')["location"]["country"].instance_eval('@h["place_id"]="new old place"')
+        subject.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h["secret"]="howdydoodygoo"')
         subject.should == other
       end
     end

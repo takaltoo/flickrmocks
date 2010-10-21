@@ -13,7 +13,7 @@ require 'ruby-debug'
 require 'flickrmocks'
 
 Rspec.configure do |c|
-  #c.mock_with :mocha
+  c.mock_with :mocha
 
   APP = FlickrMocks
   FlickrFixtures = APP::Fixtures.new
