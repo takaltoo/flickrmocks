@@ -35,7 +35,7 @@ describe APP::CustomCompare do
 
     it "should not equal when single element is different" do
       other = subject.clone
-      other.stubs(:title).returns(Faker::Lorem.sentence(3))
+      other.stub(:title).and_return(Faker::Lorem.sentence(3))
       subject.should_not == other
     end
   end
@@ -48,7 +48,7 @@ describe APP::CustomCompare do
 
     it "should not eq itself with one field difference" do
       other = subject.clone
-      other.stubs(:total).returns('123454321')
+      other.stub(:total).and_return('123454321')
       subject.should_not == other
     end
   end
@@ -61,7 +61,7 @@ describe APP::CustomCompare do
 
     it "should not eq itself with a single element different" do
       other = subject.clone
-      subject.stubs(:farm).returns(123421)
+      subject.stub(:farm).and_return(123421)
       subject.should_not == other
     end
   end
@@ -74,7 +74,7 @@ describe APP::CustomCompare do
 
     it "should not eq itself with single element difference" do
       other = subject.clone
-      other.stubs(:canprint).returns(1234321)
+      other.stub(:canprint).and_return(1234321)
       subject.should_not == other
     end
   end
@@ -87,7 +87,7 @@ describe APP::CustomCompare do
 
     it "should not eq itself with single element difference" do
       other = subject.clone
-      other.stubs(:width).returns(1234321)
+      other.stub(:width).and_return(1234321)
       subject.should_not == other
     end
   end

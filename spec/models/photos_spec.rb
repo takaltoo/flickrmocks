@@ -6,9 +6,7 @@ describe APP::Photos do
   let(:fixtures){APP::Fixtures.new}
   let(:photo_fixture) {fixtures.photos}
 
-
-
-  let(:subject) {klass.new fixtures.photos}
+  subject {klass.new fixtures.photos}
   let(:max_pages){subject.default(:max_entries)/subject.default(:per_page)}
 
   describe "self.defaults instance variables" do
@@ -134,11 +132,11 @@ describe APP::Photos do
       subject.should respond_to(:capped?)
     end
     it "should return true when not all entries returned in search" do
-      subject.stubs(:total_entries).returns(subject.default(:max_entries)+1)
+      subject.stub(:total_entries).and_return(subject.default(:max_entries)+1)
       subject.should be_capped
     end
     it "should return false when not all entries are capped" do
-      subject.stubs(:total_entries).returns(subject.default(:max_entries))
+      subject.stub(:total_entries).and_return(subject.default(:max_entries))
       subject.should_not be_capped
     end
   end
@@ -189,12 +187,12 @@ describe APP::Photos do
 
   describe "pages" do
     it "should limit total pages if greater than max_pages" do
-      subject.stubs(:total_pages).returns(max_pages+20)
+      subject.stub(:total_pages).and_return(max_pages+20)
       subject.pages.should == max_pages
     end
     it "should return total pages if not greater than max_pages" do
       pages = max_pages() - 1
-      subject.stubs(:total_pages).returns(pages)
+      subject.stub(:total_pages).and_return(pages)
       subject.pages.should == pages
     end
   end

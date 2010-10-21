@@ -127,9 +127,5 @@ module FlickrMocks
       end
     end
 
-
-
-
-
   end
 end

@@ -36,7 +36,7 @@ describe APP::Api do
     let(:search_terms) {'iran'}
     let(:base_url) {'http://www.example.com/'}
     subject {
-        flickr.photos.stubs(:search).returns(photos)
+        flickr.photos.stub(:search).and_return(photos)
         api.photos({:per_page=>per_page,:search_terms => search_terms})
     }
     it "should return object of proper class" do
@@ -49,7 +49,7 @@ describe APP::Api do
 
   describe "photos" do
     subject {
-      flickr.photos.stubs(:getInfo).returns(photo)
+      flickr.photos.stub(:getInfo).and_return(photo)
       api.photo({:photo =>photo.id,:secret => photo.secret})
     }
       
@@ -67,7 +67,7 @@ describe APP::Api do
   describe "photo_sizes" do
     let(:small_photo){APP::PhotoSize.new(sizes[0])}
     subject {
-      flickr.photos.stubs(:getSizes).returns(sizes)
+      flickr.photos.stub(:getSizes).and_return(sizes)
       api.photo_sizes(:photo => small_photo.id, :secret => small_photo.secret)
     }
 
@@ -87,8 +87,8 @@ describe APP::Api do
 
   describe "photo_details" do
       subject {
-        flickr.photos.stubs(:getSizes).returns(sizes)
-        flickr.photos.stubs(:getInfo).returns(photo)
+        flickr.photos.stub(:getSizes).and_return(sizes)
+        flickr.photos.stub(:getInfo).and_return(photo)
          api.photo_details(:photo => photo.id,:secret => photo.secret)
       }
     it "should return an object of the proper class" do
@@ -106,7 +106,7 @@ describe APP::Api do
     let(:base_url) {'http:://www.example.com/'}
     let(:date){'2004-11-20'}
     subject {
-      flickr.interestingness.stubs(:getList).returns(interesting_photos)
+      flickr.interestingness.stub(:getList).and_return(interesting_photos)
       api.interesting_photos({:date => date,:base_url => base_url})
     }
 

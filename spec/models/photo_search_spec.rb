@@ -7,13 +7,10 @@ describe APP::PhotoSearch do
   let(:fixtures){APP::Fixtures.new}
   let(:photos_fixture) {fixtures.photos}
   let(:options) {{:search_terms => 'iran', :page => '20', :date => '2010-10-03'}}
-  subject {klass.new fixtures.photos,options}
+  subject { klass.new fixtures.photos,options }
   
-
-
   context "self.defaults accessor method" do
     it "should respond to defaults" do
-
       klass.should respond_to(:defaults)
     end
     context "set/get default values" do
@@ -96,13 +93,13 @@ describe APP::PhotoSearch do
 
   context "search_terms" do
     let(:search_terms){'shiraz,iran'}
-    let(:subject) {klass.new(photos_fixture,{:search_terms => search_terms})}
+    subject {klass.new(photos_fixture,{:search_terms => search_terms})}
 
     it "should return proper search terms" do
       subject.search_terms.should == search_terms
     end
     context "empty search terms" do
-      let(:subject){ klass.new(photos_fixture,{}).search_terms}
+      subject { klass.new(photos_fixture,{}).search_terms}
       it "should return empty string when nil search terms provided" do
         subject.should == ""
       end
@@ -111,12 +108,12 @@ describe APP::PhotoSearch do
 
   context "page" do
     let(:page) {20}
-    let(:subject) {klass.new(photos_fixture,{:page => page})}
+    subject {klass.new(photos_fixture,{:page => page})}
     it "should return proper page" do
       subject.page.should == page
     end
     context "empty page" do
-      let(:subject) {klass.new(photos_fixture,{})}
+      subject {klass.new(photos_fixture,{})}
       it "should return 1 if no page specified" do
         subject.page.should == 1
       end
@@ -125,13 +122,13 @@ describe APP::PhotoSearch do
 
   context "date" do
     let(:date) {'2010-09-10'}
-    let(:subject) {klass.new(photos_fixture,{:date => date})}
+    subject {klass.new(photos_fixture,{:date => date})}
 
     it "should return proper date" do
       subject.date.should == date
     end
     context "empty date" do
-      let(:subject) {klass.new(photos_fixture,{})}
+      subject {klass.new(photos_fixture,{})}
       it "should set date to be yesterday" do
         subject.date.should be_nil  
       end
@@ -290,8 +287,4 @@ describe APP::PhotoSearch do
     end
   end
 
-
 end
-
-
-

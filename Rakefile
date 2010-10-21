@@ -27,7 +27,6 @@ begin
     gem.add_development_dependency "capybara"
     #gem.add_development_dependency 'ruby-debug19', :require => 'ruby-debug'
     gem.add_development_dependency 'factory_girl_rails', ">=1.0"
-    gem.add_development_dependency 'mocha', '>=0.9.8'
     gem.add_development_dependency 'faker','>=0.3.1'
 
     gem.add_dependency "flickraw", ">=0.8.2"

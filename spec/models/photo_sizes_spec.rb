@@ -213,7 +213,7 @@ describe APP::PhotoSizes do
     end
     it "should not be equal if available sizes is different" do
       other = subject.clone
-      other.stubs(:available_sizes).returns(subject.available_sizes[-1])
+      other.stub(:available_sizes).and_return(subject.available_sizes[-1])
       subject.should_not == other
     end
     it "should not be equal if one element of the sizes object is different" do

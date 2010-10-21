@@ -7,10 +7,10 @@ describe APP::Photo do
   let(:photo_detail_fixture){fixtures.photo_details}
 
   subject {klass.new photo_fixture}
-  
-  describe "delegated methods" do
-    describe "basic photo" do
-      let(:subject){klass.new photo_fixture}
+
+  context "delegated methods" do
+    context "basic photo" do
+      subject {klass.new photo_fixture}
       let(:expected_methods){fixtures.expected_methods.photo}
 
       it "should be object of the proper class" do
@@ -23,8 +23,8 @@ describe APP::Photo do
       end
     end
 
-    describe "extended photo" do
-      let(:subject){klass.new photo_detail_fixture}
+    context "extended photo" do
+      subject {klass.new photo_detail_fixture}
       let(:expected_methods){fixtures.expected_methods.photo_details}
 
       it "should be of object of proper class" do
@@ -38,7 +38,7 @@ describe APP::Photo do
     end
   end
 
-  describe "url_methods" do
+  context "url_methods" do
     it "should respond to :url_methods" do
       subject.should respond_to(:url_methods)
     end
@@ -48,7 +48,7 @@ describe APP::Photo do
     end
   end
 
-  describe "photo url methods" do
+  context "photo url methods" do
     let(:base_url){"http://farm#{photo_fixture['farm']}.static.flickr.com/#{photo_fixture['server']}/#{photo_fixture['id']}_#{photo_fixture['secret']}"}
     it "should return :square url" do
       subject.square.should == "#{base_url}_s.jpg"
@@ -73,7 +73,7 @@ describe APP::Photo do
     end
   end
 
-  describe "owner_url" do
+  context "owner_url" do
     it "should respond to :owner_url" do
       subject.should respond_to(:owner_url)
     end
@@ -82,7 +82,7 @@ describe APP::Photo do
     end
   end
 
-  describe "owner_id" do
+  context "owner_id" do
     it "should respond to :owner_id" do
       subject.should respond_to(:owner_id)
     end
@@ -91,7 +91,7 @@ describe APP::Photo do
     end
   end
 
-  describe "owner" do
+  context "owner" do
     it "should respond to :owner" do
       subject.should respond_to(:owner)
     end
@@ -100,11 +100,11 @@ describe APP::Photo do
     end
   end
 
-  describe "metaprogramming methods" do
-    describe "with basic photo" do
-      let(:subject) {klass.new(photo_fixture)}
+  context "metaprogramming methods" do
+    context "with basic photo" do
+      subject {klass.new(photo_fixture)}
 
-      describe ":respond_to?" do
+      context ":respond_to?" do
         it "should respond to all basic methods" do
           photo_fixture.methods(false).push(:flickr_type).each do |method|
             subject.should respond_to(method)
@@ -112,7 +112,7 @@ describe APP::Photo do
         end
       end
 
-      describe "public_methods" do
+      context "public_methods" do
         it "should include all basic methods" do
           (photo_fixture.methods(false).push(:flickr_type) - subject.public_methods).should be_empty
         end
@@ -121,30 +121,30 @@ describe APP::Photo do
         end
       end
 
-      describe "delegated_methods" do
+      context "delegated_methods" do
         it "should include all basic methods" do
           photo_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_methods.sort
         end
       end
     end
 
-    describe "with detailed photo" do
-      let(:subject) {klass.new(photo_detail_fixture)}
+    context "with detailed photo" do
+      subject {klass.new(photo_detail_fixture)}
 
-      describe "respond_to?" do
+      context "respond_to?" do
         it "should respond to all detailed photos" do
           photo_detail_fixture.methods(false).push(:flickr_type).each do |method|
             subject.should respond_to(method)
           end
         end
       end
-      describe "public_methods" do
+      context "public_methods" do
         it "should inlcude all extended methods" do
           (photo_detail_fixture.methods(false).push(:flickr_type) - subject.public_methods).should be_empty
         end
       end
 
-      describe "delegated_methods" do
+      context "delegated_methods" do
         it "should include all extended methods" do
           photo_detail_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_methods.sort
         end
@@ -152,8 +152,8 @@ describe APP::Photo do
     end
   end
 
-  describe "==" do
-    describe "basic photo" do
+  context "==" do
+    context "basic photo" do
       it "should equal itself" do
         subject.should == subject
       end
@@ -179,8 +179,8 @@ describe APP::Photo do
       end
     end
 
-    describe "detailed photo" do
-      let(:subject){klass.new photo_detail_fixture}
+    context "detailed photo" do
+      subject {klass.new photo_detail_fixture}
 
       it "should equal itself" do
         subject.should == subject
@@ -197,14 +197,14 @@ describe APP::Photo do
     
   end
 
-  describe "initialize_copy" do
+  context "initialize_copy" do
     it "should have a @__delegated_to_object__ that is distinct when cloned" do
       other = subject.clone
       subject.instance_eval("@__delegated_to_object__.__id__").should_not == other.instance_eval("@__delegated_to_object__.__id__")
     end
   end
 
-  describe "photo_id" do
+  context "photo_id" do
     it "should respond to :photo_id" do
       subject.should respond_to(:photo_id)
     end

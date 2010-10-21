@@ -186,7 +186,7 @@ describe APP::PhotoDimensions do
     end
     it "should not == its clone if a single element is different" do
       other = subject.clone
-      other.sizes[:square].stubs(:width).returns(77123)
+      other.sizes[:square].stub(:width).and_return(77123)
       subject.should_not == other
     end
   end

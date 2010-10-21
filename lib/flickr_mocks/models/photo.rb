@@ -12,6 +12,7 @@ module FlickrMocks
     def initialize(photo)
       raise TypeError, 'FlickRaw::Response expected' unless photo.is_a? FlickRaw::Response
       @__delegated_to_object__= photo
+      @__delegated_methods__ = @__delegated_to_object__.methods(false).push(:flickr_type)
       @extended_photo = photo.methods.include?(:originalsecret)
     end
 
@@ -89,7 +90,7 @@ module FlickrMocks
     end
 
     def delegated_methods
-      @__delegated_to_object__.methods(false).push(:flickr_type)
+      @__delegated_methods__
     end
     
     def url_methods

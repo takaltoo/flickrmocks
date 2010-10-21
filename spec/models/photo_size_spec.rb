@@ -58,8 +58,7 @@ describe APP::PhotoSize do
       size.should_not == [1,2,3,4]
     end
     it "should detect a single attribute error" do
-
-      APP::PhotoSize.delegated_methods do |method|
+      size.delegated_methods do |method|
         value = case size.send(method)
         when String then Faker::Lorem.sentence(3)
         when FixNum then Random.rand
