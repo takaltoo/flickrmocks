@@ -121,7 +121,7 @@ namespace :fixtures do
   end
 
   def default_interesting_photos
-    @default_intesting_photos ||= flickr.interestingness.getList :date => '2010-08-18', :per_page => '50', :extras=>'license'
+    @default_intesting_photos ||= flickr.interestingness.getList :date => '2009-01-15', :per_page => '50', :extras=>'license'
     @default_intesting_photos
   end
 

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-10-18}
+  s.date = %q{2010-10-21}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/models/photo_size.rb",
      "lib/flickr_mocks/models/photo_sizes.rb",
      "lib/flickr_mocks/models/photos.rb",
+     "lib/flickr_mocks/stubs.rb",
      "lib/flickr_mocks/version.rb",
      "lib/flickrmocks.rb",
      "spec/api/api_spec.rb",
@@ -60,8 +61,10 @@ Gem::Specification.new do |s|
      "spec/base/flickraw/custom_compare_spec.rb",
      "spec/base/flickraw/custom_marshal_spec.rb",
      "spec/base/helpers_spec.rb",
+     "spec/base/stubs_spec.rb",
      "spec/base/version_spec.rb",
      "spec/fixtures/author_photos.marshal",
+     "spec/fixtures/empty_photos.marshal",
      "spec/fixtures/expected_methods.marshal",
      "spec/fixtures/interesting_photos.marshal",
      "spec/fixtures/photo.marshal",
@@ -97,6 +100,7 @@ Gem::Specification.new do |s|
      "spec/api/options_spec.rb",
      "spec/api/sanitize_spec.rb",
      "spec/api/helper_spec.rb",
+     "spec/base/stubs_spec.rb",
      "spec/base/helpers_spec.rb",
      "spec/base/version_spec.rb",
      "spec/base/flickraw/custom_clone_spec.rb",
@@ -115,7 +119,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
       s.add_development_dependency(%q<capybara>, [">= 0"])
       s.add_development_dependency(%q<factory_girl_rails>, [">= 1.0"])
-      s.add_development_dependency(%q<mocha>, [">= 0.9.8"])
       s.add_development_dependency(%q<faker>, [">= 0.3.1"])
       s.add_runtime_dependency(%q<flickraw>, [">= 0.8.2"])
       s.add_runtime_dependency(%q<chronic>, [">= 0"])
@@ -124,7 +127,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
       s.add_dependency(%q<capybara>, [">= 0"])
       s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
-      s.add_dependency(%q<mocha>, [">= 0.9.8"])
       s.add_dependency(%q<faker>, [">= 0.3.1"])
       s.add_dependency(%q<flickraw>, [">= 0.8.2"])
       s.add_dependency(%q<chronic>, [">= 0"])
@@ -134,7 +136,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
     s.add_dependency(%q<capybara>, [">= 0"])
     s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
-    s.add_dependency(%q<mocha>, [">= 0.9.8"])
     s.add_dependency(%q<faker>, [">= 0.3.1"])
     s.add_dependency(%q<flickraw>, [">= 0.8.2"])
     s.add_dependency(%q<chronic>, [">= 0"])
