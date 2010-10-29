@@ -64,18 +64,16 @@ module FlickrMocks
       PhotoSearch.delegated_methods
     end
 
-    def url_params(options=nil)
-      sanitized_date = (date.nil? && search_terms.empty?) ? Api.time : date
-      sanitized_page = (options.nil? || options[:page].nil? || options[:page].to_s.empty?) ? page : options[:page]
-      results = {:page => sanitized_page,
-        :search_terms => search_terms,
-        :date => sanitized_date }
-      results.keep_if do |k,v|  !(v.nil? || v.to_s.empty?) end
+    def total_results
+      total_entries
     end
 
-    def url_params_string(options)
-      Helpers.to_param(options)
+    def url_params
+      { :search_terms => search_terms,
+        :date => (date.nil? && search_terms.empty?) ? Api.time : date
+      }.keep_if do |k,v|  !(v.nil? || v.to_s.empty?) end
     end
+
 
     def initialize_copy(other)
       super

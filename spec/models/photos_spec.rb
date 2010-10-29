@@ -99,7 +99,10 @@ describe APP::Photos do
       subject.total_entries.should == photo_fixture.total.to_i
     end
   end
+
   
+
+
   
   describe ":max_entries" do
     it "should respond to :max_entries" do

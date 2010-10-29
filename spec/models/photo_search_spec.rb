@@ -91,6 +91,15 @@ describe APP::PhotoSearch do
     end
   end
 
+  context "#total_results" do
+    it "should respond to" do
+      subject.should respond_to(:total_results)
+    end
+    it "should be alias to #total_entries" do
+      subject.total_results.should == subject.total_entries
+    end
+  end
+
   context "search_terms" do
     let(:search_terms){'shiraz,iran'}
     subject {klass.new(photos_fixture,{:search_terms => search_terms})}
@@ -224,41 +233,27 @@ describe APP::PhotoSearch do
     end
   end
 
+ 
+
+
   context "url_params" do
     context "no page given"
     it "should return proper search params when all options specified" do
-      options = {:page => 20, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
+      options = {:date => '2010-12-20', :search_terms => 'iran,shiraz'}
       klass.new(photos_fixture,options).url_params.should == options
     end
     it "should not return :date if empty" do
-      options = {:page => 20, :date => nil, :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params.should == {:page => 20, :search_terms => 'iran,shiraz'}
-    end
-    it "should return page=1 if page is empty" do
-      options = {:page => nil, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params.should == {:date => '2010-12-20',
-        :search_terms => 'iran,shiraz',
-        :page=>1}
+      options = {:date => nil, :search_terms => 'iran,shiraz'}
+      klass.new(photos_fixture,options).url_params.should == {:search_terms => 'iran,shiraz'}
     end
     it "should return yesterday for date if date is empty and search_terms is empty" do
-      options = {:page => 2, :date => nil, :search_terms => nil}
-      klass.new(photos_fixture,options).url_params.should == {:date => APP::Api.time, :page => 2}
+      options = {:date => nil, :search_terms => nil}
+      klass.new(photos_fixture,options).url_params.should == {:date => APP::Api.time}
     end
   end
 
-  context "page given" do
-    it "should take passed in page" do
-      options = {:page => 20, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params(:page => 3).should == options.clone.merge(:page => 3)
-    end
-  end
 
-  context "url_params_string" do
-    it "should return proper search params when all options specified" do
-      options = {:page => 20, :date => '2010-12-20', :search_terms => 'iran,shiraz'}
-      klass.new(photos_fixture,options).url_params_string(options).should == 'date=2010-12-20&page=20&search_terms=iran%2Cshiraz'
-    end
-  end
+
 
   context "clone" do
     it "should have photos that are independent of itself" do
