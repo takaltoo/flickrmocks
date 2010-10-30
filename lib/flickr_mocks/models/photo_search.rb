@@ -7,11 +7,16 @@ module FlickrMocks
     }
 
     @delegated_methods = [:current_page, :per_page, :total_entries,
-                                 :photos, :perpage, :capped?, :max_entries]
+      :photos, :perpage, :capped?, :max_entries]
+
+    @delegated_array_methods = [:[], :[]=, :at,:fetch, :first, :last,:each,
+                                        :each_index, :reverse_each,:length, :size,
+                                        :empty?, :find_index, :index,:rindex, :collect,
+                                        :map, :select, :keep_if, :values_at]
 
     class << self
       attr_accessor :defaults
-      attr_accessor :delegated_methods
+      attr_accessor :delegated_methods,:delegated_array_methods
     end
 
     def initialize(data,options={})
@@ -25,44 +30,30 @@ module FlickrMocks
       PhotoSearch.defaults[value.to_sym]
     end
 
-    def [](index)
-      photos[index]
-    end
-
-    def first
-      photos[0]
-    end
-
-    def last
-      photos[-1]
-    end
-
-    def each
-      photos.each do |photo|
-        yield photo
-      end
-    end
-    def size
-      photos.size
-    end
-
     def method_missing(id,*args,&block)
       return photos.send(id,*args,&block) if delegated_methods.include?(id)
+      return photos.send(id,*args,&block) if delegated_array_methods.include?(id)
       super
     end
 
     def respond_to?(method)
-        return true if delegated_methods.include?(method)
-        super
+      return true if delegated_methods.include?(method)
+      return true if delegated_array_methods.include?(method)
+      super
     end
 
     def methods
-     delegated_methods + super
+      delegated_methods + delegated_array_methods + super
     end
 
     def delegated_methods
       PhotoSearch.delegated_methods
     end
+
+    def delegated_array_methods
+      PhotoSearch.delegated_array_methods
+    end
+
 
     def total_results
       total_entries
@@ -129,7 +120,7 @@ module FlickrMocks
       begin
         Chronic.parse(date) unless date.nil?
       rescue
-         raise ArgumentError, "#{date} string can not be converted to Time object"
+        raise ArgumentError, "#{date} string can not be converted to Time object"
       end   
       @date = date
     end

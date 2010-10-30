@@ -144,58 +144,6 @@ describe APP::PhotoSearch do
     end
   end
 
-  context ":[]" do
-    it "should respond to :[]" do
-      subject.should respond_to(:[])
-    end
-    it "should be able to iterate through all items" do
-      index = 0
-      subject.photos.each do |photo|
-        subject[index].should == photo
-        index+=1
-      end
-    end
-  end
-
-  context "first" do
-    it "should respond to the first method" do
-      subject.should respond_to(:first)
-    end
-    it "should give proper first item" do
-      subject.first.should == subject.photos[0]
-    end
-  end
-
-  context "last" do
-    it "should respond to last method" do
-      subject.should respond_to(:last)
-    end
-    it "should give proper last item" do
-      subject.last.should == subject.photos[-1]
-    end
-  end
-
-  context ":each" do
-    it "should respond to :each method" do
-      subject.should respond_to(:each)
-    end
-    it "should yield appropriate object" do
-      index = 0
-      subject.each do |photo|
-        photo.should == subject.photos[index]
-        index+=1
-      end
-    end
-  end
-
-  context "#size" do
-    it "should respond to method" do
-      subject.should respond_to(:size)
-    end
-    it "should return the correct size" do
-      subject.size.should == subject.photos.size
-    end
-  end
 
 
   context "metaprogramming methods" do
@@ -208,6 +156,7 @@ describe APP::PhotoSearch do
           subject.send(method).should  == subject.photos.send(method)
         end
       end
+      it "should respond to array methods"
     end
 
     context "methods" do
@@ -230,6 +179,7 @@ describe APP::PhotoSearch do
           subject.should respond_to(method)
         end
       end
+      pending "it should respond to array methods"
     end
   end
 
@@ -252,6 +202,9 @@ describe APP::PhotoSearch do
     end
   end
 
+  context "array delegation methods to photos" do
+    pending "methods :[] to photos"
+  end
 
 
 
@@ -275,9 +228,9 @@ describe APP::PhotoSearch do
     end
     it "should not equal when one element of photo is different" do
       other = subject.clone
-      other.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["server"]="1234321"')
+      other.photos.last.instance_eval('@delegated_to_object').instance_eval('@h["server"]="1234321"')
       subject.should_not == other
-      subject.photos.last.instance_eval('@__delegated_to_object__').instance_eval('@h["server"]="1234321"')
+      subject.photos.last.instance_eval('@delegated_to_object').instance_eval('@h["server"]="1234321"')
       subject.should == other
     end
   end

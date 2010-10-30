@@ -7,9 +7,13 @@ module FlickrMocks
       :max_entries => 4000,
       :per_page => 50
     }
+    @delegated_instance_methods = [:[], :at,:fetch, :first, :last,:each,
+                                        :each_index, :reverse_each,:length, :size,
+                                        :empty?, :find_index, :index,:rindex, :collect,
+                                        :map, :select, :keep_if, :values_at]
 
     class << self
-      attr_accessor :defaults
+      attr_accessor :defaults,:delegated_instance_methods
     end
 
     def initialize(data)
@@ -31,24 +35,6 @@ module FlickrMocks
 
     def max_entries
       default(:max_entries)
-    end
-
-    def each
-      photos.each do |photo|
-        yield photo
-      end
-    end
-
-    def first
-      photos[0]
-    end
-
-    def last
-      photos[-1]
-    end
-
-    def [](index)
-      photos[index]
     end
 
     def pages
@@ -85,10 +71,22 @@ module FlickrMocks
       end
     end
 
-    def size
-      photos.size
+
+    def method_missing(id,*args,&block)
+      return photos.send(id,*args,&block) if  Photos.delegated_instance_methods.include?(id)
+      super
     end
-    
+
+
+    alias_method :old_respond_to?, :respond_to?
+    def respond_to?(method)
+      old_respond_to?(method) || delegated_instance_methods.include?(method)
+    end
+
+    def delegated_instance_methods
+      Photos.delegated_instance_methods
+    end
+
     private
     def current_page=(value)
       raise ArgumentError,"Expected Fixnum but was #{value.class}" unless value.is_a?(Fixnum) or value.is_a?(String)

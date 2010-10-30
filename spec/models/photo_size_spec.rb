@@ -75,7 +75,7 @@ describe APP::PhotoSize do
     it "should be have unique ids compared to clone" do
       subject = size
       other = subject.clone
-      subject.instance_eval('@__delegated_to_object__.__id__').should_not == other.instance_eval('@__delegated_to_object__.__id__')
+      subject.instance_eval('@delegated_to_object.__id__').should_not == other.instance_eval('@delegated_to_object.__id__')
     end
   end
 

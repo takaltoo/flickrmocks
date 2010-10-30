@@ -121,9 +121,9 @@ describe APP::Photo do
         end
       end
 
-      context "delegated_methods" do
+      context "delegated_instance_methods" do
         it "should include all basic methods" do
-          photo_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_methods.sort
+          photo_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_instance_methods.sort
         end
       end
     end
@@ -144,9 +144,9 @@ describe APP::Photo do
         end
       end
 
-      context "delegated_methods" do
+      context "delegated_instance_methods" do
         it "should include all extended methods" do
-          photo_detail_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_methods.sort
+          photo_detail_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_instance_methods.sort
         end
       end
     end
@@ -165,7 +165,7 @@ describe APP::Photo do
         subject.should_not == [1,2,3,4]
       end
       it "should be not be equal if single element different" do
-        subject.delegated_methods.find_all do |value| value != :flickr_type end.each do |method|
+        subject.delegated_instance_methods.find_all do |value| value != :flickr_type end.each do |method|
           other = subject.clone
 
           value = case subject.send(method)
@@ -173,7 +173,7 @@ describe APP::Photo do
           when Fixnum then next
           else subject.send(method)
           end
-          other.instance_eval('@__delegated_to_object__').instance_eval('@h[method.to_s]=value')
+          other.instance_eval('@delegated_to_object').instance_eval('@h[method.to_s]=value')
           subject.should_not == other
         end
       end
@@ -190,7 +190,7 @@ describe APP::Photo do
       end
       it "should be equal if single element different" do
         other = subject.clone
-        other.instance_eval('@__delegated_to_object__').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
+        other.instance_eval('@delegated_to_object').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
         subject.should_not == other
       end
     end
@@ -198,9 +198,9 @@ describe APP::Photo do
   end
 
   context "initialize_copy" do
-    it "should have a @__delegated_to_object__ that is distinct when cloned" do
+    it "should have a @delegated_to_object that is distinct when cloned" do
       other = subject.clone
-      subject.instance_eval("@__delegated_to_object__.__id__").should_not == other.instance_eval("@__delegated_to_object__.__id__")
+      subject.instance_eval("@delegated_to_object.__id__").should_not == other.instance_eval("@delegated_to_object.__id__")
     end
   end
 

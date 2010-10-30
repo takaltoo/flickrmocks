@@ -11,8 +11,8 @@ module FlickrMocks
 
     def initialize(photo)
       raise TypeError, 'FlickRaw::Response expected' unless photo.is_a? FlickRaw::Response
-      @__delegated_to_object__= photo
-      @__delegated_methods__ = @__delegated_to_object__.methods(false).push(:flickr_type)
+      @delegated_to_object = photo
+      @delegated_instance_methods = @delegated_to_object.methods(false).push(:flickr_type)
       @extended_photo = photo.methods.include?(:originalsecret)
     end
 
@@ -60,37 +60,37 @@ module FlickrMocks
     end
 
     def ==(other)
-       @__delegated_to_object__ == other.instance_eval('@__delegated_to_object__')
+       @delegated_to_object == other.instance_eval('@delegated_to_object')
     end
 
     def initialize_copy(orig)
       super
-      @__delegated_to_object__ = @__delegated_to_object__.clone
+      @delegated_to_object = @delegated_to_object.clone
     end
 
 
     def method_missing(id,*args,&block)
-      return @__delegated_to_object__.send(id,*args,&block) if delegated_methods.include?(id)
+      return @delegated_to_object.send(id,*args,&block) if delegated_instance_methods.include?(id)
       return medium_640 if id.to_sym == :'medium 640'
       super
     end
 
     def respond_to?(method,type=false)
       return true if method.to_sym == :'medium 640'
-      return true if delegated_methods.include?(method)
+      return true if delegated_instance_methods.include?(method)
       super
     end
 
     def methods
-      delegated_methods + super
+      delegated_instance_methods + super
     end
 
     def public_methods(all=true)
-      delegated_methods + super(all)
+      delegated_instance_methods + super(all)
     end
 
-    def delegated_methods
-      @__delegated_methods__
+    def delegated_instance_methods
+      @delegated_instance_methods
     end
     
     def url_methods

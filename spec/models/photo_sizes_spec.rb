@@ -218,7 +218,7 @@ describe APP::PhotoSizes do
     end
     it "should not be equal if one element of the sizes object is different" do
       other = subject.clone
-      other.sizes[0].instance_eval('@__delegated_to_object__').instance_eval('@h["label"] = "random size"')
+      other.sizes[0].instance_eval('@delegated_to_object').instance_eval('@h["label"] = "random size"')
       subject.should_not == other
     end
 

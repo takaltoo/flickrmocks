@@ -149,13 +149,13 @@ describe APP::PhotoDetails do
       it "should have independent @sizes" do
         subject.sizes.__id__.should_not == subject.clone.sizes.__id__
       end
-      it "should have an independent @__delegated_methods__" do
-        subject.instance_eval("@__delegated_methods__.__id__").should_not ==
-          subject.clone.instance_eval("@__delegated_methods__.__id__")
+      it "should have an independent @delegated_methods" do
+        subject.instance_eval("@delegated_instance_methods.__id__").should_not ==
+          subject.clone.instance_eval("@delegated_instance_methods.__id__")
       end
-      it "should have an independent @__delegated_to_object__" do
-        subject.instance_eval("@__delegated_to_object__.__id__").should_not ==
-          subject.clone.instance_eval("@__delegated_to_object__.__id__")
+      it "should have an independent @delegated_to_object" do
+        subject.instance_eval("@delegated_to_object.__id__").should_not ==
+          subject.clone.instance_eval("@delegated_to_object.__id__")
       end
     end
 
@@ -169,10 +169,10 @@ describe APP::PhotoDetails do
 
       it "should not == when one of delegated_to methods is different" do
         other = subject.clone
-        other.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h["secret"]="howdydoodygoo"')
+        other.instance_eval('@delegated_to_object').instance_eval('@delegated_to_object').instance_eval('@h["secret"]="howdydoodygoo"')
         subject.should_not == other
         # should equal when subject also set to new value
-        subject.instance_eval('@__delegated_to_object__').instance_eval('@__delegated_to_object__').instance_eval('@h["secret"]="howdydoodygoo"')
+        subject.instance_eval('@delegated_to_object').instance_eval('@delegated_to_object').instance_eval('@h["secret"]="howdydoodygoo"')
         subject.should == other
       end
     end

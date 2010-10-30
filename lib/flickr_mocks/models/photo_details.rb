@@ -9,9 +9,9 @@ module FlickrMocks
       raise ArgumentError,"Photo id: #{photo.id} did not match Size id: #{size.id}" unless photo.id == sizes[0].source.split('/')[-1].split('_')[0]
 
       @sizes = sizes.class == FlickrMocks::PhotoSizes ?  sizes : PhotoSizes.new(sizes)
-      @__delegated_to_object__ =  photo.is_a?(Photo) ?  photo : Photo.new(photo)
+      @delegated_to_object =  photo.is_a?(Photo) ?  photo : Photo.new(photo)
 
-      @__delegated_methods__ = @__delegated_to_object__.delegated_methods + @__delegated_to_object__.url_methods
+      @delegated_instance_methods = @delegated_to_object.delegated_instance_methods + @delegated_to_object.url_methods
     end
 
     def owner_name
@@ -29,38 +29,38 @@ module FlickrMocks
 
     # Methods that make the delegated methods appear as if they were non-delegated
     def method_missing(id,*args,&block)
-      return @__delegated_to_object__.send(id,*args,&block) if @__delegated_methods__.include?(id)
+      return @delegated_to_object.send(id,*args,&block) if @delegated_instance_methods.include?(id)
       super
     end
 
     def respond_to?(method,type=false)
-      return true if @__delegated_methods__.include?(method)
+      return true if @delegated_instance_methods.include?(method)
       super
     end
 
     def methods
-      @__delegated_methods__ + super
+      @delegated_instance_methods + super
     end
 
     def public_methods(all=true)
-      @__delegated_methods__ + super(all)
+      @delegated_instance_methods + super(all)
     end
     
     def delegated_methods
-      @__delegated_methods__
+      @delegated_instance_methods
     end
 
     def initialize_copy(orig)
       super
       @sizes = @sizes.clone
-      @__delegated_methods__ = @__delegated_methods__.clone
-      @__delegated_to_object__ = @__delegated_to_object__.clone
+      @delegated_instance_methods = @delegated_instance_methods.clone
+      @delegated_to_object = @delegated_to_object.clone
     end
 
     def owner_id
       # keeping this away from delegated to methods because it is not a native
       # FlickRaw::Response method
-      @__delegated_to_object__.owner_id
+      @delegated_to_object.owner_id
     end
 
     def ==(other)
@@ -68,11 +68,11 @@ module FlickrMocks
         false 
       elsif !other.is_a?(self.class)
         false
-      elsif @__delegated_methods__.sort != other.instance_eval('@__delegated_methods__.sort')
+      elsif @delegated_instance_methods.sort != other.instance_eval('@delegated_instance_methods.sort')
         false
       elsif @sizes != other.sizes
         false
-      elsif @__delegated_to_object__ != other.instance_eval('@__delegated_to_object__')
+      elsif @delegated_to_object != other.instance_eval('@delegated_to_object')
         false
       else
         true

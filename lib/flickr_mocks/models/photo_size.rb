@@ -3,7 +3,7 @@ module FlickrMocks
   class PhotoSize
     def initialize(size)
       raise TypeError, 'FlickRaw::Response expected' unless size.is_a? FlickRaw::Response
-      @__delegated_to_object__= size
+      @delegated_to_object= size
     end
 
     def size
@@ -19,16 +19,16 @@ module FlickrMocks
     end
 
     def ==(other)
-      @__delegated_to_object__ == other.instance_eval('@__delegated_to_object__')
+      @delegated_to_object == other.instance_eval('@delegated_to_object')
     end
 
     def initialize_copy(orig)
       super
-      @__delegated_to_object__ = @__delegated_to_object__.clone
+      @delegated_to_object = @delegated_to_object.clone
     end
 
     def method_missing(id,*args,&block)
-      return @__delegated_to_object__.send(id,*args,&block) if delegated_methods.include?(id)
+      return @delegated_to_object.send(id,*args,&block) if delegated_methods.include?(id)
       super
     end
 
@@ -46,7 +46,7 @@ module FlickrMocks
     end
 
     def delegated_methods
-     @__delegated_to_object__.methods(false).push(:flickr_type)
+     @delegated_to_object.methods(false).push(:flickr_type)
     end
     
   end
