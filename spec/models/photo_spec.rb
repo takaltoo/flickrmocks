@@ -8,209 +8,208 @@ describe APP::Photo do
 
   subject {klass.new photo_fixture}
 
-  context "delegated methods" do
-    context "basic photo" do
-      subject {klass.new photo_fixture}
-      let(:expected_methods){fixtures.expected_methods.photo}
 
-      it "should be object of the proper class" do
-        subject.should be_a(klass)
-      end
-      it "should respond properly to all delegated methods" do
-        expected_methods.each do |method|
-          subject.send(method).should ==photo_fixture.send(method)
-        end
-      end
-    end
-
-    context "extended photo" do
+  context "initialize" do
+    context "with extended photo" do
       subject {klass.new photo_detail_fixture}
-      let(:expected_methods){fixtures.expected_methods.photo_details}
-
-      it "should be of object of proper class" do
-        subject.should be_a(klass)
+      it "returns object of proper class" do
+        klass.new(photo_detail_fixture).should be_a(APP::Photo)
       end
-      it "should respond properly to all delegated methods" do
-        expected_methods.each do |method|
-          subject.send(method).should == photo_detail_fixture.send(method)
+    end
+
+    context "with basic photo" do
+      subject {klass.new photo_fixture}
+      it "returns object of proper class" do
+        klass.new(photo_fixture).should be_a(APP::Photo)
+      end
+    end
+    context "with nil" do
+      it "raises error" do
+        expect { klass.new nil}.to raise_error(TypeError)
+      end
+    end
+    context "with FlickRaw::ResponseList class" do
+      it "raises error" do
+        expect { klass.new fixtures.photos}.to raise_error(TypeError)
+      end
+    end
+    context "with an Array class" do
+      it "raises error" do
+        expect { klass.new []}.to raise_error(TypeError)
+      end
+    end
+  end
+
+  context "instance methods" do
+    specify {subject.should respond_to(:photo_id)}
+    context "#photo_id" do
+      it "returns correct photo_id" do
+        subject.photo_id.should == subject.id
+      end
+    end
+
+    it_behaves_like "object with flickr image url helpers"
+    
+    specify {subject.should respond_to(:owner_url)}
+    context "#owner_url" do
+      it "returns expected url link for owner of image" do
+        subject.owner_url.should == "http://www.flickr.com/photos/#{photo_fixture['owner']}/#{photo_fixture['id']}"
+      end
+    end
+
+    specify {subject.should respond_to(:owner_id)}
+    context "#owner_id" do
+      it "returns expected value id for owner of image" do
+        subject.owner_id.should == photo_fixture['owner']
+      end
+
+    end
+
+    specify {subject.should respond_to(:owner)}
+    context "#owner" do
+      it "returns expected name for owner of image" do
+        subject.owner.should == photo_fixture['owner']
+      end
+    end
+
+    specify{subject.should respond_to(:==)}
+    context "#==" do
+      context "basic photo" do
+        it "returns true when object is compared to itself" do
+          subject.should == subject
+        end
+        it "returns true when object is compared to clone of itself" do
+          subject.should == subject.clone
+        end
+
+        it "returns true when object is compared to an object of another class" do
+          subject.should_not == [1,2,3,4]
+        end
+        it "returns true when object is compared to another object with slight difference" do
+          subject.delegated_instance_methods.find_all do |value| value != :flickr_type end.each do |method|
+            other = subject.clone
+            value = case subject.send(method)
+            when String then Faker::Lorem.sentence(3)
+            when Fixnum then next
+            else Random.rand
+            end
+            other.instance_eval('@delegated_to_object').instance_eval('@h[method.to_s]=value')
+            subject.should_not == other
+          end
+        end
+      end
+
+      context "detailed photo" do
+        subject {klass.new photo_detail_fixture}
+
+        it "returns true when object is compared to itself" do
+          subject.should == subject
+        end
+        it "returns true when object is compared to clone of itself" do
+          subject.should == subject.clone
+        end
+        it "returns true when object is compared to an object of another class" do
+          other = subject.clone
+          other.instance_eval('@delegated_to_object').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
+          subject.should_not == other
+        end
+
+        it "returns true when object is compared to another object with slight difference" do
+          subject.delegated_instance_methods.find_all do |value| value != :flickr_type end.each do |method|
+            other = subject.clone
+            value = case subject.send(method)
+            when String then Faker::Lorem.sentence(3)
+            when Fixnum then next
+            else Random.rand
+            end
+            other.instance_eval('@delegated_to_object').instance_eval('@h[method.to_s]=value')
+            subject.should_not == other
+          end
         end
       end
     end
+
   end
 
-  context "url_methods" do
-    it "should respond to :url_methods" do
-      subject.should respond_to(:url_methods)
-    end
-    it "should return expected methods" do
-      subject.url_methods.sort.should == [:square,:thumbnail,:small,:medium,
-        :large,:medium_640,:owner_url].sort
-    end
-  end
-
-  context "photo url methods" do
-    let(:base_url){"http://farm#{photo_fixture['farm']}.static.flickr.com/#{photo_fixture['server']}/#{photo_fixture['id']}_#{photo_fixture['secret']}"}
-    it "should return :square url" do
-      subject.square.should == "#{base_url}_s.jpg"
-    end
-    it "should return :thumbnail url" do
-      subject.thumbnail.should == "#{base_url}_t.jpg"
-    end
-    it "should return :small url" do
-      subject.small.should == "#{base_url}_m.jpg"
-    end
-    it "should return :medium url" do
-      subject.medium.should == "#{base_url}.jpg"
-    end
-    it "should return :large url" do
-      subject.large.should == "#{base_url}_b.jpg"
-    end
-    it "should return :medium_640 url" do
-      subject.medium_640.should == "#{base_url}_z.jpg"
-    end
-    it "should return :medium 640 url" do
-      subject.send(:'medium 640').should == "#{base_url}_z.jpg"
-    end
-  end
-
-  context "owner_url" do
-    it "should respond to :owner_url" do
-      subject.should respond_to(:owner_url)
-    end
-    it "should return proper :owner_url" do
-      subject.owner_url.should == "http://www.flickr.com/photos/#{photo_fixture['owner']}/#{photo_fixture['id']}"
-    end
-  end
-
-  context "owner_id" do
-    it "should respond to :owner_id" do
-      subject.should respond_to(:owner_id)
-    end
-    it "should return :owner_id" do
-      subject.owner_id.should == photo_fixture['owner']
-    end
-  end
-
-  context "owner" do
-    it "should respond to :owner" do
-      subject.should respond_to(:owner)
-    end
-    it "should return :owner" do
-      subject.owner.should == photo_fixture['owner']
-    end
-  end
 
   context "metaprogramming methods" do
-    context "with basic photo" do
-      subject {klass.new(photo_fixture)}
+    context "#delegated_instance_methods" do
+      context "basic photo" do
+        subject {klass.new(photo_fixture)}
+        it "returns methods for basic photos" do
+          subject.delegated_instance_methods.sort.should == fixtures.expected_methods.photo.sort
+        end
+      end
+      context "detailed photo" do
+        subject {klass.new(photo_detail_fixture)}
+        it "returns methods for extended photos" do
+          subject.delegated_instance_methods.sort.should == fixtures.expected_methods.photo_details.sort
+        end
+      end
 
-      context ":respond_to?" do
-        it "should respond to all basic methods" do
-          photo_fixture.methods(false).push(:flickr_type).each do |method|
+    end
+
+    context "#respond_to?" do
+      context "basic photo" do
+        subject {klass.new(photo_fixture)}
+        it "responds to methods that are delegated to basic photo object" do
+          fixtures.expected_methods.photo.each do |method|
+            subject.should respond_to(method)
+          end
+        end
+        it "responds to all methods returned by #methods" do
+          subject.methods.each do |method|
             subject.should respond_to(method)
           end
         end
       end
 
-      context "public_methods" do
-        it "should include all basic methods" do
-          (photo_fixture.methods(false).push(:flickr_type) - subject.public_methods).should be_empty
-        end
-        it "should not include extended methods" do
-          (photo_detail_fixture.methods(false).push(:flickr_type) - subject.public_methods).should_not be_empty
-        end
-      end
-
-      context "delegated_instance_methods" do
-        it "should include all basic methods" do
-          photo_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_instance_methods.sort
-        end
-      end
-    end
-
-    context "with detailed photo" do
-      subject {klass.new(photo_detail_fixture)}
-
-      context "respond_to?" do
-        it "should respond to all detailed photos" do
+      context "detailed photo" do
+        subject {klass.new(photo_detail_fixture)}
+        it "responds to methods that are delegated to detailed photo object" do
           photo_detail_fixture.methods(false).push(:flickr_type).each do |method|
             subject.should respond_to(method)
           end
         end
-      end
-      context "public_methods" do
-        it "should inlcude all extended methods" do
-          (photo_detail_fixture.methods(false).push(:flickr_type) - subject.public_methods).should be_empty
-        end
-      end
-
-      context "delegated_instance_methods" do
-        it "should include all extended methods" do
-          photo_detail_fixture.methods(false).push(:flickr_type).sort.should == subject.delegated_instance_methods.sort
-        end
-      end
-    end
-  end
-
-  context "==" do
-    context "basic photo" do
-      it "should equal itself" do
-        subject.should == subject
-      end
-      it "should be equal to clone of itself" do
-        subject.should == subject.clone
-      end
-
-      it "should not be equal to an object of a different class" do
-        subject.should_not == [1,2,3,4]
-      end
-      it "should be not be equal if single element different" do
-        subject.delegated_instance_methods.find_all do |value| value != :flickr_type end.each do |method|
-          other = subject.clone
-
-          value = case subject.send(method)
-          when String then Faker::Lorem.sentence(3)
-          when Fixnum then next
-          else subject.send(method)
+        it "responds to all methods returned by #methods" do
+          subject.methods.each do |method|
+            subject.should respond_to(method)
           end
-          other.instance_eval('@delegated_to_object').instance_eval('@h[method.to_s]=value')
-          subject.should_not == other
         end
       end
     end
 
-    context "detailed photo" do
-      subject {klass.new photo_detail_fixture}
+    context "#methods" do
+      context "basic photo" do
+        subject {klass.new photo_fixture}
 
-      it "should equal itself" do
-        subject.should == subject
+        specify {subject.should respond_to(:methods)}
+        it "returns expected methods including delegated methods for basic photo fixture" do
+          expected_methods = fixtures.expected_methods.photo + subject.old_methods
+          (subject.methods - expected_methods).should be_empty
+          subject.methods.length.should == expected_methods.length
+        end
       end
-      it "should be equal to clone of itself" do
-        subject.should == subject.clone
+      context "detailed photo" do
+        subject {klass.new photo_detail_fixture}
+
+        specify {subject.should respond_to(:methods)}
+        it "returns expected methods including delegated methods to photo details fixture" do
+          expected_methods = fixtures.expected_methods.photo_details + subject.old_methods
+          (subject.methods - expected_methods).should be_empty
+          subject.methods.length.should == expected_methods.length
+        end
       end
-      it "should be equal if single element different" do
+    end
+
+  end
+
+  context "custom cloning methods" do
+    context "#initialize_copy" do
+      it "returns photo objects that have distinct @delegated_to_object ids from cloned object" do
         other = subject.clone
-        other.instance_eval('@delegated_to_object').instance_eval('@h["dates"]').instance_eval('@h["taken"]="boobooje"')
-        subject.should_not == other
+        subject.instance_eval("@delegated_to_object.__id__").should_not == other.instance_eval("@delegated_to_object.__id__")
       end
     end
-    
   end
-
-  context "initialize_copy" do
-    it "should have a @delegated_to_object that is distinct when cloned" do
-      other = subject.clone
-      subject.instance_eval("@delegated_to_object.__id__").should_not == other.instance_eval("@delegated_to_object.__id__")
-    end
-  end
-
-  context "photo_id" do
-    it "should respond to :photo_id" do
-      subject.should respond_to(:photo_id)
-    end
-    it "should give correct photo_id" do
-      subject.photo_id.should == subject.id
-    end
-  end
-  
 end

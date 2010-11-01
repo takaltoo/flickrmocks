@@ -29,6 +29,10 @@ module FlickrMocks
       Photos.defaults[value.to_s.to_sym]
     end
 
+    def capped_entries
+      total_entries > max_entries ? max_entries : total_entries
+    end
+
     def capped?
       max_entries < total_entries ? true : false
     end
@@ -36,6 +40,7 @@ module FlickrMocks
     def max_entries
       default(:max_entries)
     end
+
 
     def pages
       max_pages = default(:max_entries)/perpage
@@ -85,6 +90,13 @@ module FlickrMocks
 
     def delegated_instance_methods
       Photos.delegated_instance_methods
+    end
+
+    def collection
+      @collection ||= ::WillPaginate::Collection.create(current_page, per_page, capped_entries) do |obj|
+        obj.replace(photos)
+      end
+      @collection
     end
 
     private

@@ -1,5 +1,7 @@
-shared_examples_for "object with Array accessor helpers" do
-
+shared_examples_for "object with delegated Array accessor helpers" do
+  # NOTE: need to define:
+  # =>  subject : that returns item under test, which has accessor
+  # => references : object that gets delegated to
   specify{subject.should respond_to(:[])}
   specify{subject.should respond_to(:at)}
   specify{subject.should respond_to(:fetch)}

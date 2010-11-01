@@ -8,7 +8,7 @@ require 'flickraw-cached'
 require 'ruby-debug'
 
 require 'shared_examples/array_accessor'
-
+require 'shared_examples/image_url_helpers'
 
 
 require 'flickrmocks'

@@ -109,6 +109,19 @@ describe APP::Photos do
       specify{ subject.total_entries.should be_a(Fixnum)}
     end
 
+    specify {subject.should respond_to(:capped_entries)}
+    describe "#capped_entries"  do
+      it "returns total_entries when total_entries <= max_entries" do
+        subject.stub(:total_entries).and_return(subject.max_entries)
+        subject.capped_entries.should == subject.total_entries
+      end
+      it "returns max_entries when total_entries > max_entries" do
+        subject.stub(:total_entries).and_return(subject.max_entries + 200)
+        subject.capped_entries.should < subject.total_entries
+        subject.capped_entries.should == subject.max_entries
+      end
+    end
+
     specify { subject.should respond_to(:max_entries) }
     describe "#max_entries" do
       it "returns maximum possible entries returned by flickr" do
@@ -184,8 +197,18 @@ describe APP::Photos do
       end
     end
 
+    specify {subject.should respond_to(:collection)}
     context "#collection" do
-      it "should return will_paginate method"
+      specify{subject.collection.should be_a(WillPaginate::Collection)}
+      it "returns object with expected current_page value" do
+        subject.collection.current_page.should == subject.current_page
+      end
+      it "returns object with expected per_page value" do
+        subject.collection.per_page.should == subject.per_page
+      end
+      it "returns object with expected total_entries" do
+        subject.collection.total_entries.should == subject.capped_entries
+      end
     end
 
     context "meta-programming" do
@@ -206,7 +229,7 @@ describe APP::Photos do
       end
       context "iteratable methods" do
         let(:reference) {subject.photos}
-        it_behaves_like "object with Array accessor helpers"
+        it_behaves_like "object with delegated Array accessor helpers"
       end
     end
 

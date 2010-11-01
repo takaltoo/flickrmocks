@@ -4,7 +4,7 @@ require 'find'
 require 'delegate'
 require 'cgi'
 
-
+require 'will_paginate/collection'
 
 # Use user specified FlickRaw definition, if not defined use flickraw-cached if
 #   available
