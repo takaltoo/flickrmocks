@@ -41,55 +41,9 @@ module FlickrMocks
       default(:max_entries)
     end
 
-
     def pages
       max_pages = default(:max_entries)/perpage
       total_pages > max_pages ? max_pages : total_pages
-    end
-
-    def initialize_copy(orig)
-      super
-      @photos = @photos.map do |photo|
-        photo.clone
-      end
-    end
-
-    def ==(other)
-      return false if other.nil?
-      # check basic methods to see if they are equal
-      match = [:current_page, :per_page, :total_entries, :total_pages, :perpage].map do |method|
-        return false unless other.respond_to?(method)
-        self.send(method) == other.send(method)
-      end.inject(true) do |previous,current|
-        previous && current
-      end
-      
-      return false unless match
-      
-      # check photos
-      index = -1
-      photos.map do |photo|
-        index +=1
-        photo == other.photos[index]
-      end.inject(true) do |previous,current|
-        previous && current
-      end
-    end
-
-
-    def method_missing(id,*args,&block)
-      return photos.send(id,*args,&block) if  Photos.delegated_instance_methods.include?(id)
-      super
-    end
-
-
-    alias_method :old_respond_to?, :respond_to?
-    def respond_to?(method)
-      old_respond_to?(method) || delegated_instance_methods.include?(method)
-    end
-
-    def delegated_instance_methods
-      Photos.delegated_instance_methods
     end
 
     def collection
@@ -99,6 +53,44 @@ module FlickrMocks
       @collection
     end
 
+
+    def ==(other)
+      return false unless other.class == Photos
+      return false unless [:current_page,:per_page,:total_entries,:total_pages].inject(true) do |state,method|
+        state && (self.send(method) == other.send(method))
+      end
+      other.respond_to?(:photos) ? photos == other.photos : false
+    end
+
+
+    # metaprogramming methods
+    def method_missing(id,*args,&block)
+      return photos.send(id,*args,&block) if  Photos.delegated_instance_methods.include?(id)
+      super
+    end
+
+    alias :old_respond_to? :respond_to?
+    def respond_to?(method)
+      old_respond_to?(method) || delegated_instance_methods.include?(method)
+    end
+
+    alias :old_methods :methods
+    def methods
+      delegated_instance_methods + old_methods
+    end
+
+    def delegated_instance_methods
+      Photos.delegated_instance_methods
+    end
+
+    # custom cloning methods
+    def initialize_copy(orig)
+      super
+      @photos = @photos.map do |photo|
+        photo.clone
+      end
+    end
+    
     private
     def current_page=(value)
       raise ArgumentError,"Expected Fixnum but was #{value.class}" unless value.is_a?(Fixnum) or value.is_a?(String)

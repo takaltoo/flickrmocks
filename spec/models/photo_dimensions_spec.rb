@@ -1,195 +1,169 @@
 require 'spec_helper'
 
 describe APP::PhotoDimensions do
-
-
-  let(:expected_sizes) { [:square, :thumbnail, :small, :medium,:medium_640, :large, :original].map(&:to_s) }
-  let(:expected_dimensions) {[[1,11],[2,12],[3,13],[4,14],[5,15],[6,16],[7,17]]}
-  let(:klass) {APP::PhotoDimensions}
   let(:dimensions_string) {'square:1x11,thumbnail:2x12,small:3x13,medium:4x14,medium_640:5x15,large:6x16,original:7x17'}
-  
+  let(:expected_sizes) { [:square, :thumbnail, :small, :medium,:medium_640, :large, :original] }
+  let(:klass) {APP::PhotoDimensions}
+
   subject { APP::PhotoDimensions.new(dimensions_string) }
 
-  describe "initialization" do
-    describe "acceptable options" do
-      it "should accept proper initialization string" do
-        lambda {klass.new('square:1x11,thumbnail:2x12,small:3x13,medium:4x14,medium_640:5x15,large:6x16,original:7x17')}.should_not raise_error
+  context "class methods" do
+    specify {klass.should respond_to(:regexp_size)}
+    context "regexp_size" do
+      it "returns match when provided with valid string" do
+        klass.regexp_size.match('square:1x11,thumbnail:2x12').should_not be_nil
       end
-      it "should accept a single size" do
-        lambda {klass.new('medium:4x14')}.should_not raise_error
+      it "returns nil when string contains an extra comma" do
+        klass.regexp_size.match('square:1x11,thumbnail:2x12,').should be_nil
+      end
+      it "returns nil when string is missing a comma" do
+        klass.regexp_size.match('square1x11,thumbnail:2x12').should be_nil
       end
     end
-    describe "unacceptable options" do
-      it "should throw exception when given non-recognized size" do
+
+    specify {klass.should respond_to(:possible_sizes)}
+    context "possible_sizes" do
+      it "returns possible photo sizes" do
+        klass.possible_sizes.should == [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
+      end
+    end
+  end
+  
+  context "initialize" do
+    context "valid initialization strings" do
+      it "returns object of proper class with valid string" do
+        klass.new('square:1x11,thumbnail:2x12,small:3x13,medium:4x14,medium_640:5x15,large:6x16,original:7x17').class.should == klass
+      end
+      it "returns object of proper class with string containing only a single dimension" do
+        klass.new('medium:4x14').class.should == klass
+      end
+    end
+    
+    context "initialization with invalid arguments" do
+      it "raises exception when string contains invalid size" do
         lambda {klass.new('square:1x11,howdy:2x12')}.should raise_error(ArgumentError)
       end
-      it "should throw an exception when extra comma is provided" do
+      it "raises exception when string contains extraneous comma" do
         lambda {klass.new('square:1x11,thumbnail:3x2,')}.should raise_error(ArgumentError)
       end
-    end
-  end
-
-  describe ":available_sizes" do
-    it "should respond to :available_sizes" do
-      subject.should respond_to(:available_sizes)
-    end
-    it "should return proper list of available sizes" do
-      subject.available_sizes.should == expected_sizes.map(&:to_sym)
-    end
-  end
-
-  describe "methods that return various sizes" do
-    it "should respond to various sizes" do
-      expected_sizes.each do |size|
-        subject.should respond_to(size)
-      end
-    end
-    it "should return proper dimensions for square" do
-      index = 0
-      expected_sizes.each do |size|
-        subject.send(size).width.should == expected_dimensions[index][0]
-        subject.send(size).height.should == expected_dimensions[index][1]
-        index +=1
+      it "raises exception when argument does not respond to to_s method" do
+        lambda {klass.new('square:1x11,thumbnail:3x2'.stub(:to_s).and_return(nil))}.should raise_error(ArgumentError)
       end
     end
   end
 
-  describe ":each" do
-    it "should respond to :each" do
-      subject.should respond_to(:each)
+  context "instance methods" do
+    specify {subject.should respond_to(:available_sizes)}
+    context "#available_sizes" do
+      it "returns list of available sizes" do
+        subject.available_sizes.should == expected_sizes
+      end
     end
-    it "should yield sizes" do
-      index = 0
-      subject.  each do |size|
-        size.should == expected_sizes[index]
-        index+=1
+
+    specify {subject.should respond_to(:to_s)}
+    describe "#to_s method" do
+      it "returns expected string that represents the size and dimensions of the photo" do
+        subject.to_s.should == dimensions_string
+      end
+    end
+
+    specify {subject.should respond_to(:==)}
+    context "#==" do
+      it "returns true when object compared to itself" do
+        subject.should == subject
+      end
+      it "returns true when object compared to clone of itself" do
+        subject.should == subject.clone
+      end
+      it "returns false when single element is different" do
+        other = subject.clone
+        other.first.width=77123
+        subject.should_not == other
+      end
+    end
+
+    context "size methods" do
+      let(:dimensions) {[[1,11],[2,12],[3,13],[4,14],[5,15],[6,16],[7,17]]}
+      
+      specify{subject.should respond_to(:square)}
+      context "#square" do
+        let(:size){:square}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+
+        it_behaves_like "object with size accessor"
+      end
+
+      specify{subject.should respond_to(:thumbnail)}
+      context "#thumbnail" do
+        let(:size){:thumbnail}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+        it_behaves_like "object with size accessor"
+      end
+
+      specify{subject.should respond_to(:small)}
+      context "#small" do
+        let(:size){:small}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+        it_behaves_like "object with size accessor"
+      end
+     
+      specify{subject.should respond_to(:medium)}
+      context "#medium" do
+        let(:size){:medium}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+        it_behaves_like "object with size accessor"
+      end
+
+      specify{subject.should respond_to(:medium_640)}
+      context "#medium_640" do
+        let(:size){:medium_640}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+        it_behaves_like "object with size accessor"
+      end
+
+      specify{subject.should respond_to(:large)}
+      context "#large" do
+        let(:size){:large}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+        it_behaves_like "object with size accessor"
+      end
+
+      specify{subject.should respond_to(:original)}
+      context "#large" do
+        let(:size){:original}
+        let(:index){expected_sizes.find_index(size)}
+        let(:width){dimensions[index][0]}
+        let(:height){dimensions[index][1]}
+        it_behaves_like "object with size accessor"
+      end
+    end
+
+    context "iteratable methods" do
+      let(:reference) {subject.dimensions}
+      it_behaves_like "object with delegated Array accessor helpers"
+    end
+    
+  end
+
+  context "custom cloning methods" do
+    context "#initialize_copy" do
+      it "returns cloned object that has distinct id as compared with original"do
+        subject.dimensions.each.map do |value| value.__id__ end.should_not ==
+          subject.clone.dimensions.each.map do |value| value.__id__ end
       end
     end
   end
-
-  describe "size" do
-    it "should respond to :size" do
-      subject.should respond_to(:size)
-    end
-    it "should return correct size" do
-      subject.size.should == subject.sizes.keys.length
-    end
-  end
-
-  describe ":each_with_dimensions" do
-    it "should respond to :each_with_dimensions" do
-      subject.should respond_to(:each_with_dimensions)
-    end
-    it "should yield expected results" do
-      index =0
-      subject.each_with_dimensions do |size,dimensions|
-        size.should == expected_sizes[index]
-        dimensions.width.should == expected_dimensions[index][0]
-        dimensions.height.should == expected_dimensions[index][1]
-        index+=1
-      end
-    end
-  end
-
-  describe ":each_dimensions_string" do
-    it "should respond to :each_dimensions_string" do
-      subject.should respond_to(:each_dimensions_string)
-    end
-    it "should yield proper strigns" do
-      index=0
-      subject.each_dimensions_string do |string|
-        string.should == "#{expected_sizes[index]} (#{expected_dimensions[index][0]}x#{expected_dimensions[index][1]})"
-        index +=1
-      end
-    end
-  end
-
-  describe "self.regexp_size" do
-    it "should accept proper strings" do
-      klass.regexp_size.match('square:1x11,thumbnail:2x12').should_not be_nil
-    end
-    it "should not accept extraneous commas" do
-      klass.regexp_size.match('square:1x11,thumbnail:2x12,').should be_nil
-    end
-    it "should not accept missing colons" do
-      klass.regexp_size.match('square1x11,thumbnail:2x12').should be_nil
-    end
-  end
-
-  describe "self.valid_size?" do
-    it "should return false on bogus symbol" do
-      klass.valid_size?(:bogus).should == false
-    end
-    it "should return false on bogus string" do
-      klass.valid_size?('bogus').should == false
-    end
-    it "should return true on valid sizes provided as symbol" do
-      expected_sizes.each do |size|
-        klass.valid_size?(size.to_sym).should == true
-      end
-    end
-      it "should return true on valid sizes provided as string" do
-      expected_sizes.each do |size|
-        klass.valid_size?(size.to_s).should == true
-      end
-    end
-  end
-
-  describe "valid dimensions" do
-    it "should respond to :valid_dimensions?" do
-      klass.should respond_to(:valid_dimensions?)
-    end
-    it "should accept a single size" do
-      klass.valid_dimensions?('thumbnail:2x12').should be(true)
-    end
-    it "should accept multiple sizes" do
-      klass.valid_dimensions?('square:1x11,thumbnail:2x12').should be(true)
-    end
-    it "should not accept missing colons" do
-      klass.valid_dimensions?('square1x11,thumbnail:2x12').should be(false)
-    end
-    it "should not accept strings with extra commas" do
-      klass.valid_dimensions?('square1x11,thumbnail:2x12,').should be(false)
-    end
-    it "should give false on unrecognized sizes" do
-      klass.valid_dimensions?('square:1x11,garbage:2x3,thumbnail:4x5').should be(false)
-    end
-  end
-
-  describe "to_s method" do
-    it "should respond to to_s" do
-      subject.should respond_to(:to_s)
-    end
-    it "should return proper to_s string" do
-      subject.to_s.should == dimensions_string
-    end
-  end
-
-  describe "initialize_copy" do
-    it "should have a independent @sizes attribute"do
-      subject.sizes.__id__.should_not == subject.clone.sizes.__id__
-    end
-    it "should have an independent @sizes elements" do
-      other = subject.clone
-      subject.sizes.keys.each do |key|
-        subject.sizes[key].__id__.should_not == other.sizes[key].__id__
-      end
-    end
-  end
-
-  describe ":==" do
-    it "should == to itself" do
-      subject.should == subject
-    end
-    it "should == its clone" do
-      subject.should == subject.clone
-    end
-    it "should not == its clone if a single element is different" do
-      other = subject.clone
-      other.sizes[:square].stub(:width).and_return(77123)
-      subject.should_not == other
-    end
-  end
-
 end
 

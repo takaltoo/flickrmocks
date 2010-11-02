@@ -5,126 +5,93 @@ module FlickrMocks
     # sizes that are recognized by class. The sizes are in order from smallest to largest
     @possible_sizes =  [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
     @regexp_size = /^[a-z]+(_\d+)?:\d+x\d+(,[a-z]+(_\d+)?:\d+x\d+)*$/
+    @delegated_instance_methods = [:[], :at,:fetch, :first, :last,:each,
+                                        :each_index, :reverse_each,:length, :size,
+                                        :empty?, :find_index, :index,:rindex, :collect,
+                                        :map, :select, :keep_if, :values_at]
 
     class << self
-      attr_accessor :possible_sizes
-      attr_reader :regexp_size
+      attr_reader :possible_sizes,:regexp_size,:delegated_instance_methods
     end
     
-    attr_accessor :sizes
-
     def initialize(data)
-      self.sizes = data
-    end
-
-    def square
-      @sizes.has_key?(:square) ? @sizes[:square] : nil
-    end
-
-    def thumbnail
-      @sizes.has_key?(:thumbnail) ? @sizes[:thumbnail] : nil
-    end
-
-    def small
-      @sizes.has_key?(:small) ? @sizes[:small] : nil
-    end
-
-    def medium
-      @sizes.has_key?(:medium) ? @sizes[:medium] : nil
-    end
-
-    def medium_640
-      @sizes.has_key?(:medium_640) ? @sizes[:medium_640] : nil
-    end
-
-    def large
-      @sizes.has_key?(:large) ? @sizes[:large] : nil
-    end
-
-    def original
-      @sizes.has_key?(:original) ? @sizes[:original] : nil
+      self.delegated_to_object = data
     end
 
     def available_sizes
-      sizes = []
-      PhotoDimensions.possible_sizes.each do |size|
-        sizes.push(size) if @sizes.has_key?(size)
-      end
-      sizes
+      map do |dimension|
+        dimension.size
+      end     
     end
 
-    def each
-      PhotoDimensions.possible_sizes.each do |size|
-        yield size.to_s if @sizes.has_key?(size)
-      end
+    def dimensions
+      @delegated_to_object
     end
-
-    def size
-      sizes.keys.length
-    end
-
-    def each_with_dimensions
-      PhotoDimensions.possible_sizes.each do |size|
-        yield size.to_s,@sizes[size] if @sizes.has_key?(size)
-      end
-    end
-
-    def each_dimensions_string
-      PhotoDimensions.possible_sizes.each do |size|
-        yield "#{size.to_s} (#{@sizes[size].width}x#{@sizes[size].height})" if @sizes.has_key?(size)
-      end
-    end
-
+    
     def to_s
-      result = []
-      each_with_dimensions do  |size,dim|
-        result.push [size,[dim.width,dim.height].join('x')].join(':')
-      end
-      result.join(',')
-    end
-
-    def self.valid_size?(data)
-      PhotoDimensions.possible_sizes.include?(data.to_sym)
-    end
-
-    def self.valid_dimensions?(string)
-      return false unless PhotoDimensions.regexp_size =~ string
-      string.split(',').each do |fields|
-        size,dim = fields.split(':')
-        size = size.to_sym
-        width,height = dim.split(/x/)
-        return false unless FlickrMocks::PhotoDimensions.possible_sizes.include?(size)
-      end
-      return true
-    end
-
-    def initialize_copy(other)
-      super
-      @sizes = @sizes.clone.each_pair do |key,value|
-        @sizes[key] = value.clone
-      end
+      dimensions.map do  |dimension|
+        [dimension.size,[dimension.width,dimension.height].join('x')].join(':')
+      end.join(',')
     end
 
     def ==(other)
+      return false unless other.class.should == self.class
       to_s == other.to_s
+    end
+
+    # metaprogramming methods
+    alias :old_respond_to? :respond_to?
+    def respond_to?(method)
+      valid_size?(method) || delegated_instance_methods.include?(method) || old_respond_to?(method)
+    end
+
+    def method_missing(id,*args,&block)
+      return get_size(id,*args,&block) if  valid_size?(id)
+      return dimensions.send(id,*args,&block) if delegated_instance_methods.include?(id)
+      super
+    end
+
+    alias :old_methods :methods
+    def methods
+      available_sizes + delegated_instance_methods + methods
+    end
+
+    def delegated_instance_methods
+      PhotoDimensions.delegated_instance_methods
+    end
+    
+    # custom cloning methods
+    def initialize_copy(other)
+      super
+      @delegated_to_object = @delegated_to_object.map do |object|
+        object.clone
+      end
     end
 
     
     private
-    def sizes=(data)
-      raise ArgumentEror, "Invalid #{data} must respond to :to_s" unless data.respond_to?(:to_s)
-
-      @sizes={}
+    def delegated_to_object=(data)
+      raise(ArgumentError, "Invalid #{data} must respond to :to_s") unless data.respond_to?(:to_s)
       # expecting strings of type: "square:1x1,thumbnail:2x2,small:3x3,medium:4x4,medium_640:4x4,large:5x5,original:6x6"
+      raise(ArgumentError, "Invalid string format") unless data =~ PhotoDimensions.regexp_size
 
-      raise ArgumentError, "Format #{data} is incorrect must be: square:1x1,thumbnail:2x2" unless PhotoDimensions.valid_dimensions?(data)
-
-      data.to_s.split(',').each do |fields|
+      @delegated_to_object= data.to_s.split(',').map do |fields|
         size,dim = fields.split(':')
         size= size.to_sym
+        raise(ArgumentError,"Invalid size provided #{size}") unless valid_size?(size)
         width,height=dim.split(/x/)
-        @sizes[size.to_sym] = OpenStruct.new :width => width.to_i,:height => height.to_i
+        OpenStruct.new :size => size,:width => width.to_i,:height => height.to_i
       end
+    end
+
+    def valid_size?(data)
+      PhotoDimensions.possible_sizes.include?(data.to_sym)
+    end
+
+    def get_size(size)
+      dimensions.keep_if do |dimension|
+        dimension.size == size
+      end.first
     end
 
   end

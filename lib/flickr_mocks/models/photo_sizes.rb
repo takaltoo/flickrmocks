@@ -1,116 +1,95 @@
-
 module FlickrMocks
   class PhotoSizes
-    attr_reader :sizes,:available_sizes
-    alias_method :all, :sizes
     @possible_sizes = [:square, :thumbnail, :small, :medium, :medium_640, :large, :original]
+    @delegated_instance_methods = [:[], :at,:fetch, :first, :last,:each,
+      :each_index, :reverse_each,:length, :size,
+      :empty?, :find_index, :index,:rindex, :collect,
+      :map, :select, :keep_if, :values_at]
 
     class << self
-      attr_accessor :possible_sizes
+      attr_accessor :possible_sizes, :delegated_instance_methods
     end
 
     def initialize(object)
-      raise TypeError, 'FlickRaw::Response expected' unless object.is_a? FlickRaw::Response
-      self.sizes = object
-      self.available_sizes=@sizes
+      raise TypeError, 'FlickRaw::Response expected' unless object.class == FlickRaw::ResponseList
+      self.delegated_to_object= object
     end
 
-    def [](index)
-      @sizes[index]
-    end
-
-    def last
-      @sizes[-1]
-    end
-
-    def first
-      @sizes[0]
-    end
-    
     def id
-      @sizes.first.id
+      @delegated_to_object.first.id
     end
 
     def secret
-      @sizes.first.secret
+      @delegated_to_object.first.secret
     end
 
-    def method_missing(name,*args,&block)
-      return @sizes[size_index name] if size_index? name
-      return nil if PhotoSizes.possible_sizes.include?(name)
-      super
-    end
-    
-    def methods
-      PhotoSizes.possible_sizes + super
+    def sizes
+      @delegated_to_object
     end
 
-    def each
-      @sizes.each do |photo|
-        yield photo
+    def available_sizes
+      @available_sizes ||= sizes.map do |size|
+        size.size.to_sym
       end
+      @available_sizes
     end
 
-    def empty?
-      @sizes.empty?
+    def collection
+      @collection ||= ::WillPaginate::Collection.create(1, sizes.length, sizes.length) do |obj|
+        obj.replace(sizes)
+      end
+      @collection
     end
-
-    def size
-      all.size
-    end
-
 
 
     def to_s
-      result = []
-      @sizes.each do |size|
-        result.push "#{size.size}:#{size.width}x#{size.height}"
-      end
-      PhotoDimensions.new(result.join(',')).to_s
+      PhotoDimensions.new(@delegated_to_object.map do |size|
+          "#{size.size}:#{size.width}x#{size.height}"
+        end.join(',')).to_s
     end
 
     def ==(other)
-      return false unless @available_sizes == (other.respond_to?(:available_sizes) ? other.available_sizes : nil)
-      return false unless other.respond_to?(:sizes)
-      index = -1
-      sizes.map do |size|
-        index += 1
-        size == other[index]
-      end.inject(true) do |previous,current|
-        previous && current
-      end
+      return false unless self.class == other.class
+      @delegated_to_object == other.instance_eval('@delegated_to_object')
     end
 
+    # metaprogramming methods
+    alias :old_methods :methods
+    def methods
+      delegated_instance_methods + old_methods
+    end
+
+    def method_missing(id,*args,&block)
+      return @delegated_to_object.send(id,*args,&block) if  delegated_instance_methods.include?(id)
+      return nil if PhotoSizes.possible_sizes.include?(name)
+      super
+    end
+
+    alias :old_respond_to? :respond_to?
+    def respond_to?(method)
+      old_respond_to?(method) || delegated_instance_methods.include?(method)
+    end
+
+    def delegated_instance_methods
+      PhotoSizes.possible_sizes + PhotoSizes.delegated_instance_methods
+    end
+
+    # cloning methods
     def initialize_copy(orig)
       super
-      @sizes = @sizes.clone.map do |data|
+      @delegated_to_object = @delegated_to_object.map do |data|
         data.clone
       end
-      @available_sizes = @available_sizes.clone
     end
 
 
     private
-    def available_sizes=(data)
-      @available_sizes=[]
-      data.each do |datum|
-        @available_sizes.push datum.size.to_sym
-      end
-    end
 
-    def sizes=(data)
-      @sizes=[]
+    def delegated_to_object=(data)
+      @delegated_to_object = []
       data.each do |datum|
-        @sizes.push PhotoSize.new datum
+        @delegated_to_object.push PhotoSize.new datum
       end
-    end
-    
-    def size_index(name)
-      @available_sizes.find_index name.to_s.downcase.sub(/\s+/,'_').to_sym
-    end
-
-    def size_index?(name)
-      !!size_index(name)
     end
 
   end

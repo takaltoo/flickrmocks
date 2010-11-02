@@ -213,13 +213,20 @@ describe APP::Photos do
 
     context "meta-programming" do
       specify{ subject.should respond_to(:delegated_instance_methods)}
-      specify{ subject.should respond_to(:respond_to?)}
       context "#delegated_instance_methods" do
         it "returns expected list of methods that are delegated to other objects" do
           subject.delegated_instance_methods.should == APP::Photos.delegated_instance_methods
         end
       end
 
+      specify { subject.should respond_to(:methods)}
+      context "#methods" do
+        it "should return all methods as well as array iteration methods" do
+          subject.methods.sort.should == (subject.old_methods + subject.delegated_instance_methods).sort
+        end
+      end
+      
+      specify{ subject.should respond_to(:respond_to?)}
       context "#respond_to?" do
         it "recognizes all methods returned by #methods" do
           subject.methods.each do |method|

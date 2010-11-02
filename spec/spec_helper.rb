@@ -9,6 +9,7 @@ require 'ruby-debug'
 
 require 'shared_examples/array_accessor'
 require 'shared_examples/image_url_helpers'
+require 'shared_examples/size_accessor'
 
 
 require 'flickrmocks'
