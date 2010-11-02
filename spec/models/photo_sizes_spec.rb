@@ -111,18 +111,13 @@ describe APP::PhotoSizes do
 
       specify { subject.should respond_to(:collection)}
       context "#collection" do
-        it "returns an object of class WillPaginate::Collection" do
-          subject.collection.should be_a(WillPaginate::Collection)
-        end
-        it "returns object with expected current_page value" do
-          subject.collection.current_page.should == 1
-        end
-        it "returns object with expected per_page value" do
-          subject.collection.per_page.should == subject.sizes.length
-        end
-        it "returns object with expected total_entries" do
-          subject.collection.total_entries.should == subject.sizes.length
-        end
+        let(:reference){
+          OpenStruct.new :current_page => 1,
+          :per_page => subject.available_sizes.length,
+          :total_entries => subject.available_sizes.length,
+          :collection => subject.sizes
+        }
+        it_behaves_like "object that responds to collection"
       end
     end
   end
@@ -140,7 +135,7 @@ describe APP::PhotoSizes do
     context "#methods" do
       it "returns all methods including those that are delegated" do
         subject.methods.sort.should == ( subject.delegated_instance_methods +
-                                                  subject.old_methods).sort
+            subject.old_methods).sort
       end
     end
 
@@ -170,7 +165,7 @@ describe APP::PhotoSizes do
       end
     end
   end
-
+  
 end
 
 

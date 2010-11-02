@@ -22,7 +22,7 @@ module FlickrMocks
       self.per_page= data.perpage
       self.total_entries= data.total
       self.total_pages = data.pages
-      self.photos=  data.photo
+      self.photos =  data.photo
     end
 
     def default(value)

@@ -199,16 +199,13 @@ describe APP::Photos do
 
     specify {subject.should respond_to(:collection)}
     context "#collection" do
-      specify{subject.collection.should be_a(WillPaginate::Collection)}
-      it "returns object with expected current_page value" do
-        subject.collection.current_page.should == subject.current_page
-      end
-      it "returns object with expected per_page value" do
-        subject.collection.per_page.should == subject.per_page
-      end
-      it "returns object with expected total_entries" do
-        subject.collection.total_entries.should == subject.capped_entries
-      end
+      let(:reference){
+        OpenStruct.new :current_page => subject.current_page,
+                            :per_page => subject.per_page,
+                            :total_entries => subject.capped_entries,
+                            :collection => subject.photos
+      }
+      it_behaves_like "object that responds to collection"
     end
 
     context "meta-programming" do

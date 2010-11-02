@@ -27,6 +27,13 @@ module FlickrMocks
     def dimensions
       @delegated_to_object
     end
+
+    def collection
+      @collection ||= ::WillPaginate::Collection.create(1, available_sizes.length, available_sizes.length) do |obj|
+        obj.replace(dimensions)
+      end
+      @collection
+    end
     
     def to_s
       dimensions.map do  |dimension|

@@ -60,6 +60,17 @@ describe APP::PhotoDimensions do
       end
     end
 
+    specify {subject.should respond_to(:collection)}
+    context "#collection" do
+      let(:reference){
+        OpenStruct.new :current_page => 1,
+                            :per_page => subject.available_sizes.length,
+                            :total_entries => subject.available_sizes.length,
+                            :collection => subject.dimensions
+      }
+      it_behaves_like "object that responds to collection"
+    end
+
     specify {subject.should respond_to(:to_s)}
     describe "#to_s method" do
       it "returns expected string that represents the size and dimensions of the photo" do
