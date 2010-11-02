@@ -10,7 +10,7 @@ describe APP::PhotoDimensions do
   context "class methods" do
     specify {klass.should respond_to(:regexp_size)}
     context "regexp_size" do
-      it "returns match when provided with valid string" do
+      it "returns match when provided with valid string such as: 'square:1x11,thumbnail:2x12'" do
         klass.regexp_size.match('square:1x11,thumbnail:2x12').should_not be_nil
       end
       it "returns nil when string contains an extra comma" do
@@ -23,7 +23,7 @@ describe APP::PhotoDimensions do
 
     specify {klass.should respond_to(:possible_sizes)}
     context "possible_sizes" do
-      it "returns possible photo sizes" do
+      it "returns possible photo sizes [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]" do
         klass.possible_sizes.should == [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
       end
     end
@@ -83,75 +83,88 @@ describe APP::PhotoDimensions do
     end
 
     context "size methods" do
-      let(:dimensions) {[[1,11],[2,12],[3,13],[4,14],[5,15],[6,16],[7,17]]}
-      
-      specify{subject.should respond_to(:square)}
-      context "#square" do
-        let(:size){:square}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
+      context "fully specified dimension" do
+        let(:dimensions) {[[1,11],[2,12],[3,13],[4,14],[5,15],[6,16],[7,17]]}
 
-        it_behaves_like "object with size accessor"
-      end
+        specify{subject.should respond_to(:square)}
+        context "#square" do
+          let(:size){:square}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
 
-      specify{subject.should respond_to(:thumbnail)}
-      context "#thumbnail" do
-        let(:size){:thumbnail}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
-        it_behaves_like "object with size accessor"
-      end
+          it_behaves_like "object with size accessor"
+        end
 
-      specify{subject.should respond_to(:small)}
-      context "#small" do
-        let(:size){:small}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
-        it_behaves_like "object with size accessor"
-      end
-     
-      specify{subject.should respond_to(:medium)}
-      context "#medium" do
-        let(:size){:medium}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
-        it_behaves_like "object with size accessor"
-      end
+        specify{subject.should respond_to(:thumbnail)}
+        context "#thumbnail" do
+          let(:size){:thumbnail}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
+          it_behaves_like "object with size accessor"
+        end
 
-      specify{subject.should respond_to(:medium_640)}
-      context "#medium_640" do
-        let(:size){:medium_640}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
-        it_behaves_like "object with size accessor"
-      end
+        specify{subject.should respond_to(:small)}
+        context "#small" do
+          let(:size){:small}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
+          it_behaves_like "object with size accessor"
+        end
 
-      specify{subject.should respond_to(:large)}
-      context "#large" do
-        let(:size){:large}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
-        it_behaves_like "object with size accessor"
-      end
+        specify{subject.should respond_to(:medium)}
+        context "#medium" do
+          let(:size){:medium}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
+          it_behaves_like "object with size accessor"
+        end
 
-      specify{subject.should respond_to(:original)}
-      context "#large" do
-        let(:size){:original}
-        let(:index){expected_sizes.find_index(size)}
-        let(:width){dimensions[index][0]}
-        let(:height){dimensions[index][1]}
-        it_behaves_like "object with size accessor"
+        specify{subject.should respond_to(:medium_640)}
+        context "#medium_640" do
+          let(:size){:medium_640}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
+          it_behaves_like "object with size accessor"
+        end
+
+        specify{subject.should respond_to(:large)}
+        context "#large" do
+          let(:size){:large}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
+          it_behaves_like "object with size accessor"
+        end
+
+        specify{subject.should respond_to(:original)}
+        context "#large" do
+          let(:size){:original}
+          let(:index){expected_sizes.find_index(size)}
+          let(:width){dimensions[index][0]}
+          let(:height){dimensions[index][1]}
+          it_behaves_like "object with size accessor"
+        end
+      end
+      context "partially specified dimensions" do
+        subject {APP::PhotoDimensions.new('square:1x11')}
+        it "should return object for dimensions that are specified" do
+          subject.send(:square).should_not be_nil
+        end
+        it "should return nil for dimensions that are not specified" do
+            [:thumbnail, :small, :medium,:medium_640, :large, :original].each do |method|
+              subject.send(method).should be_nil
+            end
+        end
       end
     end
 
     context "iteratable methods" do
-      let(:reference) {subject.dimensions}
+      let(:reference){subject.dimensions}
       it_behaves_like "object with delegated Array accessor helpers"
     end
     
