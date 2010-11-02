@@ -50,7 +50,6 @@ describe APP::Photos do
   end
 
   context "instance methods" do
-
     specify {  subject.should respond_to(:default) }
     context "#default" do
       it "accepts a string for argument" do

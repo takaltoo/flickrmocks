@@ -96,71 +96,56 @@ describe APP::PhotoDimensions do
     context "size methods" do
       context "fully specified dimension" do
         let(:dimensions) {[[1,11],[2,12],[3,13],[4,14],[5,15],[6,16],[7,17]]}
+        def reference
+          index = expected_sizes.find_index(size)
+          OpenStruct.new :size => size,
+                              :width => dimensions[index][0],
+                              :height => dimensions[index][1]
+        end
 
         specify{subject.should respond_to(:square)}
         context "#square" do
           let(:size){:square}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
-
           it_behaves_like "object with size accessor"
         end
 
         specify{subject.should respond_to(:thumbnail)}
         context "#thumbnail" do
           let(:size){:thumbnail}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
           it_behaves_like "object with size accessor"
         end
 
         specify{subject.should respond_to(:small)}
         context "#small" do
           let(:size){:small}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
           it_behaves_like "object with size accessor"
         end
 
         specify{subject.should respond_to(:medium)}
         context "#medium" do
           let(:size){:medium}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
           it_behaves_like "object with size accessor"
         end
 
         specify{subject.should respond_to(:medium_640)}
         context "#medium_640" do
           let(:size){:medium_640}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
           it_behaves_like "object with size accessor"
         end
 
         specify{subject.should respond_to(:large)}
         context "#large" do
           let(:size){:large}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
           it_behaves_like "object with size accessor"
         end
 
         specify{subject.should respond_to(:original)}
         context "#large" do
           let(:size){:original}
-          let(:index){expected_sizes.find_index(size)}
-          let(:width){dimensions[index][0]}
-          let(:height){dimensions[index][1]}
           it_behaves_like "object with size accessor"
         end
       end
+
       context "partially specified dimensions" do
         subject {APP::PhotoDimensions.new('square:1x11')}
         it "should return object for dimensions that are specified" do
