@@ -1,14 +1,5 @@
 module FlickrMocks
   class PhotoSizes
-    @possible_sizes = [:square, :thumbnail, :small, :medium, :medium_640, :large, :original]
-    @delegated_instance_methods = [:[], :at,:fetch, :first, :last,:each,
-      :each_index, :reverse_each,:length, :size,
-      :empty?, :find_index, :index,:rindex, :collect,
-      :map, :select, :keep_if, :values_at]
-
-    class << self
-      attr_accessor :possible_sizes, :delegated_instance_methods
-    end
 
     def initialize(object)
       raise TypeError, 'FlickRaw::Response expected' unless object.class == FlickRaw::ResponseList
@@ -53,6 +44,10 @@ module FlickrMocks
       @delegated_to_object == other.instance_eval('@delegated_to_object')
     end
 
+    def possible_sizes
+      Models::Helpers.possible_sizes
+    end
+
     # metaprogramming methods
     alias :old_methods :methods
     def methods
@@ -61,7 +56,7 @@ module FlickrMocks
 
     def method_missing(id,*args,&block)
       return @delegated_to_object.send(id,*args,&block) if  delegated_instance_methods.include?(id)
-      return nil if PhotoSizes.possible_sizes.include?(name)
+      return nil if possible_sizes.include?(name)
       super
     end
 
@@ -71,7 +66,7 @@ module FlickrMocks
     end
 
     def delegated_instance_methods
-      PhotoSizes.possible_sizes + PhotoSizes.delegated_instance_methods
+      possible_sizes + FlickrMocks::Models::Helpers.array_accessor_methods
     end
 
     # cloning methods
@@ -91,6 +86,7 @@ module FlickrMocks
         @delegated_to_object.push PhotoSize.new datum
       end
     end
+    
 
   end
 end

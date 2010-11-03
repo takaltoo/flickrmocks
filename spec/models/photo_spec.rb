@@ -3,24 +3,22 @@ require 'spec_helper'
 describe APP::Photo do
   let(:klass){APP::Photo}
   let(:fixtures){APP::Fixtures.new}
-  let(:photo_fixture){fixtures.photo}
-  let(:photo_detail_fixture){fixtures.photo_details}
+  let(:basic_photo){klass.new fixtures.photo}
+  let(:extended_photo){klass.new fixtures.photo_details}
 
-  subject {klass.new photo_fixture}
-
+  subject {basic_photo}
 
   context "initialize" do
     context "with extended photo" do
-      subject {klass.new photo_detail_fixture}
       it "returns object of proper class" do
-        klass.new(photo_detail_fixture).should be_a(APP::Photo)
+        klass.new(fixtures.photo_details).should be_a(APP::Photo)
       end
     end
 
     context "with basic photo" do
-      subject {klass.new photo_fixture}
+      subject {klass.new fixtures.photo}
       it "returns object of proper class" do
-        klass.new(photo_fixture).should be_a(APP::Photo)
+        klass.new(fixtures.photo).should be_a(APP::Photo)
       end
     end
     context "with nil" do
@@ -48,19 +46,46 @@ describe APP::Photo do
       end
     end
 
-    it_behaves_like "object with flickr image url helpers"
+    context "url image helpers" do
+      context "basic photo" do
+        subject {basic_photo}
+        it_behaves_like "object with flickr image url helpers"
+      end
+
+      context "extended photo" do
+        subject {extended_photo}
+        it_behaves_like "object with flickr image url helpers"
+      end
+      
+      context "#original" do
+        context "basic photo" do
+          subject  {basic_photo}
+          specify {subject.should respond_to(:original)}
+          it "returns nil for basic photo" do
+            subject.original.should be_nil
+          end
+        end        
+        context "extended photo" do
+          subject  {extended_photo}
+          specify {subject.should respond_to(:original)}
+          it "returns expected url for detail photo" do
+            subject.original.should == subject.square.sub('_%s_s.' % subject.secret, '_%s_o.' % subject.originalsecret)
+          end
+        end
+      end
+    end
     
     specify {subject.should respond_to(:owner_url)}
     context "#owner_url" do
       it "returns expected url link for owner of image" do
-        subject.owner_url.should == "http://www.flickr.com/photos/#{photo_fixture['owner']}/#{photo_fixture['id']}"
+        subject.owner_url.should == "http://www.flickr.com/photos/#{fixtures.photo['owner']}/#{fixtures.photo['id']}"
       end
     end
 
     specify {subject.should respond_to(:owner_id)}
     context "#owner_id" do
       it "returns expected value id for owner of image" do
-        subject.owner_id.should == photo_fixture['owner']
+        subject.owner_id.should == fixtures.photo['owner']
       end
 
     end
@@ -68,12 +93,13 @@ describe APP::Photo do
     specify {subject.should respond_to(:owner)}
     context "#owner" do
       it "returns expected name for owner of image" do
-        subject.owner.should == photo_fixture['owner']
+        subject.owner.should == fixtures.photo['owner']
       end
     end
 
     specify{subject.should respond_to(:==)}
     context "#==" do
+      subject {basic_photo}
       context "basic photo" do
         it "returns true when object is compared to itself" do
           subject.should == subject
@@ -100,7 +126,7 @@ describe APP::Photo do
       end
 
       context "detailed photo" do
-        subject {klass.new photo_detail_fixture}
+        subject {extended_photo}
 
         it "returns true when object is compared to itself" do
           subject.should == subject
@@ -135,13 +161,13 @@ describe APP::Photo do
   context "metaprogramming methods" do
     context "#delegated_instance_methods" do
       context "basic photo" do
-        subject {klass.new(photo_fixture)}
+        subject {basic_photo}
         it "returns methods for basic photos" do
           subject.delegated_instance_methods.sort.should == fixtures.expected_methods.photo.sort
         end
       end
       context "detailed photo" do
-        subject {klass.new(photo_detail_fixture)}
+        subject {extended_photo}
         it "returns methods for extended photos" do
           subject.delegated_instance_methods.sort.should == fixtures.expected_methods.photo_details.sort
         end
@@ -151,7 +177,7 @@ describe APP::Photo do
 
     context "#respond_to?" do
       context "basic photo" do
-        subject {klass.new(photo_fixture)}
+        subject {basic_photo}
         it "responds to methods that are delegated to basic photo object" do
           fixtures.expected_methods.photo.each do |method|
             subject.should respond_to(method)
@@ -165,9 +191,9 @@ describe APP::Photo do
       end
 
       context "detailed photo" do
-        subject {klass.new(photo_detail_fixture)}
+        subject {extended_photo}
         it "responds to methods that are delegated to detailed photo object" do
-          photo_detail_fixture.methods(false).push(:flickr_type).each do |method|
+          fixtures.photo_details.methods(false).push(:flickr_type).each do |method|
             subject.should respond_to(method)
           end
         end
@@ -181,7 +207,7 @@ describe APP::Photo do
 
     context "#methods" do
       context "basic photo" do
-        subject {klass.new photo_fixture}
+        subject {basic_photo}
 
         specify {subject.should respond_to(:methods)}
         it "returns expected methods including delegated methods for basic photo fixture" do
@@ -191,8 +217,7 @@ describe APP::Photo do
         end
       end
       context "detailed photo" do
-        subject {klass.new photo_detail_fixture}
-
+        subject {extended_photo}
         specify {subject.should respond_to(:methods)}
         it "returns expected methods including delegated methods to photo details fixture" do
           expected_methods = fixtures.expected_methods.photo_details + subject.old_methods

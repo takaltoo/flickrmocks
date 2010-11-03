@@ -64,9 +64,9 @@ describe APP::PhotoDimensions do
     context "#collection" do
       let(:reference){
         OpenStruct.new :current_page => 1,
-                            :per_page => subject.available_sizes.length,
-                            :total_entries => subject.available_sizes.length,
-                            :collection => subject.dimensions
+        :per_page => subject.available_sizes.length,
+        :total_entries => subject.available_sizes.length,
+        :collection => subject.dimensions
       }
       it_behaves_like "object that responds to collection"
     end
@@ -99,8 +99,8 @@ describe APP::PhotoDimensions do
         def reference
           index = expected_sizes.find_index(size)
           OpenStruct.new :size => size,
-                              :width => dimensions[index][0],
-                              :height => dimensions[index][1]
+            :width => dimensions[index][0],
+            :height => dimensions[index][1]
         end
 
         specify{subject.should respond_to(:square)}
@@ -152,18 +152,47 @@ describe APP::PhotoDimensions do
           subject.send(:square).should_not be_nil
         end
         it "should return nil for dimensions that are not specified" do
-            [:thumbnail, :small, :medium,:medium_640, :large, :original].each do |method|
-              subject.send(method).should be_nil
-            end
+          [:thumbnail, :small, :medium,:medium_640, :large, :original].each do |method|
+            subject.send(method).should be_nil
+          end
         end
       end
     end
-
+    
     context "iteratable methods" do
       let(:reference){subject.dimensions}
       it_behaves_like "object with delegated Array accessor helpers"
     end
+
     
+  end
+
+  context "metapragramming methods" do
+    specify {subject.should respond_to(:methods)}
+    context "#methods" do
+      it "returns expected set of methods" do
+        subject.methods.sort.should == (subject.old_methods +
+                                           subject.delegated_instance_methods +
+                                           klass.possible_sizes).sort
+      end
+    end
+
+    specify {subject.should respond_to(:respond_to?)}
+    context "#respond_to?" do
+      it "returns true with return value from methods" do
+        subject.methods.each do |method|
+          subject.should respond_to(method)
+        end
+      end
+
+      specify {subject.should respond_to(:delegated_instance_methods)}
+      context "#delegated_instance_methods" do
+        it "returns methods that include array accessors" do
+          subject.delegated_instance_methods.sort.should == ( 
+              FlickrMocks::Models::Helpers.array_accessor_methods ).sort
+        end
+      end
+    end
   end
 
   context "custom cloning methods" do

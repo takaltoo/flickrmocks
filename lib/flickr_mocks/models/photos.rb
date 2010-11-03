@@ -7,13 +7,10 @@ module FlickrMocks
       :max_entries => 4000,
       :per_page => 50
     }
-    @delegated_instance_methods = [:[], :at,:fetch, :first, :last,:each,
-                                        :each_index, :reverse_each,:length, :size,
-                                        :empty?, :find_index, :index,:rindex, :collect,
-                                        :map, :select, :keep_if, :values_at]
+
 
     class << self
-      attr_accessor :defaults,:delegated_instance_methods
+      attr_accessor :defaults
     end
 
     def initialize(data)
@@ -65,7 +62,7 @@ module FlickrMocks
 
     # metaprogramming methods
     def method_missing(id,*args,&block)
-      return photos.send(id,*args,&block) if  Photos.delegated_instance_methods.include?(id)
+      return photos.send(id,*args,&block) if  delegated_instance_methods.include?(id)
       super
     end
 
@@ -80,7 +77,7 @@ module FlickrMocks
     end
 
     def delegated_instance_methods
-      Photos.delegated_instance_methods
+      FlickrMocks::Models::Helpers.array_accessor_methods
     end
 
     # custom cloning methods

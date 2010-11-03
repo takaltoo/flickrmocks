@@ -1,7 +1,11 @@
-shared_examples_for "object with flickr image url helpers" do
-  let(:base_url){"http://farm#{photo_fixture['farm']}.static.flickr.com/#{photo_fixture['server']}/#{photo_fixture['id']}_#{photo_fixture['secret']}"}
-
+shared_examples_for "object with flickr image url helpers" do  
   specify {subject.should respond_to(:square)}
+  let(:base_url){"http://farm%s.static.flickr.com/%s/%s_%s" %[
+            subject.farm,
+            subject.server,
+            subject.id,
+            subject.secret
+          ]}
   context "#square" do
     it "returns expected url for squre flickr image" do
       subject.square.should == "#{base_url}_s.jpg"

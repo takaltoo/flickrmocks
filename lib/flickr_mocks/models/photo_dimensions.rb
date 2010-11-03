@@ -5,13 +5,10 @@ module FlickrMocks
     # sizes that are recognized by class. The sizes are in order from smallest to largest
     @possible_sizes =  [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
     @regexp_size = /^[a-z]+(_\d+)?:\d+x\d+(,[a-z]+(_\d+)?:\d+x\d+)*$/
-    @delegated_instance_methods = [:[], :at,:fetch, :first, :last,:each,
-                                        :each_index, :reverse_each,:length, :size,
-                                        :empty?, :find_index, :index,:rindex, :collect,
-                                        :map, :select, :keep_if, :values_at]
+
 
     class << self
-      attr_reader :possible_sizes,:regexp_size,:delegated_instance_methods
+      attr_reader :possible_sizes,:regexp_size
     end
     
     def initialize(data)
@@ -60,11 +57,11 @@ module FlickrMocks
 
     alias :old_methods :methods
     def methods
-      available_sizes + delegated_instance_methods + methods
+      available_sizes + delegated_instance_methods + old_methods
     end
 
     def delegated_instance_methods
-      PhotoDimensions.delegated_instance_methods
+      Models::Helpers.array_accessor_methods
     end
     
     # custom cloning methods

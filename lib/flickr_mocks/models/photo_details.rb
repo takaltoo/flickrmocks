@@ -1,17 +1,11 @@
 module FlickrMocks
   class PhotoDetails
-    attr_reader :sizes
-
-    def initialize(photo,sizes)
-      raise ArgumentError, 'FlickRaw::Response expected' unless photo.is_a?(FlickRaw::Response) || photo.is_a?(Photo)
-      raise ArgumentError, 'FlickRaw::Response expected' unless sizes.is_a?(PhotoSizes) || sizes.is_a?(FlickRaw::ResponseList)
-
-      raise ArgumentError,"Photo id: #{photo.id} did not match Size id: #{size.id}" unless photo.id == sizes[0].source.split('/')[-1].split('_')[0]
-
-      @sizes = sizes.class == FlickrMocks::PhotoSizes ?  sizes : PhotoSizes.new(sizes)
-      @delegated_to_object =  photo.is_a?(Photo) ?  photo : Photo.new(photo)
-
-      @delegated_instance_methods = @delegated_to_object.delegated_instance_methods + @delegated_to_object.url_methods
+    attr_reader :dimensions
+    
+    def initialize(photo,dimensions)
+      self.dimensions = dimensions
+      self.delegated_to_object=  photo
+      raise ArgumentError 'owner id for photo did not match owner id for at least one size' unless valid_owner_for_dimensions?
     end
 
     def owner_name
@@ -21,62 +15,71 @@ module FlickrMocks
     def owner_username
       self.owner.username
     end
-
-    # requires originalsecret which is in the detail view but not generic
-    def original
-      FlickRaw.url_o self
-    end
-
-    # Methods that make the delegated methods appear as if they were non-delegated
-    def method_missing(id,*args,&block)
-      return @delegated_to_object.send(id,*args,&block) if @delegated_instance_methods.include?(id)
-      super
-    end
-
-    def respond_to?(method,type=false)
-      return true if @delegated_instance_methods.include?(method)
-      super
-    end
-
-    def methods
-      @delegated_instance_methods + super
-    end
-
-    def public_methods(all=true)
-      @delegated_instance_methods + super(all)
-    end
     
-    def delegated_methods
-      @delegated_instance_methods
+    def dimensions
+      @dimensions
     end
 
-    def initialize_copy(orig)
-      super
-      @sizes = @sizes.clone
-      @delegated_instance_methods = @delegated_instance_methods.clone
-      @delegated_to_object = @delegated_to_object.clone
+    def photo
+      @delegated_to_object
     end
 
-    def owner_id
-      # keeping this away from delegated to methods because it is not a native
-      # FlickRaw::Response method
-      @delegated_to_object.owner_id
+    def possible_sizes
+      FlickrMocks::Models::Helpers.possible_sizes
     end
 
     def ==(other)
-      if other.nil?
-        false 
-      elsif !other.is_a?(self.class)
-        false
-      elsif @delegated_instance_methods.sort != other.instance_eval('@delegated_instance_methods.sort')
-        false
-      elsif @sizes != other.sizes
-        false
-      elsif @delegated_to_object != other.instance_eval('@delegated_to_object')
-        false
-      else
-        true
-      end
+      return false unless other.class == PhotoDetails
+      (dimensions == other.dimensions) && (@delegated_to_object == other.instance_eval('@delegated_to_object'))
+    end
+
+    # metaprogramming methods
+    def method_missing(id,*args,&block)
+      return dimensions.sizes.send(id,*args,&block) if array_accessor_methods.include?(id)
+      return @delegated_to_object.send(id,*args,&block) if delegated_instance_methods.include?(id)
+      super
+    end
+
+    alias :old_respond_to? :respond_to?
+    def respond_to?(method,type=false)
+      delegated_instance_methods.include?(method) || old_respond_to?(method)
+    end
+
+    alias :old_methods :methods
+    def methods
+      delegated_instance_methods + old_methods
+    end
+
+    def delegated_instance_methods
+      @delegated_to_object.delegated_instance_methods + array_accessor_methods + [:owner_id] + possible_sizes
+    end
+
+    # custom cloning methods
+    def initialize_copy(orig)
+      super
+      @dimensions = @dimensions.clone
+      @delegated_to_object = @delegated_to_object.clone
+    end
+
+
+
+    private
+    def dimensions=(object)
+      @dimensions = object.class == PhotoSizes ?  object : PhotoSizes.new(object)
+    end
+
+    def delegated_to_object=(object)
+      @delegated_to_object = object.is_a?(Photo) ?  object : Photo.new(object)
+    end
+
+    def valid_owner_for_dimensions?
+      dimensions.map do |size|
+        photo.id == size.id
+      end.inject(true) do |prev,cur| prev && cur end
+    end
+
+    def array_accessor_methods
+      FlickrMocks::Models::Helpers.array_accessor_methods
     end
 
   end

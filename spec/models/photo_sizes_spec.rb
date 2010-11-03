@@ -5,16 +5,9 @@ describe APP::PhotoSizes do
   let(:fixtures){APP::Fixtures.new}
 
   subject {APP::PhotoSizes.new fixtures.photo_sizes}
-  context "class methods" do
-    specify {klass.should respond_to(:possible_sizes)}
-    context "possible_sizes" do
-      let(:possible_sizes){[:square, :thumbnail, :small, :medium, :medium_640, :large, :original]}
-      it "returns list of sizes that are possible for an image" do
-        (klass.possible_sizes - possible_sizes).should be_empty
-        klass.possible_sizes.length.should == possible_sizes.length
-      end
-    end
-  end
+
+
+
 
 
   context "initialize" do
@@ -78,6 +71,12 @@ describe APP::PhotoSizes do
       end
     end
 
+    specify {subject.should respond_to(:possible_sizes)}
+      context "possible_sizes" do
+        it "returns list of sizes that are possible for an image" do
+          subject.possible_sizes == FlickrMocks::Models::Helpers.possible_sizes
+        end
+    end
     specify {subject.should respond_to(:to_s)}
     context "#to_s" do
       it "should return expected string" do
@@ -127,7 +126,8 @@ describe APP::PhotoSizes do
     specify{subject.should respond_to(:delegated_instance_methods)}
     context "#delegated_instance_methods" do
       it "returns array accessor methods + size methods" do
-        subject.delegated_instance_methods.sort.should == (klass.delegated_instance_methods + klass.possible_sizes).sort
+        subject.delegated_instance_methods.sort.should == (subject.possible_sizes +
+                                                                           APP::Models::Helpers.array_accessor_methods).sort
       end
     end
 

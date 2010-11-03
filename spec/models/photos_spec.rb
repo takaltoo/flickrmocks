@@ -211,7 +211,7 @@ describe APP::Photos do
       specify{ subject.should respond_to(:delegated_instance_methods)}
       context "#delegated_instance_methods" do
         it "returns expected list of methods that are delegated to other objects" do
-          subject.delegated_instance_methods.should == APP::Photos.delegated_instance_methods
+          subject.delegated_instance_methods.should == APP::Models::Helpers.array_accessor_methods
         end
       end
 

@@ -14,6 +14,10 @@ module FlickrMocks
       FlickRaw.url_s self
     end
 
+    def original
+      respond_to?(:originalsecret) ? FlickRaw.url_o(self) : nil
+    end
+
     def thumbnail
       FlickRaw.url_t self
     end
