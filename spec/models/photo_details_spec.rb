@@ -61,7 +61,7 @@ describe APP::PhotoDetails do
 
     specify {subject.should respond_to(:possible_sizes)}
     context "#possible_sizes" do
-      it "returns list of sizes" do
+      it "returns list of all possible sizes" do
         subject.possible_sizes.should == FlickrMocks::Models::Helpers.possible_sizes
       end
     end
@@ -104,7 +104,12 @@ describe APP::PhotoDetails do
             subject.send(method).should == subject.photo.send(method)
           end
         end
-      it "returns expected result delegated to url helpers for basic photo" 
+      it "returns expected result delegated to url helpers for basic photo" do
+          reference = APP::Photo.new(fixtures.photo)
+          FlickrMocks::Models::Helpers.possible_sizes.each do |size|
+            subject.send(size).should == reference.send(size)
+          end
+      end
       end
       context "detailed photo object" do
         subject {photo_details_extended}
@@ -114,14 +119,19 @@ describe APP::PhotoDetails do
             subject.send(method).should == subject.photo.send(method)
           end
         end
-        it "returns expected result delegated to url helpers for detailed photo"
+        it "returns expected result delegated to url helpers for detailed photo" do
+          reference = APP::Photo.new(fixtures.photo_details)
+          FlickrMocks::Models::Helpers.possible_sizes.each do |size|
+            subject.send(size).should == reference.send(size)
+          end
+        end
       end
     end
 
-    context "iteration methods delegated to dimensions (PhotoSizes)" do
-      let(:reference){photo_sizes}
-      it_should_behave_like "object with delegated Array accessor helpers"
-    end
+    context "iteration methods delegated to dimensions (PhotoSizes)" do    
+        let(:reference){photo_sizes}
+        it_should_behave_like "object with delegated Array accessor helpers"
+      end
   end
 
 
