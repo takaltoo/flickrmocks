@@ -3,12 +3,11 @@ require 'ostruct'
 module FlickrMocks
   class PhotoDimensions
     # sizes that are recognized by class. The sizes are in order from smallest to largest
-    @possible_sizes =  [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
     @regexp_size = /^[a-z]+(_\d+)?:\d+x\d+(,[a-z]+(_\d+)?:\d+x\d+)*$/
 
 
     class << self
-      attr_reader :possible_sizes,:regexp_size
+      attr_reader :regexp_size
     end
     
     def initialize(data)
@@ -72,7 +71,9 @@ module FlickrMocks
       end
     end
 
-    
+    def possible_sizes
+      FlickrMocks::Models::Helpers.possible_sizes
+    end
     private
     def delegated_to_object=(data)
       raise(ArgumentError, "Invalid #{data} must respond to :to_s") unless data.respond_to?(:to_s)
@@ -89,7 +90,7 @@ module FlickrMocks
     end
 
     def valid_size?(data)
-      PhotoDimensions.possible_sizes.include?(data.to_sym)
+      possible_sizes.include?(data.to_sym)
     end
 
     def get_size(size)

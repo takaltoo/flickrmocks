@@ -14,7 +14,7 @@ module FlickrMocks
     end
 
     def initialize(data)
-      raise ArgumentEror, 'Expecting class of FlickRaw::ResponseList' unless data.instance_of?(FlickRaw::ResponseList)
+      raise ArgumentError, 'Expecting class of FlickRaw::ResponseList' unless data.class == FlickRaw::ResponseList
       self.current_page= data.page
       self.per_page= data.perpage
       self.total_entries= data.total

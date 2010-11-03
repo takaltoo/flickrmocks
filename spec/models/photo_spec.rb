@@ -23,17 +23,17 @@ describe APP::Photo do
     end
     context "with nil" do
       it "raises error" do
-        expect { klass.new nil}.to raise_error(TypeError)
+        expect { klass.new nil}.to raise_error(ArgumentError)
       end
     end
     context "with FlickRaw::ResponseList class" do
       it "raises error" do
-        expect { klass.new fixtures.photos}.to raise_error(TypeError)
+        expect { klass.new fixtures.photos}.to raise_error(ArgumentError)
       end
     end
     context "with an Array class" do
       it "raises error" do
-        expect { klass.new []}.to raise_error(TypeError)
+        expect { klass.new []}.to raise_error(ArgumentError)
       end
     end
   end

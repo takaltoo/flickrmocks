@@ -1,10 +1,8 @@
 module FlickrMocks
 
   class PhotoSize
-    def initialize(size)
-      raise TypeError, 'FlickRaw::Response expected' if size.is_a? FlickRaw::ResponseList
-      raise TypeError, 'FlickRaw::Response expected' unless size.is_a? FlickRaw::Response
-      @delegated_to_object= size
+    def initialize(object)
+      self.delegated_to_object= object
     end
 
     def size
@@ -49,6 +47,14 @@ module FlickrMocks
       super
       @delegated_to_object = @delegated_to_object.clone
     end
-  end
 
+
+  private
+
+    def delegated_to_object=(data)
+      raise ArgumentError, 'FlickRaw::Response expected' if data.class == FlickRaw::ResponseList
+      raise ArgumentError, 'FlickRaw::Response expected' unless data.is_a? FlickRaw::Response
+      @delegated_to_object = data
+    end
+  end
 end

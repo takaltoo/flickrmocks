@@ -2,7 +2,6 @@ module FlickrMocks
   class PhotoSizes
 
     def initialize(object)
-      raise TypeError, 'FlickRaw::Response expected' unless object.class == FlickRaw::ResponseList
       self.delegated_to_object= object
     end
 
@@ -81,6 +80,7 @@ module FlickrMocks
     private
 
     def delegated_to_object=(data)
+      raise ArgumentError, 'FlickRaw::Response expected' unless data.class == FlickRaw::ResponseList
       @delegated_to_object = []
       data.each do |datum|
         @delegated_to_object.push PhotoSize.new datum

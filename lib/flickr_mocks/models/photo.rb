@@ -2,9 +2,7 @@ module FlickrMocks
 
   class Photo
     def initialize(photo)
-      raise TypeError, "FlickRaw::ResponseList expected" if photo.is_a? FlickRaw::ResponseList
-      raise TypeError, 'FlickRaw::Response expected' unless photo.is_a? FlickRaw::Response
-      @delegated_to_object = photo
+      self.delegated_to_object = photo
       @delegated_instance_methods = @delegated_to_object.methods(false).push(:flickr_type)
       @extended_photo = photo.methods.include?(:originalsecret)
     end
@@ -57,7 +55,7 @@ module FlickrMocks
     end
 
     def ==(other)
-       @delegated_to_object == other.instance_eval('@delegated_to_object')
+      @delegated_to_object == other.instance_eval('@delegated_to_object')
     end
 
     def initialize_copy(orig)
@@ -87,6 +85,13 @@ module FlickrMocks
     def methods
       delegated_instance_methods + old_methods
     end
-  end
 
+
+    private
+    def delegated_to_object=(object)
+      raise ArgumentError, "FlickRaw::ResponseList expected" if object.class == FlickRaw::ResponseList
+      raise ArgumentError, 'FlickRaw::Response expected' unless object.class ==  FlickRaw::Response
+      @delegated_to_object = object
+    end
+  end
 end

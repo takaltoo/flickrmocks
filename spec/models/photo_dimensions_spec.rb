@@ -20,13 +20,6 @@ describe APP::PhotoDimensions do
         klass.regexp_size.match('square1x11,thumbnail:2x12').should be_nil
       end
     end
-
-    specify {klass.should respond_to(:possible_sizes)}
-    context "possible_sizes" do
-      it "returns possible photo sizes [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]" do
-        klass.possible_sizes.should == [:square,:thumbnail,:small,:medium,:medium_640,:large,:original]
-      end
-    end
   end
   
   context "initialize" do
@@ -92,6 +85,14 @@ describe APP::PhotoDimensions do
         subject.should_not == other
       end
     end
+
+    specify {subject.should respond_to(:possible_sizes)}
+    context "#possible_sizes" do
+      it "returns expected set of sizes" do
+        subject.possible_sizes.should == FlickrMocks::Models::Helpers.possible_sizes
+      end
+    end
+
 
     context "size methods" do
       context "fully specified dimension" do
@@ -173,7 +174,7 @@ describe APP::PhotoDimensions do
       it "returns expected set of methods" do
         subject.methods.sort.should == (subject.old_methods +
                                            subject.delegated_instance_methods +
-                                           klass.possible_sizes).sort
+                                           subject.possible_sizes).sort
       end
     end
 

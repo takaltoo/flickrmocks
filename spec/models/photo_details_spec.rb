@@ -23,16 +23,16 @@ describe APP::PhotoDetails do
       klass.new(fixtures.photo_details,fixtures.photo_sizes).should be_a(klass)
     end
     it "raises an error when Array supplied for photo" do
-      lambda{APP::PhotoDetails.new [],photo_sizes}.should raise_error TypeError
+      lambda{APP::PhotoDetails.new [],photo_sizes}.should raise_error ArgumentError
     end
     it "raises an error when Array supplied for photo_details" do
-      lambda{APP::PhotoDetails.new extended_photo,[]}.should raise_error TypeError
+      lambda{APP::PhotoDetails.new extended_photo,[]}.should raise_error ArgumentError
     end
     it "raises error when nil supplied for photo_sizes" do
-      lambda{APP::PhotoDetails.new extended_photo,nil}.should raise_error TypeError
+      lambda{APP::PhotoDetails.new extended_photo,nil}.should raise_error ArgumentError
     end
     it "raises error when nil supplied for photo_details" do
-      lambda{APP::PhotoDetails.new nil,photo_sizes}.should raise_error TypeError
+      lambda{APP::PhotoDetails.new nil,photo_sizes}.should raise_error ArgumentError
     end
   end
 

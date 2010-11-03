@@ -6,10 +6,6 @@ describe APP::PhotoSizes do
 
   subject {APP::PhotoSizes.new fixtures.photo_sizes}
 
-
-
-
-
   context "initialize" do
     context "with FlickRaw::ResponseList" do
       it "returns object of proper class" do
@@ -20,7 +16,7 @@ describe APP::PhotoSizes do
       it "raises an error" do
         expect {
           klass.new(fixtures.photo)
-        }.to raise_error(TypeError)
+        }.to raise_error(ArgumentError)
 
       end
     end
@@ -28,14 +24,14 @@ describe APP::PhotoSizes do
       it "raises an error" do
         expect {
           klass.new([])
-        }.to raise_error(TypeError)
+        }.to raise_error(ArgumentError)
       end
     end
     context "with a nil object" do
       it "raises an error" do
         expect {
           klass.new(nil)
-        }.to raise_error(TypeError)
+        }.to raise_error(ArgumentError)
       end
     end
   end

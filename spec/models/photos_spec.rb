@@ -49,6 +49,22 @@ describe APP::Photos do
     end
   end
 
+
+  context "initialization" do
+    it "returns object of a proper class when photos FlickRaw::ResponseList provided" do
+      klass.new(fixtures.photos).class.should == klass
+    end
+    it "raises an error when FlickRaw::Response provided" do
+      expect {klass.new(fixtures.photo)}.to raise_error(ArgumentError)
+    end
+    it "raises an error when an Array class specified" do
+      expect {klass.new([1,2,3,4])}.to raise_error(ArgumentError)
+    end
+    it "raises an error when sizes FlickRaw::ResponseList provided" do
+      expect {klass.new(fixtures.sizes)}.to raise_error
+    end
+  end
+
   context "instance methods" do
     specify {  subject.should respond_to(:default) }
     context "#default" do

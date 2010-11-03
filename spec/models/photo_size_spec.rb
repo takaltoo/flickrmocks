@@ -17,19 +17,19 @@ describe APP::PhotoSize do
       it "raises error" do
         expect {
           klass.new(fixtures.photos)
-        }.to raise_error(TypeError)
+        }.to raise_error(ArgumentError)
       end
     end
     context "unexpected object" do
       it "raises error when array object provided" do
         expect{
           klass.new([])
-        }.to raise_error(TypeError)
+        }.to raise_error(ArgumentError)
       end
       it "raises error when Hash object provided" do
         expect{
           klass.new({})
-        }.to raise_error(TypeError)
+        }.to raise_error(ArgumentError)
       end
     end
   end
