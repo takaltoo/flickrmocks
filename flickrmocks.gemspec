@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-10-21}
+  s.date = %q{2010-11-03}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
     ".autotest",
      ".document",
      ".gitignore",
+     ".rspec",
      "MIT-LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -34,13 +35,13 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/api/helpers.rb",
      "lib/flickr_mocks/api/options.rb",
      "lib/flickr_mocks/api/sanitize.rb",
-     "lib/flickr_mocks/api/time.rb",
      "lib/flickr_mocks/fixtures.rb",
      "lib/flickr_mocks/flickraw/custom_clone.rb",
      "lib/flickr_mocks/flickraw/custom_compare.rb",
      "lib/flickr_mocks/flickraw/custom_marshal.rb",
      "lib/flickr_mocks/flickraw/flickraw.rb",
      "lib/flickr_mocks/helpers.rb",
+     "lib/flickr_mocks/models/helpers.rb",
      "lib/flickr_mocks/models/photo.rb",
      "lib/flickr_mocks/models/photo_details.rb",
      "lib/flickr_mocks/models/photo_dimensions.rb",
@@ -52,10 +53,10 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/version.rb",
      "lib/flickrmocks.rb",
      "spec/api/api_spec.rb",
+     "spec/api/flickr_spec.rb",
      "spec/api/helper_spec.rb",
      "spec/api/options_spec.rb",
      "spec/api/sanitize_spec.rb",
-     "spec/api/time_spec.rb",
      "spec/base/fixtures_spec.rb",
      "spec/base/flickraw/custom_clone_spec.rb",
      "spec/base/flickraw/custom_compare_spec.rb",
@@ -72,6 +73,7 @@ Gem::Specification.new do |s|
      "spec/fixtures/photo_size.marshal",
      "spec/fixtures/photo_sizes.marshal",
      "spec/fixtures/photos.marshal",
+     "spec/models/helpers_spec.rb",
      "spec/models/photo_details_spec.rb",
      "spec/models/photo_dimensions_spec.rb",
      "spec/models/photo_search_spec.rb",
@@ -79,6 +81,10 @@ Gem::Specification.new do |s|
      "spec/models/photo_sizes_spec.rb",
      "spec/models/photo_spec.rb",
      "spec/models/photos_spec.rb",
+     "spec/shared_examples/array_accessor.rb",
+     "spec/shared_examples/collection.rb",
+     "spec/shared_examples/image_url_helpers.rb",
+     "spec/shared_examples/size_accessor.rb",
      "spec/spec_helper.rb",
      "tasks/fixtures.rb"
   ]
@@ -88,7 +94,12 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Enables FlickRaw responses to be Marshaled.}
   s.test_files = [
-    "spec/models/photo_details_spec.rb",
+    "spec/shared_examples/array_accessor.rb",
+     "spec/shared_examples/size_accessor.rb",
+     "spec/shared_examples/collection.rb",
+     "spec/shared_examples/image_url_helpers.rb",
+     "spec/models/helpers_spec.rb",
+     "spec/models/photo_details_spec.rb",
      "spec/models/photo_size_spec.rb",
      "spec/models/photo_sizes_spec.rb",
      "spec/models/photos_spec.rb",
@@ -96,7 +107,7 @@ Gem::Specification.new do |s|
      "spec/models/photo_spec.rb",
      "spec/models/photo_search_spec.rb",
      "spec/api/api_spec.rb",
-     "spec/api/time_spec.rb",
+     "spec/api/flickr_spec.rb",
      "spec/api/options_spec.rb",
      "spec/api/sanitize_spec.rb",
      "spec/api/helper_spec.rb",
