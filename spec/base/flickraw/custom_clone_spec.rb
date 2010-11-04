@@ -9,6 +9,8 @@ describe APP::CustomClone do
   let(:photo_sizes){fixtures.photo_sizes}
   let(:photo_size){fixtures.photo_size}
 
+  # helper test method that check the ids of all object containted in a
+  # => FlickRaw::Response/ResponseList objects
   def same_ids?(object,other)
     case object
     when FlickRaw::Response then same_ids?(object.instance_eval('@h'), other.instance_eval('@h'))
@@ -31,38 +33,35 @@ describe APP::CustomClone do
     end
   end
 
-  describe "clone" do
+  context "clone" do
     shared_examples_for "cloning any flickraw response" do
-      it "has distinct ids for clone" do
+      it "returns clone with distinct ids from original object" do
         other = subject.clone
-        same_ids?(photo,other).should be_false
-      end
-      it "has same id with itself" do
-        same_ids?(photo,photo).should be_true
+        same_ids?(subject,other).should be_false
       end
     end
 
-    context "photo" do
+    context "cloning photo flickraw response" do
       let(:subject){ photo}
       it_behaves_like "cloning any flickraw response"
     end
 
-    context "photos" do
+    context "cloning photos flickraw responseList" do
       let(:subject) { photos }
       it_behaves_like "cloning any flickraw response"
     end
 
-    context "photo_details" do
+    context "cloning photo_details flickraw responseList" do
       let(:subject) {photo_details}
       it_behaves_like "cloning any flickraw response"
     end
 
-    context "photo_sizes" do
+    context "cloning photo_sizes flickraw responseList" do
       let(:subject) { photo_sizes }
       it_behaves_like "cloning any flickraw response"
     end
 
-    context "photo_size" do
+    context "cloning photo_size responseList" do
       let(:subject) {photo_size}
       it_behaves_like "cloning any flickraw response"
     end

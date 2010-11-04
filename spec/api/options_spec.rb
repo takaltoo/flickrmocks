@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::Api do
   let(:api) {APP::Api}
-  let(:subject) {api}
+  let(:subject) {APP::Api}
   let(:extras){
     { :license => '4,5,6,7',
       :media => 'photos',

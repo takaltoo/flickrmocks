@@ -78,7 +78,6 @@ describe APP::PhotoSearch do
       subject {klass.new(fixtures.photos,{:search_terms => search_terms})}
 
       it "returns expected has of search_terms" do
-        debugger
         subject.search_terms.should == search_terms
       end
 

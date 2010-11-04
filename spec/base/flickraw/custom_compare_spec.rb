@@ -9,7 +9,7 @@ describe APP::CustomCompare do
   let(:photo_sizes){fixtures.photo_sizes}
   let(:photo_size){fixtures.photo_size}
 
-  shared_examples_for "any flickraw response fixture" do
+  shared_examples_for "flickraw response for ==" do
     it "should be equal to itself" do
       subject.should == subject
     end
@@ -27,69 +27,72 @@ describe APP::CustomCompare do
     end
   end
 
-  context "photo" do
-    let(:subject){photo}
-    let(:other){photo_details}
+  context "instance methods" do
+    context "#==" do
+      context "photo flickraw response" do
+        let(:subject){photo}
+        let(:other){photo_details}
 
-    it_behaves_like "any flickraw response fixture"
+        it_behaves_like  "flickraw response for =="
 
-    it "should not equal when single element is different" do
-      other = subject.clone
-      other.stub(:title).and_return(Faker::Lorem.sentence(3))
-      subject.should_not == other
-    end
-  end
+        it "returns false when object is compared with object that is slightly different" do
+          other = subject.clone
+          other.stub(:title).and_return(Faker::Lorem.sentence(3))
+          subject.should_not == other
+        end
+      end
 
-  context "photos" do
-    let(:subject){photos}
-    let(:other){photo_details}
+      context "photos flickraw responselist" do
+        let(:subject){photos}
+        let(:other){photo_details}
     
-    it_behaves_like "any flickraw response fixture"
+        it_behaves_like "flickraw response for =="
 
-    it "should not eq itself with one field difference" do
-      other = subject.clone
-      other.stub(:total).and_return('123454321')
-      subject.should_not == other
+        it "returns false when object is compared with object that is slightly different" do
+          other = subject.clone
+          other.stub(:total).and_return('123454321')
+          subject.should_not == other
+        end
+      end
+
+      context "photo_details flickraw response" do
+        let(:subject){photo_details}
+        let(:other){photo_sizes}
+
+        it_behaves_like "flickraw response for =="
+
+        it "returns false when object is compared with object that is slightly different" do
+          other = subject.clone
+          subject.stub(:farm).and_return(123421)
+          subject.should_not == other
+        end
+      end
+
+      context "photo_sizes response list" do
+        let(:subject){photo_sizes}
+        let(:other){photo_details}
+
+        it_behaves_like "flickraw response for =="
+
+        it "returns false when object is compared with object that is slightly different" do
+          other = subject.clone
+          other.stub(:canprint).and_return(1234321)
+          subject.should_not == other
+        end
+      end
+
+      context "photo_size response" do
+        let(:subject){photo_size}
+        let(:other){photo_details}
+
+        it_behaves_like "flickraw response for =="
+
+        it "returns false when object is compared with object that is slightly different" do
+          other = subject.clone
+          other.stub(:width).and_return(1234321)
+          subject.should_not == other
+        end
+      end
     end
   end
-
-  context "photo_details" do
-    let(:subject){photo_details}
-    let(:other){photo_sizes}
-
-    it_behaves_like "any flickraw response fixture"
-
-    it "should not eq itself with a single element different" do
-      other = subject.clone
-      subject.stub(:farm).and_return(123421)
-      subject.should_not == other
-    end
-  end
-
-   context "photo_sizes" do
-    let(:subject){photo_sizes}
-    let(:other){photo_details}
-
-    it_behaves_like "any flickraw response fixture"
-
-    it "should not eq itself with single element difference" do
-      other = subject.clone
-      other.stub(:canprint).and_return(1234321)
-      subject.should_not == other
-    end
-  end
-
-  context "photo_size" do
-    let(:subject){photo_size}
-    let(:other){photo_details}
-
-    it_behaves_like "any flickraw response fixture"
-
-    it "should not eq itself with single element difference" do
-      other = subject.clone
-      other.stub(:width).and_return(1234321)
-      subject.should_not == other
-    end
-  end
-
 end

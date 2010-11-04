@@ -19,10 +19,6 @@ module FlickrMocks
       @empty_photos = load_fixture(:empty_photos)
 
       @expected_methods = load_fixture(:expected_methods)
-      
-
-
-
     end
 
     def self.repository
