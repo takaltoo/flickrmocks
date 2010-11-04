@@ -6,7 +6,8 @@ module FlickrMocks
       :page => 1
     }
     
-    @delegated_instance_methods = [:current_page, :per_page, :total_entries, :perpage, :capped?, :max_entries]
+    @delegated_instance_methods = [:current_page, :per_page, :total_entries, :perpage, :capped?,
+                                            :max_entries, :collection]
 
     class << self
       attr_accessor :defaults

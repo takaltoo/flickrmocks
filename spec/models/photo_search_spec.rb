@@ -19,7 +19,7 @@ describe APP::PhotoSearch do
     specify {klass.should respond_to(:delegated_instance_methods)}
     it "returns expected set of methods" do
       klass.delegated_instance_methods.sort.should == [:current_page, :per_page,
-        :total_entries,:perpage, :capped?, :max_entries].sort
+        :total_entries,:perpage, :capped?, :max_entries, :collection].sort
     end
   end
 
@@ -78,6 +78,7 @@ describe APP::PhotoSearch do
       subject {klass.new(fixtures.photos,{:search_terms => search_terms})}
 
       it "returns expected has of search_terms" do
+        debugger
         subject.search_terms.should == search_terms
       end
 
@@ -117,6 +118,7 @@ describe APP::PhotoSearch do
         subject.total_results.should == subject.total_entries
       end
     end
+
 
     specify{subject.should respond_to(:url_params)}
     context "url_params" do
@@ -164,6 +166,18 @@ describe APP::PhotoSearch do
           end
         end
       end
+      specify {subject.should respond_to(:collection)}
+      context "#collection" do
+        it "returns object of WillPaginate::Collection class" do
+          subject.collection.class.should == WillPaginate::Collection
+        end
+        it "returns object with expected photo entries" do
+          subject.collection.each_index do |index|
+            subject.collection[index].should == subject.photos[index]
+          end
+        end
+      end
+
       context "array accessor methods" do
         let(:reference){subject.photos}
         it_behaves_like "object with delegated Array accessor helpers"

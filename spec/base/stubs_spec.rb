@@ -4,12 +4,10 @@ describe APP::Stubs do
   let(:klass) {APP::Stubs}
   let(:fixtures) {APP::Fixtures.new}
 
-  context "stub_flickr" do
-    it "should respond to method" do
-      klass.should respond_to(:stub_flickr)
-    end
-
-    context "flickr search methods" do
+  context "class methods" do
+    
+    specify{klass.should respond_to(:stub_flickr)}
+    context "stub_flickr" do
       before(:each) do
         klass.stub_flickr
       end
@@ -26,17 +24,13 @@ describe APP::Stubs do
         flickr.interestingness.getList.should == fixtures.interesting_photos
       end
     end
-  end
 
-  context "stub_search" do
-    it "should respond to method" do
-      klass.should respond_to(:stub_search)
-    end
-    context "stub flickr.photos.search" do
+    specify {klass.should respond_to(:stub_search)}
+    context "stub_search: stubs for flickr.photos.search" do
       before(:each) do
         klass.stub_search
-      end
-      it "should raise error when no options provided" do
+      end     
+      it "raises error when no options provided" do
         expect {
           flickr.photos.search
         }.to raise_error(
@@ -44,7 +38,7 @@ describe APP::Stubs do
           /'flickr.photos.search' - Parameterless searches have been disabled. Please use flickr.photos.getRecent instead./
         )
       end
-      it "should raise error when non-hash option provided" do
+      it "raises when non-Hash option provided" do
         expect {
           flickr.photos.search([])
         }.to raise_error(
@@ -52,7 +46,7 @@ describe APP::Stubs do
           /'flickr.photos.search' - Parameterless searches have been disabled. Please use flickr.photos.getRecent instead./
         )
       end
-      it "should raise error  when neither :photo nor :user_id given" do
+      it "raises error when neither :photo nor :user_id given" do
         expect {
           flickr.photos.search(:per_page => '3', :license => '4' )
         }.to raise_error(
@@ -60,74 +54,70 @@ describe APP::Stubs do
           /'flickr.photos.search' - Parameterless searches have been disabled. Please use flickr.photos.getRecent instead./
         )
       end
-      it "should return default photos fixture when :tags option given with non-garbage value" do
+      it "returns default photos fixture when :tags option given with non-garbage value" do
         flickr.photos.search(:tags => "france").should == fixtures.photos
       end
-      it "should return empty photos when :tags option given with garbage value" do
+      it "returns empty photos when :tags option given with garbage value" do
         flickr.photos.search(:tags => "garbage").should == fixtures.empty_photos
       end
-      it "should return author photo fixture when :user_id option given with non-garbage option" do
+      it "returns author photo fixture when :user_id option given with non-garbage option" do
         flickr.photos.search(:user_id => '23@393').should == fixtures.author_photos
       end
-      it "should return empty photos when :user_id option given with garbage" do
+      it "returns empty photos when :user_id is garbage" do
         flickr.photos.search(:user_id => 'garbage').should == fixtures.empty_photos
       end
-      it "should return :author_photos when both :tags and :author_id provided with non-garbage option" do
+      it "returns :author_photos when both :tags and :author_id provided with non-garbage option" do
         flickr.photos.search(:user_id => '23@23', :tags => '23@23').should == fixtures.author_photos
       end
-      it "should return empty_photos when :tags is garbage and :author_id is non-garbage" do
+      it "returns empty_photos when :tags is garbage and :author_id is non-garbage" do
         flickr.photos.search(:author_id => '23@393', :tags => 'garbage').should == fixtures.empty_photos
       end
-      it "should return empty_photos when :author_id is garbage and :tags is non-garbage" do
+      it "returns empty_photos when :author_id is garbage and :tags is non-garbage" do
         flickr.photos.search(:user_id=> 'garbage', :tags => 'france').should == fixtures.empty_photos
       end
-      it "should return :empty when both :author_id and :tags is garbage" do
+      it "returns :empty when both :author_id and :tags is garbage" do
         flickr.photos.search(:user_id=>'garbage',:tags => 'garbage').should == fixtures.empty_photos
       end
     end
-  end
 
-  context "stub_getInfo" do
-    it "should respond to method" do
-      klass.should respond_to(:stub_getInfo)
-    end
-    context "stub flickr.photos.getInfo" do
+
+    specify {klass.should respond_to(:stub_getInfo)}
+    context "stub_getInfo: which stubs flickr.photos.getInfo" do
       before(:each) do
         klass.stub_getInfo
       end
-      it "should raise error when no option given" do
+      it "raises error when no arguments provided" do
         expect { flickr.photos.getInfo.should }.to raise_error(
           FlickRaw::FailedResponse,
           /'flickr.photos.getInfo' - Photo not found/
         )
       end
-      it "should raise error when garbage id given" do
+      it "raises error when improper photo_id provided" do
         expect { flickr.photos.getInfo(:photo_id => 'garbage').should }.to raise_error(
           FlickRaw::FailedResponse,
           /'flickr.photos.getInfo' - Photo "garbage" not found \(invalid ID\)/
         )
       end
-      it "should raise error when non-hash option provided" do
+      it "raises error when non-hash option provided" do
         expect { flickr.photos.getInfo([]).should }.to raise_error(
           FlickRaw::FailedResponse,
           /'flickr.photos.getInfo' - Photo not found/
         )
       end
-      it "should return photo details fixture when option given" do
+      it "raises photo details fixture when photo_id and secret given" do
         flickr.photos.getInfo(:secret => 'b5da82cd4e', :photo_id => '51028174').should == fixtures.photo_details
       end
-    end
-  end
-
-  context "stub_getSizes" do
-    it "should respond to method" do
-      klass.should respond_to(:stub_getSizes)
-    end
-    context "expected stub responses" do
-      before(:each) do
-          klass.stub_getSizes
+      it "raises photo details fixture when  photo_id and no secret given" do
+        flickr.photos.getInfo(:photo_id => '51028174').should == fixtures.photo_details
       end
-      it "should raise error when no options given" do
+    end
+
+    specify {klass.should respond_to(:stub_getSizes)}
+    context "stub_getSizes: which stubs flickr.photos.getSizes" do
+      before(:each) do
+        klass.stub_getSizes
+      end
+      it "raises error when no options given" do
         expect {
           flickr.photos.getSizes
         }.to raise_error(
@@ -135,7 +125,7 @@ describe APP::Stubs do
           /'flickr.photos.getSizes' - Photo not found/
         )
       end
-      it "should raise error when non-hash given" do
+      it "raises error when non-hash given" do
         expect {
           flickr.photos.getSizes []
         }.to raise_error(
@@ -143,7 +133,7 @@ describe APP::Stubs do
           /'flickr.photos.getSizes' - Photo not found/
         )
       end
-      it "should raise error when garbage given as photo_id" do
+      it "raises error when garbage given as photo_id" do
         expect {
           flickr.photos.getSizes :photo_id => 'garbage'
         }.to raise_error(
@@ -151,30 +141,26 @@ describe APP::Stubs do
           /'flickr.photos.getSizes' - Photo not found/
         )
       end
-      it "should return photo sizes fixture when option given" do
+      it "returns photo sizes fixture when option given" do
         flickr.photos.getSizes(:secret => '3c4374b19e', :photo_id => "5102817422").should == fixtures.photo_sizes
       end
     end
-  end
 
-  context "stub_interestingness" do
-    it "should respond to method" do
-      klass.should respond_to(:stub_interestingness)
-    end
-    context "stub flickr.interestingness" do
+    specify {klass.should respond_to(:stub_interestingness)}
+    context "stub_interestingness: stubs  flickr.interestingness.getList" do
       before(:each) do
         klass.stub_interestingness
       end
-      it "should return interesting fixture when no option given" do
+      it "returns interesting fixture when no option given" do
         flickr.interestingness.getList.should == fixtures.interesting_photos
       end
-      it "should return interesting fixture if non has option given" do
+      it "returns interesting fixture with non-hash option argument" do
         flickr.interestingness.getList([]).should == fixtures.interesting_photos
       end
-      it "should return interseting fixture if hash provided without :date key" do
+      it "returns interesting fixture if hash-option with :date key provided" do
         flickr.interestingness.getList(:tags => 'hello').should == fixtures.interesting_photos
       end
-      it "should raise error if invalid date provided" do
+      it "raises error if invalid date provided" do
         expect {
           flickr.interestingness.getList(:date => 'garbage')
         }.to raise_error(
@@ -182,13 +168,13 @@ describe APP::Stubs do
           /Not a valid date string/
         )
       end
-      it "should return empty string if 2001-01-01 given" do
+      it "returns empty string if 2001-01-01 given" do
         flickr.interestingness.getList(:date => '2000-01-01').should == fixtures.empty_photos
       end
-      it "should return photo details fixture when option given" do
+      it "returns photo details fixture when option given" do
         flickr.interestingness.getList(:date=> '2010-10-10').should == fixtures.interesting_photos
       end
     end
-  end
 
+  end
 end
