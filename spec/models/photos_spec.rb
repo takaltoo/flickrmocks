@@ -5,9 +5,10 @@ describe APP::Photos do
   let(:api) {APP::Api}
   let(:klass) {APP::Photos}
   let(:fixtures){APP::Fixtures.new}
-  let(:photo_fixture) {fixtures.photos}
+  let(:photos_fixture) {fixtures.photos}
+  let(:interesting_photos_fixture){fixtures.interesting_photos}
 
-  subject {klass.new fixtures.photos}
+  subject {klass.new photos_fixture}
   let(:max_pages){subject.default(:max_entries)/subject.default(:per_page)}
 
   context "class methods" do 
@@ -89,7 +90,7 @@ describe APP::Photos do
     specify {  subject.should respond_to(:current_page) }
     context "#current_page" do
       it "returns expected page" do
-        subject.current_page.should == photo_fixture.page
+        subject.current_page.should == photos_fixture.page
       end
       it "returns kind of type Fixnum" do
         subject.current_page.should be_a(Fixnum)
@@ -99,7 +100,7 @@ describe APP::Photos do
     specify {  subject.should respond_to(:per_page) }
     describe "#per_page" do
       it "returns maximum entries possible for a page" do
-        subject.per_page.should == photo_fixture.perpage
+        subject.per_page.should == photos_fixture.perpage
       end
       it "returns kind of Fixnum" do
         subject.per_page.should be_a(Fixnum)
@@ -109,7 +110,7 @@ describe APP::Photos do
     specify {  subject.should respond_to(:perpage) }
     describe "#perpage" do
       it "returns maximum entries possible for a page" do
-        subject.perpage.should == photo_fixture.perpage
+        subject.perpage.should == photos_fixture.perpage
       end
       it "returns kind of Fixnum" do
         subject.perpage.should be_a(Fixnum)
@@ -119,7 +120,7 @@ describe APP::Photos do
     specify { subject.should respond_to(:total_entries) }
     describe "#total_entries" do
       it "returns total of photos" do
-        subject.total_entries.should == photo_fixture.total.to_i
+        subject.total_entries.should == photos_fixture.total.to_i
       end
       specify{ subject.total_entries.should be_a(Fixnum)}
     end
@@ -214,13 +215,42 @@ describe APP::Photos do
 
     specify {subject.should respond_to(:collection)}
     context "#collection" do
-      let(:reference){
-        OpenStruct.new :current_page => subject.current_page,
-                            :per_page => subject.per_page,
-                            :total_entries => subject.capped_entries,
-                            :collection => subject.photos
-      }
-      it_behaves_like "object that responds to collection"
+      context "all items" do
+        let(:reference){
+          OpenStruct.new :current_page => subject.current_page,
+          :per_page => subject.per_page,
+          :total_entries => subject.capped_entries,
+          :collection => subject.photos
+        }
+        it_behaves_like "object that responds to collection"
+      end
+      context "items that are usable (due to licensing restrictions)" do
+        subject {klass.new(interesting_photos_fixture)}
+        let(:expected) { subject.photos.clone.keep_if do |p| p.license.to_i > 3 end }
+        
+        it "returns WillPaginate collection that includes only usable photos" do
+          subject.collection(true).should == expected
+        end
+        it "returns object with current_page set to 1" do
+          subject.collection(true).current_page.should == 1
+        end
+        it "returns object with total_entries set to number of usable entries in current page" do
+          subject.collection(true).total_entries.should == expected.length
+        end
+        it "returns object with per_page set ot number of usable entries on current page" do
+          subject.collection(true).per_page.should == expected.length
+        end
+      end
+    end
+
+    specify {subject.should respond_to(:usable_photos)}
+    context "#usable_items" do
+      it "returns all items if every item is usable" do
+        subject.usable_photos == subject.photos
+      end
+      it "returns subset of items if not all items are usable" do
+        subject.usable_photos == subject.photos.clone.keep_if(&:usable?)
+      end
     end
 
     context "meta-programming" do

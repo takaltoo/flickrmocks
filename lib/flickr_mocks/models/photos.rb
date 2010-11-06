@@ -43,12 +43,22 @@ module FlickrMocks
       total_pages > max_pages ? max_pages : total_pages
     end
 
-    def collection
-      
-      @collection ||= ::WillPaginate::Collection.create(current_page, per_page, capped_entries) do |obj|
-        obj.replace(photos)
+    def usable_photos
+      photos.clone.keep_if(&:usable?)
+    end
+
+    def collection(usable=nil)
+      case usable
+      when true
+        usable_photos = photos.clone.keep_if(&:usable?)
+        ::WillPaginate::Collection.create(1, usable_photos.length, usable_photos.length) do |obj|
+          obj.replace(usable_photos)
+        end
+      else
+        ::WillPaginate::Collection.create(current_page, per_page, capped_entries) do |obj|
+          obj.replace(photos)
+        end
       end
-      @collection
     end
 
 

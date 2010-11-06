@@ -165,10 +165,10 @@ describe APP::PhotoSearch do
           end
         end
       end
+      
       specify {subject.should respond_to(:collection)}
       context "#collection" do
         it "returns object of WillPaginate::Collection class" do
-          debugger
           subject.collection.class.should == WillPaginate::Collection
         end
         it "returns object with expected photo entries" do
@@ -176,6 +176,7 @@ describe APP::PhotoSearch do
             subject.collection[index].should == subject.photos[index]
           end
         end
+        it "returns only usable object when usable option specified"
       end
 
       context "array accessor methods" do
