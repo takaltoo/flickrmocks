@@ -46,6 +46,44 @@ describe APP::Photo do
       end
     end
 
+    specify {subject.should respond_to(:usable?)}
+    context "#usable?" do
+      context "licenses that DO NOT reserve ALL copyright" do
+        it "returns false when license is '0'" do
+          subject.stub(:license).and_return("0")
+          subject.should_not be_usable
+        end
+      end
+      context "licenses that DO NOT allow for commercial usage" do
+        it "returns false when license is '1'" do
+          subject.stub(:license).and_return("1")
+          subject.should_not be_usable
+        end
+        it "returns false when license is '2'" do
+          subject.stub(:license).and_return("2")
+          subject.should_not be_usable
+        end
+        it "returns false when license is '3'" do
+          subject.stub(:license).and_return("3")
+          subject.should_not be_usable
+        end
+      end
+      context "licenses that allow for commercial usage" do
+        it "returns false when license is '4'" do
+          subject.stub(:license).and_return('4')
+          subject.should be_usable
+        end
+        it "returns false when license is '5'" do
+          subject.stub(:license).and_return('5')
+          subject.should be_usable
+        end
+        it "returns false when license is '6'" do
+          subject.stub(:license).and_return('6')
+          subject.should be_usable
+        end
+      end
+    end
+
     context "url image helpers" do
       context "basic photo" do
         subject {basic_photo}

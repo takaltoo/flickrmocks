@@ -168,6 +168,7 @@ describe APP::PhotoSearch do
       specify {subject.should respond_to(:collection)}
       context "#collection" do
         it "returns object of WillPaginate::Collection class" do
+          debugger
           subject.collection.class.should == WillPaginate::Collection
         end
         it "returns object with expected photo entries" do

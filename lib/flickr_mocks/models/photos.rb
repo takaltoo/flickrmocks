@@ -44,6 +44,7 @@ module FlickrMocks
     end
 
     def collection
+      
       @collection ||= ::WillPaginate::Collection.create(current_page, per_page, capped_entries) do |obj|
         obj.replace(photos)
       end

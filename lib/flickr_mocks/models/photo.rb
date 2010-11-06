@@ -54,6 +54,10 @@ module FlickrMocks
       id
     end
 
+    def usable?
+      license.to_i > 3
+    end
+
     def ==(other)
       @delegated_to_object == other.instance_eval('@delegated_to_object')
     end
