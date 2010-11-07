@@ -1,7 +1,7 @@
 # subject is object under test
 # reference is an object that responds to: :current_page,:per_page,:total_entries,:collection
 shared_examples_for "object that responds to collection" do
-  specify{subject.collection.should be_a(WillPaginate::Collection)}
+  specify {subject.collection.class.should == WillPaginate::Collection}
   it "returns object with expected current_page" do
     subject.collection.current_page.should == reference.current_page
   end
@@ -14,4 +14,20 @@ shared_examples_for "object that responds to collection" do
   it "returns object with expected elements" do
     subject.collection.map do |item| item end.should == reference.collection.map do |item|  item end
   end
+end
+
+shared_examples_for "object that responds to collection with usable option" do
+    specify {subject.collection(true).class.should == WillPaginate::Collection}
+    it "returns collection that includes only usable photos" do
+      subject.collection(true).should == reference
+    end
+    it "returns object with current_page set to 1" do
+      subject.collection(true).current_page.should == 1
+    end
+    it "returns object with total_entries set to number of usable entries in current page" do
+      subject.collection(true).total_entries.should == reference.length
+    end
+    it "returns object with per_page set ot number of usable entries on current page" do
+      subject.collection(true).per_page.should == reference.length
+    end
 end

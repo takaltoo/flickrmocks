@@ -215,7 +215,7 @@ describe APP::Photos do
 
     specify {subject.should respond_to(:collection)}
     context "#collection" do
-      context "all items" do
+      context "usable argument set to nil" do
         let(:reference){
           OpenStruct.new :current_page => subject.current_page,
           :per_page => subject.per_page,
@@ -224,22 +224,10 @@ describe APP::Photos do
         }
         it_behaves_like "object that responds to collection"
       end
-      context "items that are usable (due to licensing restrictions)" do
+      context "usable argument set to true" do
         subject {klass.new(interesting_photos_fixture)}
-        let(:expected) { subject.photos.clone.keep_if do |p| p.license.to_i > 3 end }
-        
-        it "returns WillPaginate collection that includes only usable photos" do
-          subject.collection(true).should == expected
-        end
-        it "returns object with current_page set to 1" do
-          subject.collection(true).current_page.should == 1
-        end
-        it "returns object with total_entries set to number of usable entries in current page" do
-          subject.collection(true).total_entries.should == expected.length
-        end
-        it "returns object with per_page set ot number of usable entries on current page" do
-          subject.collection(true).per_page.should == expected.length
-        end
+        let(:reference) { subject.photos.clone.keep_if do |p| p.license.to_i > 3 end }
+        it_behaves_like "object that responds to collection with usable option"
       end
     end
 

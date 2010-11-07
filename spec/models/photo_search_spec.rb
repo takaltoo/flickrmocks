@@ -19,7 +19,7 @@ describe APP::PhotoSearch do
     specify {klass.should respond_to(:delegated_instance_methods)}
     it "returns expected set of methods" do
       klass.delegated_instance_methods.sort.should == [:current_page, :per_page,
-        :total_entries,:perpage, :capped?, :max_entries, :collection].sort
+        :total_entries,:perpage, :capped?, :max_entries, :collection,:capped_entries].sort
     end
   end
 
@@ -118,6 +118,18 @@ describe APP::PhotoSearch do
       end
     end
 
+    specify {subject.should respond_to(:capped_entries)}
+    context "#capped_entries" do
+      it "returns same as total_entries when <= max_entries" do
+        subject.photos.stub(:total_entries).and_return(subject.photos.max_entries() -1)
+        subject.capped_entries.should == subject.photos.capped_entries
+      end
+      it "returns max_entries when total_entries > max_entries" do
+        subject.photos.stub(:total_entries).and_return(subject.photos.max_entries()+1)
+        subject.capped_entries.should == subject.photos.capped_entries
+      end
+    end
+
 
     specify{subject.should respond_to(:url_params)}
     context "url_params" do
@@ -168,16 +180,24 @@ describe APP::PhotoSearch do
       
       specify {subject.should respond_to(:collection)}
       context "#collection" do
-        it "returns object of WillPaginate::Collection class" do
-          subject.collection.class.should == WillPaginate::Collection
-        end
-        it "returns object with expected photo entries" do
-          subject.collection.each_index do |index|
-            subject.collection[index].should == subject.photos[index]
-          end
-        end
-        it "returns only usable object when usable option specified"
+        context "usable photos set to nil" do
+        let(:reference){
+          OpenStruct.new :current_page => subject.current_page,
+          :per_page => subject.per_page,
+          :total_entries => subject.capped_entries,
+          :collection => subject.photos
+        }
+        it_behaves_like "object that responds to collection"
       end
+      
+      context "usable photos set to true" do
+        subject { klass.new fixtures.interesting_photos,options }
+        let(:reference) { subject.photos.clone.keep_if do |p| p.license.to_i > 3 end }
+        it_behaves_like "object that responds to collection with usable option"
+      end
+
+    end
+
 
       context "array accessor methods" do
         let(:reference){subject.photos}
