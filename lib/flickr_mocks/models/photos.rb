@@ -51,7 +51,7 @@ module FlickrMocks
       case usable
       when true
         usable_photos = photos.clone.keep_if(&:usable?)
-        ::WillPaginate::Collection.create(1, usable_photos.length, usable_photos.length) do |obj|
+        ::WillPaginate::Collection.create(1, per_page, usable_photos.length) do |obj|
           obj.replace(usable_photos)
         end
       else

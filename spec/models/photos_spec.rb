@@ -224,10 +224,28 @@ describe APP::Photos do
         }
         it_behaves_like "object that responds to collection"
       end
+
       context "usable argument set to true" do
         subject {klass.new(interesting_photos_fixture)}
-        let(:reference) { subject.photos.clone.keep_if do |p| p.license.to_i > 3 end }
+        let(:collection){subject.photos.clone.keep_if do |p| p.license.to_i > 3 end}
+        let(:reference) {
+          OpenStruct.new :current_page => 1,
+          :per_page => subject.perpage,
+          :total_entries => collection.length,
+          :collection => collection
+        }
         it_behaves_like "object that responds to collection with usable option"
+      end
+
+      context "empty collection" do
+        let(:reference) {
+        OpenStruct.new :current_page => 1,
+          :per_page => fixtures.empty_photos.perpage,
+          :total_entries => 0,
+          :collection => []
+        }
+        let(:subject){klass.new(fixtures.empty_photos)}
+        it_behaves_like "object with no items that responds to collection"
       end
     end
 
