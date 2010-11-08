@@ -192,7 +192,13 @@ describe APP::PhotoSearch do
       
       context "usable photos set to true" do
         subject { klass.new fixtures.interesting_photos,options }
-        let(:reference) { subject.photos.clone.keep_if do |p| p.license.to_i > 3 end }
+        let(:collection){subject.photos.clone.keep_if do |p| p.license.to_i > 3 end}
+        let(:reference) {
+          OpenStruct.new :current_page => 1,
+          :per_page => subject.perpage,
+          :total_entries => collection.length,
+          :collection => collection
+        }
         it_behaves_like "object that responds to collection with usable option"
       end
 
