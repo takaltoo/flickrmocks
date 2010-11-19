@@ -68,7 +68,8 @@ module FlickrMocks
 
     def collection
       ::WillPaginate::Collection.create(current_page, per_page, total_entries) do |obj|
-        obj.replace(institutions)
+        start = (current_page-1)*per_page
+        obj.replace(institutions[start, per_page])
       end
     end
 

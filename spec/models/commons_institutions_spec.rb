@@ -149,7 +149,7 @@ describe APP::CommonsInstitutions do
           OpenStruct.new :current_page => 1,
           :per_page => 20,
           :total_entries => fixture.size,
-          :collection => subject.institutions
+          :collection => subject.institutions[0,20]
         }
         it_behaves_like "object that responds to collection"
       end
