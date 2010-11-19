@@ -88,7 +88,7 @@ module FlickrMocks
     end
 
     def max_page
-      (total_entries  / @per_page) == 0 ? 1 : (total_entries  / @per_page)
+      (total_entries  / @per_page.to_f).ceil == 0 ? 1 : (total_entries  / @per_page.to_f).ceil
     end
 
     def sanitize_page(page)

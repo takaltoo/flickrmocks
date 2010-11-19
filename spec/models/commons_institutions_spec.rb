@@ -58,7 +58,7 @@ describe APP::CommonsInstitutions do
           klass.new(fixture,:per_page => 20, :current_page => 0).current_page.should == 1
         end
         it "should return max page when current_page is greater than max_page" do
-          max_page = (fixture.size / 20)
+          max_page = (fixture.size / 20.to_f).ceil
           klass.new(fixture,:per_page => 20,
                                   :current_page => max_page+1).current_page.should == max_page
         end
