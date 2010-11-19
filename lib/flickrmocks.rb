@@ -26,7 +26,8 @@ end
 #  end
 # end
 
-['/flickr_mocks/version.rb',
+[
+ 'flickr_mocks/version.rb',
  'flickr_mocks/stubs.rb',
  'flickr_mocks/helpers.rb',
  'flickr_mocks/fixtures.rb',
@@ -48,8 +49,8 @@ end
  'flickr_mocks/flickraw/custom_clone.rb',
  'flickr_mocks/flickraw/custom_compare.rb',
  'flickr_mocks/flickraw/custom_marshal.rb',
- 'flickr_mocks/flickraw/flickraw.rb'].each do |file|
- 
- File.expand_path(File.dirname(__FILE__)) + file
+ 'flickr_mocks/flickraw/flickraw.rb'
+].each do |file|
+ require File.expand_path(File.dirname(__FILE__)) + '/' + file
 end
 
