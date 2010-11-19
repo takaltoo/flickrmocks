@@ -82,11 +82,16 @@ module FlickrMocks
       @per_page = value.to_i == 0 ? default(:per_page) : value.to_i
     end
 
-    def current_page=(value)
-      page = value.to_i < 1 ? 1 : value.to_i
-      max_page = (total_entries  / @per_page) == 0 ? 1 : (total_entries  / @per_page)
-      page = page > max_page ? max_page : page
-      @current_page = page
+    def current_page=(page)
+      @current_page = sanitize_page(page) > max_page ? max_page : sanitize_page(page)
+    end
+
+    def max_page
+      (total_entries  / @per_page) == 0 ? 1 : (total_entries  / @per_page)
+    end
+
+    def sanitize_page(page)
+      page.to_i < 1 ? 1 : page.to_i
     end
   end
 end
