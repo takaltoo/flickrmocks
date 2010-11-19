@@ -165,6 +165,14 @@ describe APP::Api do
       subject.commons_institutions_params(:per_page => 20).should ==
         {:per_page => 20, :current_page => 1}
     end
+    it "returns :current_page in preference to :page" do
+      subject.commons_institutions_params(:per_page=>20,:page=>2,:current_page=>3).should ==
+        {:per_page => 20, :current_page => 3}
+    end
+    it "returns :page when :current_page is not specified" do
+      subject.commons_institutions_params(:per_page=>20,:page=>3).should ==
+        {:per_page => 20, :current_page => 3}
+    end
   end
   
   

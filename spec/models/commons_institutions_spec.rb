@@ -62,6 +62,9 @@ describe APP::CommonsInstitutions do
           klass.new(fixture,:per_page => 20,
                                   :current_page => max_page+1).current_page.should == max_page
         end
+        it "should return 1 when :per_page is very large and current_page is not set" do
+          klass.new(fixture,:per_page => 200000).current_page.should == 1
+        end
       end
 
       specify {subject.should respond_to(:per_page)}
