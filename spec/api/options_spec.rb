@@ -24,7 +24,7 @@ describe APP::Api do
   }
   
 
-  describe "search_options" do
+  context "search_options" do
     it "should give correct options when all options are specified except :author_id" do
       subject.search_options(options.clone.merge(:per_page =>'400')).should == expected
     end
@@ -60,7 +60,7 @@ describe APP::Api do
     end
   end
 
-  describe "interesting_options" do
+  context "interesting_options" do
     let(:expected){
       { :date => '2010-02-14',
         :per_page => '2',
@@ -81,7 +81,7 @@ describe APP::Api do
     end
   end
 
-  describe "photo_options" do
+  context "photo_options" do
     let(:expected) {
       {:photo_id => '20030', :secret => 'abcdef'}
     }
@@ -102,7 +102,7 @@ describe APP::Api do
     end
   end
 
-  describe "search_params" do
+  context "search_params" do
     let(:expected){
       {
         :search_terms => 'iran,shiraz',
@@ -126,8 +126,7 @@ describe APP::Api do
     end
   end
 
-  describe "interesting_params" do
-    
+  context "interesting_params" do
     let(:expected) {
       {
         :date => 'iran,shiraz',
@@ -146,6 +145,28 @@ describe APP::Api do
         expected.clone.merge(:base_url => expected[:base_url])
     end
   end
+
+  context "institution_params" do
+    it "returns :per_page and :current_page if specified" do
+      expected = {:per_page => 2, :current_page => 3}
+      subject.commons_institutions_params(expected).should == expected
+    end
+    it "returns :per_page is prefereed over :perpage is specified" do
+      expected = {:per_page => 2, :current_page => 1}
+      subject.commons_institutions_params(:per_page => 3, :perpage => 20, :current_page => 1).should ==
+        {:per_page => 3, :current_page => 1}
+    end
+    it "returns :perpage if :per_page is not specified" do
+      expected = {:perpage => 3}
+      subject.commons_institutions_params(:perpage => 20, :current_page => 1).should ==
+        {:per_page => 20, :current_page => 1}
+    end
+    it "returns :current_page of 1 if not specified" do
+      subject.commons_institutions_params(:per_page => 20).should ==
+        {:per_page => 20, :current_page => 1}
+    end
+  end
+  
   
 end
 

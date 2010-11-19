@@ -23,6 +23,10 @@ describe APP::Stubs do
       it "stubs flickr.interestingness.getList" do
         flickr.interestingness.getList.should == fixtures.interesting_photos
       end
+
+      it "stubs flickr.commons.getInstitutions" do
+        flickr.commons.getInstitutions.should == fixtures.commons_institutions
+      end
     end
 
     specify {klass.should respond_to(:stub_search)}
@@ -173,6 +177,16 @@ describe APP::Stubs do
       end
       it "returns photo details fixture when option given" do
         flickr.interestingness.getList(:date=> '2010-10-10').should == fixtures.interesting_photos
+      end
+    end
+
+    specify {klass.should respond_to(:stub_commons_institutions)}
+    context "stub_commons_institutions" do
+      before(:each) do
+        klass.stub_commons_institutions
+      end
+      it "returns commons_institutions fixture" do
+        flickr.commons.getInstitutions.should == fixtures.commons_institutions
       end
     end
 

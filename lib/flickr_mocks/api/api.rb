@@ -38,5 +38,10 @@ module FlickrMocks
       PhotoSearch.new photos,Api.interesting_params(params)
     end
 
+    def self.commons_institutions(params)
+      institutions = Api.flickr_commons_institutions
+      CommonsInstitutions.new institutions,Api.commons_institutions_params(params)
+    end
+
   end
 end

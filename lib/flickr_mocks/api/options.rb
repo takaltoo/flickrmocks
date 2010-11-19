@@ -49,6 +49,13 @@ module FlickrMocks
         :base_url => params[:base_url]
       }
     end
+
+    def self.commons_institutions_params(params)
+      return {
+        :per_page => params[:per_page] || params[:perpage],
+        :current_page => params[:current_page] || 1
+      }
+    end
   end
 
  

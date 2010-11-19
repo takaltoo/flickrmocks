@@ -2,7 +2,7 @@ module FlickrMocks
   module Stubs
 
     def self.stub_flickr
-      [:stub_search,:stub_getInfo,:stub_getSizes,:stub_interestingness].each do |method|
+      [:stub_search,:stub_getInfo,:stub_getSizes,:stub_interestingness,:stub_commons_institutions].each do |method|
         self.send(method)
       end
     end
@@ -86,6 +86,14 @@ module FlickrMocks
           else
             Fixtures.new.interesting_photos
           end
+        end
+      }.call
+    end
+
+    def self.stub_commons_institutions
+      Proc.new {
+        flickr.commons.stub(:getInstitutions) do
+            Fixtures.new.commons_institutions
         end
       }.call
     end

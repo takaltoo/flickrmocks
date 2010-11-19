@@ -9,6 +9,7 @@ describe APP::Api do
   let(:sizes) {fixtures.photo_sizes}
   let(:photo_details) {fixtures.photo_details}
   let(:interesting_photos) {fixtures.interesting_photos}
+  let(:commons_institutions) {fixtures.commons_institutions}
 
 
   context "class instance variables" do
@@ -77,6 +78,15 @@ describe APP::Api do
         flickr.interestingness.stub(:getList).and_return(interesting_photos)
         klass.interesting_photos({:date => '2010-01-01'}).should ==
                   APP::PhotoSearch.new(interesting_photos,{:date => '2010-01-01'})
+      end
+    end
+
+    specify {klass.should respond_to(:commons_institutions)}
+    describe "commons_institutions" do
+      it "returns expected CommonsInstitutions object" do
+        flickr.commons.stub(:getInstitutions).and_return(commons_institutions)
+        klass.commons_institutions({}).should ==
+          APP::CommonsInstitutions.new(commons_institutions)
       end
     end
 

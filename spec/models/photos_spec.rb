@@ -12,8 +12,7 @@ describe APP::Photos do
   let(:max_pages){subject.default(:max_entries)/subject.default(:per_page)}
 
   context "class methods" do 
-    specify { klass.should respond_to(:defaults)}
-    
+    specify { klass.should respond_to(:defaults)}   
     context "defaults" do
       before(:each) do
         @defaults = klass.defaults.clone

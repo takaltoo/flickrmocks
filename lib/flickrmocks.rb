@@ -39,6 +39,8 @@ require 'flickr_mocks/models/photos.rb'
 require 'flickr_mocks/models/photo.rb'
 require 'flickr_mocks/models/photo_search.rb'
 require 'flickr_mocks/models/photo_details.rb'
+require 'flickr_mocks/models/commons_institutions.rb'
+require 'flickr_mocks/models/commons_institution.rb'
 
 require 'flickr_mocks/api/helpers.rb'
 require 'flickr_mocks/api/options.rb'

@@ -44,5 +44,11 @@ describe APP::Api do
         klass.flickr_author({}).should == fixtures.author_photos
       end
     end
+
+    specify {klass.should respond_to(:flickr_commons_institutions)}
+    it "retuns list of commons institutions" do
+      flickr.commons.stub(:getInstitutions).and_return(fixtures.commons_institutions)
+      klass.flickr_commons_institutions.should == fixtures.commons_institutions
+    end
   end
 end

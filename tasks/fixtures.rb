@@ -1,12 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/flickrmocks')
 require 'fileutils'
+require 'ruby-debug'
 
 
 # used for providing fixtures to users of the gem
 namespace :fixtures do
   desc 'generate all fixtures for USERS of the GEM'
   task :all => [:photos,:empty_photos,:interesting_photos,:author_photos,:photo,:photo_details,
-                   :photo_sizes,:photo_size,:expected_methods]
+                   :photo_sizes,:photo_size,:expected_methods, :commons_institutions]
   
   desc 'generate fixture for flickr.photos.search'
   task :photos => :repository do
@@ -51,12 +52,17 @@ namespace :fixtures do
     dump default_photo_sizes,:photo_sizes
   end
 
-  desc 'generated fixture for single size'
+  desc 'generate fixture for single size'
   task :photo_size => :repository do
     config_flickr
     dump default_photo_sizes[0],:photo_size
   end
 
+  desc 'generate fixture for commons institutions'
+  task :commons_institutions => :repository do
+    config_flickr
+    dump default_commons_institutions, :commons_institutions
+  end
 
   desc 'expected methods'
   task :expected_methods => :repository do
@@ -70,6 +76,7 @@ namespace :fixtures do
     data.photo_details = default_methods(default_photo_details)
     data.photo_sizes = default_methods(default_photo_sizes)
     data.photo_size = default_methods(default_photo_size)
+    data.commons_institutions = default_methods(default_commons_institutions)
     dump data,:expected_methods
   end
 
@@ -106,7 +113,7 @@ namespace :fixtures do
   end
 
   def repo_dir
-    FlickrMocks::Fixtures.repository
+    config_dir + '/spec/fixtures/'
   end
 
   def dump(data,fname)
@@ -155,6 +162,11 @@ namespace :fixtures do
     @default_empty_photos
   end
 
+  def default_commons_institutions
+    @default_commons_institutions ||= flickr.commons.getInstitutions
+    @default_commons_institutions
+  end
+  
   def default_methods(obj)
     obj.methods(false).push(:flickr_type)
   end

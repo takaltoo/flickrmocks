@@ -9,6 +9,7 @@ shared_examples_for "object with delegated Array accessor helpers" do
   specify{subject.should respond_to(:last)}
   specify{subject.should respond_to(:each)}
   specify{subject.should respond_to(:each_index)}
+  specify{subject.should respond_to(:each_with_index)}
   specify{subject.should respond_to(:reverse_each)}
   specify{subject.should respond_to(:length)}
   specify{subject.should respond_to(:size)}
@@ -98,6 +99,17 @@ shared_examples_for "object with delegated Array accessor helpers" do
       subject.each {|v| actual.push v}
       reference.each{|v| expected.push v}
       actual.should == expected
+    end
+  end
+
+  context "#each_with_index" do
+    it "returns value and index" do
+      subject.each_with_index do |value,index|
+        value.should == reference[index]
+      end
+      reference.each_with_index do |value,index|
+        value.should == subject[index]
+      end
     end
   end
 

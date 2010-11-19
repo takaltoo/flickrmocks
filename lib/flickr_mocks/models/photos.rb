@@ -3,10 +3,7 @@ module FlickrMocks
     attr_reader :current_page,:per_page,:total_entries,:total_pages,:photos
     alias :perpage :per_page
 
-    @defaults =  {
-      :max_entries => 4000,
-      :per_page => 50
-    }
+    @defaults =  FlickrMocks::Models::Helpers.paging_defaults.clone
 
 
     class << self

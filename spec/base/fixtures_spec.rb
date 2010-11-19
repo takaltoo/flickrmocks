@@ -78,6 +78,12 @@ describe APP::Fixtures do
       let(:fixture) {:photo_sizes}
       it_behaves_like "a flickraw fixture"
     end
+
+    specify {subject.should respond_to(:commons_institutions)}
+    context "commons_institutions" do
+      let(:fixture){:commons_institutions}
+      it_behaves_like "a flickraw fixture"
+    end
   end
 
 end
