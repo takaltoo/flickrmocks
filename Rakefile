@@ -22,7 +22,6 @@ begin
     gem.homepage = "http://github.com/takaltoo/flickrmocks"
     gem.authors = ["Takaltoo"]
 
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 2.10"
     gem.add_development_dependency "rspec", ">=2.0.0.beta.22"
     gem.add_development_dependency "capybara"
     #gem.add_development_dependency 'ruby-debug19', :require => 'ruby-debug'
