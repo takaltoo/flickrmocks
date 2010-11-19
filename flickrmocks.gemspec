@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-11-09}
+  s.date = %q{2010-11-18}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -41,6 +41,8 @@ Gem::Specification.new do |s|
      "lib/flickr_mocks/flickraw/custom_marshal.rb",
      "lib/flickr_mocks/flickraw/flickraw.rb",
      "lib/flickr_mocks/helpers.rb",
+     "lib/flickr_mocks/models/commons_institution.rb",
+     "lib/flickr_mocks/models/commons_institutions.rb",
      "lib/flickr_mocks/models/helpers.rb",
      "lib/flickr_mocks/models/photo.rb",
      "lib/flickr_mocks/models/photo_details.rb",
@@ -65,6 +67,7 @@ Gem::Specification.new do |s|
      "spec/base/stubs_spec.rb",
      "spec/base/version_spec.rb",
      "spec/fixtures/author_photos.marshal",
+     "spec/fixtures/commons_institutions.marshal",
      "spec/fixtures/empty_photos.marshal",
      "spec/fixtures/expected_methods.marshal",
      "spec/fixtures/interesting_photos.marshal",
@@ -73,6 +76,8 @@ Gem::Specification.new do |s|
      "spec/fixtures/photo_size.marshal",
      "spec/fixtures/photo_sizes.marshal",
      "spec/fixtures/photos.marshal",
+     "spec/models/commons_institution_spec.rb",
+     "spec/models/commons_institutions_spec.rb",
      "spec/models/helpers_spec.rb",
      "spec/models/photo_details_spec.rb",
      "spec/models/photo_dimensions_spec.rb",
@@ -101,7 +106,9 @@ Gem::Specification.new do |s|
      "spec/models/helpers_spec.rb",
      "spec/models/photo_details_spec.rb",
      "spec/models/photo_size_spec.rb",
+     "spec/models/commons_institution_spec.rb",
      "spec/models/photo_sizes_spec.rb",
+     "spec/models/commons_institutions_spec.rb",
      "spec/models/photos_spec.rb",
      "spec/models/photo_dimensions_spec.rb",
      "spec/models/photo_spec.rb",
@@ -126,7 +133,6 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
       s.add_development_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
       s.add_development_dependency(%q<capybara>, [">= 0"])
       s.add_development_dependency(%q<factory_girl_rails>, [">= 1.0"])
@@ -134,7 +140,6 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<flickraw>, [">= 0.8.2"])
       s.add_runtime_dependency(%q<chronic>, [">= 0"])
     else
-      s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
       s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
       s.add_dependency(%q<capybara>, [">= 0"])
       s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])
@@ -143,7 +148,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<chronic>, [">= 0"])
     end
   else
-    s.add_dependency(%q<thoughtbot-shoulda>, [">= 2.10"])
     s.add_dependency(%q<rspec>, [">= 2.0.0.beta.22"])
     s.add_dependency(%q<capybara>, [">= 0"])
     s.add_dependency(%q<factory_girl_rails>, [">= 1.0"])

@@ -1,3 +1,4 @@
+
 module FlickrMocks
   class CommonsInstitution
     def initialize(object)

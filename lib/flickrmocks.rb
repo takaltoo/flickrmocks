@@ -26,30 +26,30 @@ end
 #  end
 # end
 
-require 'flickr_mocks/version.rb'
-require 'flickr_mocks/stubs.rb'
-require 'flickr_mocks/helpers.rb'
-require 'flickr_mocks/fixtures.rb'
-
-require 'flickr_mocks/models/helpers.rb'
-require 'flickr_mocks/models/photo_sizes.rb'
-require 'flickr_mocks/models/photo_dimensions.rb'
-require 'flickr_mocks/models/photo_size.rb'
-require 'flickr_mocks/models/photos.rb'
-require 'flickr_mocks/models/photo.rb'
-require 'flickr_mocks/models/photo_search.rb'
-require 'flickr_mocks/models/photo_details.rb'
-require 'flickr_mocks/models/commons_institutions.rb'
-require 'flickr_mocks/models/commons_institution.rb'
-
-require 'flickr_mocks/api/helpers.rb'
-require 'flickr_mocks/api/options.rb'
-require 'flickr_mocks/api/flickr.rb'
-require 'flickr_mocks/api/sanitize.rb'
-require 'flickr_mocks/api/api.rb'
-
-require 'flickr_mocks/flickraw/custom_clone.rb'
-require 'flickr_mocks/flickraw/custom_compare.rb'
-require 'flickr_mocks/flickraw/custom_marshal.rb'
-require 'flickr_mocks/flickraw/flickraw.rb'
+['/flickr_mocks/version.rb',
+ 'flickr_mocks/stubs.rb',
+ 'flickr_mocks/helpers.rb',
+ 'flickr_mocks/fixtures.rb',
+ 'flickr_mocks/models/helpers.rb',
+ 'flickr_mocks/models/photo_sizes.rb',
+ 'flickr_mocks/models/photo_dimensions.rb',
+ 'flickr_mocks/models/photo_size.rb',
+ 'flickr_mocks/models/photos.rb',
+ 'flickr_mocks/models/photo.rb',
+ 'flickr_mocks/models/photo_search.rb',
+ 'flickr_mocks/models/photo_details.rb',
+ 'flickr_mocks/models/commons_institutions.rb',
+ 'flickr_mocks/models/commons_institution.rb',
+ 'flickr_mocks/api/helpers.rb',
+ 'flickr_mocks/api/options.rb',
+ 'flickr_mocks/api/flickr.rb',
+ 'flickr_mocks/api/sanitize.rb',
+ 'flickr_mocks/api/api.rb',
+ 'flickr_mocks/flickraw/custom_clone.rb',
+ 'flickr_mocks/flickraw/custom_compare.rb',
+ 'flickr_mocks/flickraw/custom_marshal.rb',
+ 'flickr_mocks/flickraw/flickraw.rb'].each do |file|
+ 
+ File.expand_path(File.dirname(__FILE__)) + file
+end
 

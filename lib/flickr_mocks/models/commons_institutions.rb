@@ -1,3 +1,4 @@
+
 module FlickrMocks
   class CommonsInstitutions
     attr_accessor :per_page,:current_page
