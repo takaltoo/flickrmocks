@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe APP::CustomCompare do
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
 
   let(:photo){fixtures.photo}
   let(:photos){fixtures.photos}
@@ -45,7 +45,7 @@ describe APP::CustomCompare do
       context "photos flickraw responselist" do
         let(:subject){photos}
         let(:other){photo_details}
-    
+
         it_behaves_like "flickraw response for =="
 
         it "returns false when object is compared with object that is slightly different" do
@@ -62,9 +62,9 @@ describe APP::CustomCompare do
         it_behaves_like "flickraw response for =="
 
         it "returns false when object is compared with object that is slightly different" do
-          other = subject.clone
-          subject.stub(:farm).and_return(123421)
-          subject.should_not == other
+            other = subject.clone
+            other.stub(:farm).and_return(123421)
+            subject.should_not == other
         end
       end
 

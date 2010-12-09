@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe APP::CustomClone do
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
 
   let(:photo){fixtures.photo}
   let(:photos){fixtures.photos}

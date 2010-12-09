@@ -1,10 +1,9 @@
 require 'spec_helper'
 
-
 describe APP::Photos do
   let(:api) {APP::Api}
   let(:klass) {APP::Photos}
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
   let(:photos_fixture) {fixtures.photos}
   let(:interesting_photos_fixture){fixtures.interesting_photos}
 

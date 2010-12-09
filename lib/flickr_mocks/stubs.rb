@@ -9,7 +9,7 @@ module FlickrMocks
 
 
     def self.stub_search
-      fixtures = Fixtures.new
+      fixtures = Fixtures.instance
       Proc.new { flickr.photos.stub(:search) do |params|
           if !params.is_a?(Hash)
             raise FlickRaw::FailedResponse.new('Parameterless searches have been disabled. Please use flickr.photos.getRecent instead.',
@@ -45,7 +45,7 @@ module FlickrMocks
             raise FlickRaw::FailedResponse.new('Photo "%s" not found (invalid ID)' % params[:photo_id],
             'code','flickr.photos.getInfo')
           else
-            Fixtures.new.photo_details
+            Fixtures.instance.photo_details
           end
         end
       }.call
@@ -64,7 +64,7 @@ module FlickrMocks
             raise FlickRaw::FailedResponse.new('Photo not found',
               'code','flickr.photos.getSizes')
           else
-            Fixtures.new.photo_sizes
+            Fixtures.instance.photo_sizes
           end
         end
       }.call
@@ -74,17 +74,17 @@ module FlickrMocks
       Proc.new { 
         flickr.interestingness.stub(:getList) do |params|
           if !params.is_a?(Hash)
-            Fixtures.new.interesting_photos
+            Fixtures.instance.interesting_photos
           elsif !params.has_key?(:date)
-            Fixtures.new.interesting_photos
+            Fixtures.instance.interesting_photos
           elsif params[:date] == 'garbage'
             raise FlickRaw::FailedResponse.new('Not a valid date string',
             'code','flickr.interestingness.getList'
             )
           elsif params[:date] == '2000-01-01'
-            Fixtures.new.empty_photos
+            Fixtures.instance.empty_photos
           else
-            Fixtures.new.interesting_photos
+            Fixtures.instance.interesting_photos
           end
         end
       }.call
@@ -93,7 +93,7 @@ module FlickrMocks
     def self.stub_commons_institutions
       Proc.new {
         flickr.commons.stub(:getInstitutions) do
-            Fixtures.new.commons_institutions
+            Fixtures.instance.commons_institutions
         end
       }.call
     end

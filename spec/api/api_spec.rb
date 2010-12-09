@@ -3,13 +3,13 @@ require 'ruby-debug'
 describe APP::Api do
   let(:klass) { APP::Api }
 
-  let(:fixtures) { APP::Fixtures.new }
-  let(:photo)  {fixtures.photo}
-  let(:photos) {fixtures.photos}
-  let(:sizes) {fixtures.photo_sizes}
-  let(:photo_details) {fixtures.photo_details}
-  let(:interesting_photos) {fixtures.interesting_photos}
-  let(:commons_institutions) {fixtures.commons_institutions}
+  let(:fixtures){APP::Fixtures.instance}
+  let(:photo){fixtures.photo}
+  let(:photos){fixtures.photos}
+  let(:sizes){fixtures.photo_sizes}
+  let(:photo_details){fixtures.photo_details}
+  let(:interesting_photos){fixtures.interesting_photos}
+  let(:commons_institutions){fixtures.commons_institutions}
 
 
   context "class instance variables" do

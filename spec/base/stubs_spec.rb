@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::Stubs do
   let(:klass) {APP::Stubs}
-  let(:fixtures) {APP::Fixtures.new}
+  let(:fixtures) {APP::Fixtures.instance}
 
   context "class methods" do
     
@@ -27,6 +27,7 @@ describe APP::Stubs do
       it "stubs flickr.commons.getInstitutions" do
         flickr.commons.getInstitutions.should == fixtures.commons_institutions
       end
+      
     end
 
     specify {klass.should respond_to(:stub_search)}

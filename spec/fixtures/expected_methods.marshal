@@ -1,4 +1,4 @@
-U:OpenStruct{:photos[:	page:
+U:OpenStruct{:photos[:	page:
 pages:perpage:
 total:
 photo:flickr_type:empty_photos[;;;	;
@@ -14,4 +14,5 @@ notes:	tags:location:geoperms:	urls:
 media;:photo_sizes[
 :canblog:canprint:candownload:	size;:photo_size[:
 label:
-width:height:source:url;-;:commons_institutions[:institution;
+width:height:source:url;-;:commons_institutions[:institution;:commons_institution_photos[;;;	;
+;;

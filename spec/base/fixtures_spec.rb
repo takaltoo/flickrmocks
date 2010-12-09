@@ -4,9 +4,18 @@ require 'ruby-debug'
 describe APP::Fixtures do
 
   let(:klass) {APP::Fixtures}
-  let(:fixtures) {APP::Fixtures.new}
+  let(:fixtures) {klass.instance}
   let(:subject) {fixtures}
-  
+
+  context "singleton behavior" do
+    specify {klass.should respond_to(:instance)}
+    it "returns an instance of the fixtures class" do
+      klass.instance.should == fixtures
+    end
+    it "raises an error when new called" do
+      expect {klass.new}.to raise_error(NoMethodError)
+    end
+  end
   context "class methods" do
     specify {klass.should respond_to(:repository)}
     context "repository" do
@@ -82,6 +91,12 @@ describe APP::Fixtures do
     specify {subject.should respond_to(:commons_institutions)}
     context "commons_institutions" do
       let(:fixture){:commons_institutions}
+      it_behaves_like "a flickraw fixture"
+    end
+
+    specify {subject.should respond_to(:commons_institution_photos)}
+    context "commons_institutions_photos" do
+      let(:fixture){:commons_institution_photos}
       it_behaves_like "a flickraw fixture"
     end
   end

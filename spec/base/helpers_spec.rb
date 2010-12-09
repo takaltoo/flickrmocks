@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::Helpers do
   let(:klass) {APP::Helpers}
-  let(:fixtures) {APP::Fixtures.new}
+  let(:fixtures) {APP::Fixtures.instance}
 
   context "class methods" do
 

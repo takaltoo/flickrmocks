@@ -8,6 +8,10 @@ module FlickrMocks
       raise ArgumentError 'owner id for photo did not match owner id for at least one size' unless valid_owner_for_dimensions?
     end
 
+    def author
+      owner_name.empty? ? owner_username : owner_name
+    end
+
     def owner_name
       self.owner.realname
     end

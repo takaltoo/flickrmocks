@@ -3,7 +3,7 @@ require 'spec_helper'
 describe APP::CustomMarshal do
   let(:klass) {APP::CustomMarshal}
   let(:helpers) {APP::Helpers}
-  let(:fixtures) {APP::Fixtures.new}
+  let(:fixtures) {APP::Fixtures.instance}
 
   shared_examples_for "marshalling and unmarshalling flickraw objects" do
     it "should properly marshal/unmarshal Photos object" do

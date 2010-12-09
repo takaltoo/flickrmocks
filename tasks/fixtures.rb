@@ -6,8 +6,9 @@ require 'ruby-debug'
 # used for providing fixtures to users of the gem
 namespace :fixtures do
   desc 'generate all fixtures for USERS of the GEM'
-  task :all => [:photos,:empty_photos,:interesting_photos,:author_photos,:photo,:photo_details,
-                   :photo_sizes,:photo_size,:expected_methods, :commons_institutions]
+  task :all => [:photos,:empty_photos,:interesting_photos,:author_photos,
+                    :photo,:photo_details,:photo_sizes,:photo_size,:expected_methods,
+                    :commons_institutions,:commons_institution_photos]
   
   desc 'generate fixture for flickr.photos.search'
   task :photos => :repository do
@@ -64,6 +65,13 @@ namespace :fixtures do
     dump default_commons_institutions, :commons_institutions
   end
 
+  desc 'generate fixture for commons institution photos'
+  task :commons_institution_photos => :repository do
+    config_flickr
+    dump default_commons_institution_photos, :commons_institution_photos
+  end
+  
+
   desc 'expected methods'
   task :expected_methods => :repository do
     data = OpenStruct.new
@@ -77,6 +85,7 @@ namespace :fixtures do
     data.photo_sizes = default_methods(default_photo_sizes)
     data.photo_size = default_methods(default_photo_size)
     data.commons_institutions = default_methods(default_commons_institutions)
+    data.commons_institution_photos = default_methods(default_commons_institution_photos)
     dump data,:expected_methods
   end
 
@@ -166,11 +175,14 @@ namespace :fixtures do
     @default_commons_institutions ||= flickr.commons.getInstitutions
     @default_commons_institutions
   end
+
+  def default_commons_institution_photos
+    @default_commons_institution_photos ||= flickr.photos.search :user_id  => '35532303@N08', :per_page => '200', :extras=>'license'
+    @default_commons_institution_photos
+  end
   
   def default_methods(obj)
-    obj.methods(false).push(:flickr_type)
+    obj.methods.include?(:flickr_type) ? obj.methods(false).push(:flickr_type) : obj.methods(false)
   end
-
-
   
 end

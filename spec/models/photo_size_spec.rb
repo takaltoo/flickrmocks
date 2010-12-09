@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::PhotoSize do
   let(:klass){APP::PhotoSize}
-  let(:fixtures){ APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
   let(:size_fixture){fixtures.photo_size}
 
   subject {klass.new size_fixture}

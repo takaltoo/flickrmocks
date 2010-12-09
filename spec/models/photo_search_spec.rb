@@ -3,7 +3,7 @@ require 'spec_helper'
 describe APP::PhotoSearch do
   let(:api) {APP::Api}
   let(:klass) {APP::PhotoSearch}
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
   let(:options) {{:search_terms => 'iran', :page => '20', :date => '2010-10-03'}}
 
   subject { klass.new fixtures.photos,options }

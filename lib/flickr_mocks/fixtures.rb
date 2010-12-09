@@ -1,9 +1,12 @@
 require 'ostruct'
+require 'singleton'
 
 module FlickrMocks
   class Fixtures
+    include Singleton
     attr_accessor :photos,:interesting_photos,:author_photos,:photo,:photo_details,
-                      :photo_sizes,:photo_size,:expected_methods,:empty_photos,:commons_institutions
+                      :photo_sizes,:photo_size,:expected_methods,:empty_photos,
+                      :commons_institutions,:commons_institution_photos
 
     def initialize
       @photos = load_fixture(:photos)
@@ -17,7 +20,8 @@ module FlickrMocks
       @photo_size = load_fixture(:photo_size)
 
       @commons_institutions = load_fixture(:commons_institutions)
-      
+      @commons_institution_photos = load_fixture(:commons_institution_photos)
+
       @empty_photos = load_fixture(:empty_photos)
 
       @expected_methods = load_fixture(:expected_methods)

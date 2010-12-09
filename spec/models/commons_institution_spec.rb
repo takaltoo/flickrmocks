@@ -3,7 +3,7 @@ require 'spec_helper'
 describe APP::CommonsInstitution do
   let(:api) {APP::Api}
   let(:klass) {APP::CommonsInstitution}
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
   let(:fixture){fixtures.commons_institutions[0]}
   subject {klass.new(fixture)}
 

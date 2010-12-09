@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::Api do
   let(:klass){APP::Api}
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
   
   context "class methods" do
     specify {klass.should respond_to(:flickr_photos)}

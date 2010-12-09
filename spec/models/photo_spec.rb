@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::Photo do
   let(:klass){APP::Photo}
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
   let(:basic_photo){klass.new fixtures.photo}
   let(:extended_photo){klass.new fixtures.photo_details}
 

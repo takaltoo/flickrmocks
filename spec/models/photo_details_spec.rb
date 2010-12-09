@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe APP::PhotoDetails do  
   let(:klass){APP::PhotoDetails}
-  let(:fixtures){APP::Fixtures.new}
+  let(:fixtures){APP::Fixtures.instance}
 
   let(:basic_photo) { APP::Photo.new fixtures.photo }
   let(:extended_photo) { APP::Photo.new fixtures.photo_details }
@@ -49,6 +49,19 @@ describe APP::PhotoDetails do
     context "#owner_username" do
       it "returns expected name for owner" do
         subject.owner_username.should == fixtures.photo_details.owner.username
+      end
+    end
+
+
+    specify {subject.should respond_to(:author)}
+    context "#author" do
+      it "returns owner_name when NOT empty" do
+        subject.stub(:owner_name).and_return("Sample Owner")
+        subject.author.should == subject.owner_name
+      end
+      it "returns owner_username when owner_name is NOT present" do
+        subject.stub(:owner_name).and_return("")
+        subject.author.should == subject.owner_username
       end
     end
 
