@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{flickrmocks}
-  s.version = "0.8.13"
+  s.version = "0.8.14"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Takaltoo"]
-  s.date = %q{2010-12-06}
+  s.date = %q{2010-12-08}
   s.description = %q{FlickrMocks makes it possible to Marshal responses 
 			 generated from the FLickRaw gem. This is useful for 
 			 Mocking/Stubbing the Flickr interface for testing purposes.
@@ -67,6 +67,7 @@ Gem::Specification.new do |s|
      "spec/base/stubs_spec.rb",
      "spec/base/version_spec.rb",
      "spec/fixtures/author_photos.marshal",
+     "spec/fixtures/commons_institution_photos.marshal",
      "spec/fixtures/commons_institutions.marshal",
      "spec/fixtures/empty_photos.marshal",
      "spec/fixtures/expected_methods.marshal",
