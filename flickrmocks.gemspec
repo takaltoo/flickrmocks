@@ -3,7 +3,7 @@
 # Instead, edit Jeweler::Tasks in Rakefile, and run the gemspec command
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "flickrmocks/version"
+require "flickr_mocks/version"
 
 Gem::Specification.new do |s|
   s.name        = "flickrmocks"
