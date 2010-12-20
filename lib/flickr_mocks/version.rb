@@ -1,4 +1,4 @@
 
 module FlickrMocks
-  VERSION = File.read(File.expand_path("../../../VERSION", __FILE__)).strip
+  VERSION = '0.8.15'
 end
