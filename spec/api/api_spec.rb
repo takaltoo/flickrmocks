@@ -34,12 +34,17 @@ describe APP::Api do
   end
 
   context "class methods" do
+    let(:subject){klass}
     specify {klass.should respond_to(:photo)}
     context "photo" do
       it "returns expected Photo object" do
         flickr.photos.stub(:getInfo).and_return(photo)
         klass.photo({:photo =>photo.id,
                          :secret => photo.secret}).should == APP::Photo.new(photo)
+      end
+      context "arguments" do
+        let(:method){:photo}
+        it_behaves_like "object that expects single Hash argument"
       end
     end
 
@@ -48,17 +53,30 @@ describe APP::Api do
       it "returns expected PhotoSearch object" do
         flickr.photos.stub(:search).and_return(photos)
         klass.photos({:search_terms => 'iran'}).should ==
-                        APP::PhotoSearch.new(photos,{:search_terms => 'iran'})
+          APP::PhotoSearch.new(photos,{:search_terms => 'iran'})
+      end
+      it "raises error when non-hash argument provided" do
+        expect {
+          klass.photos([])
+        }.to raise_error(ArgumentError)
+      end
+      context "arguments" do
+        let(:method){:photos}
+        it_behaves_like "object that expects single Hash argument"
       end
     end
 
     specify {klass.should respond_to(:photo_sizes)}
-    describe "photo_sizes" do
+    context "photo_sizes" do
       it "returns expected PhotoSizes object" do
         expected = APP::PhotoSizes.new(sizes)
         flickr.photos.stub(:getSizes).and_return(sizes)
         klass.photo_sizes(:photo => expected.id,
                                 :secret => expected.secret).should ==  expected
+      end
+      context "arguments" do
+        let(:method){:photos}
+        it_behaves_like "object that expects single Hash argument"
       end
     end
     
@@ -70,6 +88,11 @@ describe APP::Api do
         klass.photo_details(:photo => photo.id,
                                   :secret => photo.secret).should  == APP::PhotoDetails.new(photo,sizes)
       end
+      context "arguments" do
+        let(:method){:photo_details}
+        it_behaves_like "object that expects single Hash argument"
+      end
+      
     end
 
     specify {klass.should respond_to(:interesting_photos)}
@@ -79,6 +102,10 @@ describe APP::Api do
         klass.interesting_photos({:date => '2010-01-01'}).should ==
                   APP::PhotoSearch.new(interesting_photos,{:date => '2010-01-01'})
       end
+      context "arguments" do
+        let(:method){:interesting_photos}
+        it_behaves_like "object that expects single Hash argument"
+      end      
     end
 
     specify {klass.should respond_to(:commons_institutions)}
@@ -87,6 +114,10 @@ describe APP::Api do
         flickr.commons.stub(:getInstitutions).and_return(commons_institutions)
         klass.commons_institutions({}).should ==
           APP::CommonsInstitutions.new(commons_institutions)
+      end
+      context "arguments" do
+        let(:method){:commons_institutions}
+        it_behaves_like "object that expects single Hash argument"
       end
     end
 
