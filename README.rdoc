@@ -2,7 +2,8 @@
 
 Wiki[http://wiki.github.com/takaltoo/flickrmocks] | RDocs[http://rdoc.info/projects/takaltoo/flickrmocks]
 
-FlickrMocks simplifies access to the Flickr API by providing wrappers and helpers on top of the FlickRaw[https://github.com/hanklords/flickraw] gem.
+FlickrMocks simplifies access to the Flickr API by providing wrappers and helpers on top of
+the FlickRaw[https://github.com/hanklords/flickraw] gem.
 
 == Installation
 In a standalone ruby project:
@@ -27,15 +28,19 @@ Alternatively, you can install it as a plugin.
 FlickrMocks API helpers expect the FlickRaw.api_key to be initialized before they are called:
     FlickRaw.api_key = your_flickr_api_key
 
-In Rails you can automate the initialization by creating the initializer file config/initializers/flickraw_config.rb with the content:
+In Rails you can automate the initialization by creating the initializer file
+config/initializers/flickraw_config.rb with the content:
 
     FlickRaw.api_key = your_flickr_api_key[http://www.flickr.com/services/api/misc.api_keys.html]
 
-Alternatively, your flickr api key can be placed into a separate YAML[http://railscasts.com/episodes/85-yaml-configuration-file] configuration file. In this scenario the contents of the config/initializers/flickrwa_config.rb would be something like:
+Alternatively, your flickr api key can be placed into a separate
+YAML[http://railscasts.com/episodes/85-yaml-configuration-file] configuration file.
+In this scenario the contents of the config/initializers/flickrwa_config.rb would be something like:
 
     FlickRaw.api_key = APP_CONFIG['flickr_api_key']
 
-Your config/config.yml could look something similar to this (Note: you can use this file to place all your custom configurations):
+Your config/config.yml could look something similar to this (Note: you can use
+this file to place all your custom configurations):
 
     development:
       flickr_api_key: xyz
@@ -45,27 +50,33 @@ Your config/config.yml could look something similar to this (Note: you can use t
       flickr_api_key: xyz
 
 == Using the search API
-FlickrMocks::Api.photo(options_hash), returns object of class FlickrMocks::Photo. The options accepted include:
+FlickrMocks::Api.photo(options_hash), returns object of class FlickrMocks::Photo.
+The options accepted include:
     - :photo_id => "id for photo"
     - :secret => "secret for photo"
-FlickrMocks::Api.photo_details(options_hash), returns object of class FlickrMocks::PhotoDetails. The options accepted include:
+FlickrMocks::Api.photo_details(options_hash), returns object of class FlickrMocks::PhotoDetails.
+The options accepted include:
     - :photo_id => "id for photo"
     - :secret => "secret for photo"
-FlickrMocks::Api.photos(options_hash), returns object of class FlickrMocks::PhotoSearch. The options accepted include:
+FlickrMocks::Api.photos(options_hash), returns object of class FlickrMocks::PhotoSearch.
+The options accepted include:
     - :search_terms => 'search terms' # comma separated list of search terms 'happy cow, pasture'
     - :owner_id => 'id for owner of photo' # either :owner_id or :search_terms must be specified
     - :tag_mode => 'all' # optional argument, can be either all or any
     - :per_page =>  '50' # optional argument, can be any number greater than 0
     - :page =>  '1' # optional argument, can be any number greater than 0
     - :base_url => 'url' # optional argument
-FlickrMocks::Api.photo_sizes(options_hash), returns object of class FlickrMocks::PhotoSizes. The options accepted include:
+FlickrMocks::Api.photo_sizes(options_hash), returns object of class FlickrMocks::PhotoSizes.
+The options accepted include:
     - :photo_id => "id for photo"
     - :secret => "secret for photo" # optional argument
-FlickrMocks::Api.interesting_photos(options_hash), returns object of class FlickrMocks::PhotoSearch. The options accepted include:
+FlickrMocks::Api.interesting_photos(options_hash), returns object of class FlickrMocks::PhotoSearch.
+The options accepted include:
     - :date => '2010-10-10' # date of format YYYY-MM-DD
     - :per_page => 'number' # optional argument
     - :page =>  'number' # optional argument
-FlickrMocks::Api.commons_institutions(options_hash), returns object of class FlickrMocks::CommonsInstitutions. The options accepted include:
+FlickrMocks::Api.commons_institutions(options_hash), returns object of class FlickrMocks::CommonsInstitutions.
+The options accepted include:
     - :per_page => 'number' # optional argument
     - :current_page => 'number' # optional argument
 
@@ -82,7 +93,10 @@ By calling FlickrMocks::Stubs::Api.all the following methods will be stubbed.
      FlickrMocks::Api.interesting_photos
      FlickrMocks::Api.commons_institutions
 
-NOTE: the stubs return errors when not called with proper options. Moreover, some of the stubs return different objects depending on how they are called. For additional details please refer RDocs[http://rdoc.info/projects/takaltoo/flickrmocks].
+NOTE: the stubs return errors when not called with proper options. Moreover, some of the stubs return
+different objects depending on how they are called. For additional details please
+refer RDocs[http://rdoc.info/projects/takaltoo/flickrmocks].
+
 == Additional Docs
 
 * {RDOCs}[http://rdoc.info/projects/takaltoo/flickrmocks]
