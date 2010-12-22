@@ -27,9 +27,11 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_runtime_dependency(%q<flickraw>, [">= 0.8.2"])
   s.add_runtime_dependency(%q<chronic>, [">= 0"])
+  s.add_runtime_dependency(%q<ruby-debug19>, [">= 0.11.6"])
+  s.add_runtime_dependency(%q<will_paginate>, [">= 3.0.pre2"])
   s.add_development_dependency(%q<rspec>, [">= 2.2.0"])
-  s.add_development_dependency(%q<capybara>, [">= 0"])
   s.add_development_dependency(%q<factory_girl_rails>, [">= 1.0"])
   s.add_development_dependency(%q<faker>, [">= 0.3.1"])
+  s.add_development_dependency(%q<flickraw-cached>, [">= 0.8.2"])
 end
 

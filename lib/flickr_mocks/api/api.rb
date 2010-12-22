@@ -24,7 +24,7 @@ module FlickrMocks
       raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
       photo = Api.flickr_photo(params)
       sizes = Api.flickr_photo_sizes(params)
-      @this = @photo = PhotoDetails.new(photo,sizes)
+      PhotoDetails.new(photo,sizes)
     end
 
     def self.photo(params)

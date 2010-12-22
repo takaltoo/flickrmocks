@@ -21,3 +21,6 @@ pkg
 ## PROJECT::SPECIFIC
 nbproject
 config.yml
+
+## documentation
+doc

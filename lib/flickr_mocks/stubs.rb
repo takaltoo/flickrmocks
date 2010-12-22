@@ -34,6 +34,56 @@ module FlickrMocks
           end}.call
       end
 
+      def self.photo
+        lambda{::FlickrMocks::Api.stub(:photo) do |params|
+            ::FlickrMocks::Stubs::Flickr.getInfo
+            case params
+            when Hash then
+              Photo.new(::FlickrMocks::Api.flickr_photo(params))
+            else
+              raise ArgumentError
+            end
+        end}.call
+      end
+
+      def self.photo_sizes  
+         lambda {::FlickrMocks::Api.stub(:photo_sizes) do |params|
+            ::FlickrMocks::Stubs::Flickr.getSizes
+            case params
+            when Hash then
+              PhotoSizes.new(flickr.photos.getSizes(::FlickrMocks::Api.photo_options(params)))
+            else
+              raise ArgumentError
+            end
+          end}.call
+      end
+
+      def self.interesting_photos
+         lambda {::FlickrMocks::Api.stub(:interesting_photos) do |params|
+            ::FlickrMocks::Stubs::Flickr.interestingness
+            case params
+            when Hash then
+              PhotoSearch.new(flickr.interestingness.getList(params),
+                ::FlickrMocks::Api.interesting_params(params))
+            else
+              raise ArgumentError
+            end
+          end}.call
+      end
+
+      def self.commons_institutions
+        lambda {::FlickrMocks::Api.stub(:commons_institutions) do |params|
+            ::FlickrMocks::Stubs::Flickr.commons_institutions
+            case params
+            when Hash then
+              CommonsInstitutions.new(::FlickrMocks::Api.flickr_commons_institutions,
+                ::FlickrMocks::Api.commons_institutions_params(params))
+            else
+              raise ArgumentError
+            end
+          end}.call
+      end
+
     end
 
 
@@ -118,14 +168,12 @@ module FlickrMocks
           flickr.interestingness.stub(:getList) do |params|
             if !params.is_a?(Hash)
               Fixtures.instance.interesting_photos
-            elsif !params.has_key?(:date)
-              Fixtures.instance.interesting_photos
+            elsif params[:date] == '2000-01-01'
+              Fixtures.instance.empty_photos
             elsif params[:date] == 'garbage'
               raise FlickRaw::FailedResponse.new('Not a valid date string',
                 'code','flickr.interestingness.getList'
               )
-            elsif params[:date] == '2000-01-01'
-              Fixtures.instance.empty_photos
             else
               Fixtures.instance.interesting_photos
             end

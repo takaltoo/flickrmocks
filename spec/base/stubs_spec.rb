@@ -6,9 +6,9 @@ describe APP::Stubs do
   let(:flickr_stubs){klass::Flickr}
   let(:api_stubs){klass::Api}
   let(:api){APP::Api}
+  
   context "class methods" do
-    context "Flickr Stubs" do
-
+    context "Flickr" do
       specify{flickr_stubs.should respond_to(:all)}
       context "all" do
         before(:each) do
@@ -192,7 +192,7 @@ describe APP::Stubs do
             /Not a valid date string/
           )
         end
-        it "returns empty string if 2001-01-01 given" do
+        it "returns empty string if 2000-01-01 given" do
           flickr.interestingness.getList(:date => '2000-01-01').should == fixtures.empty_photos
         end
         it "returns photo details fixture when option given" do
@@ -211,47 +211,26 @@ describe APP::Stubs do
       end
     end
 
-    context "Api stubs" do
+    context "Api" do
+      specify{api_stubs.should respond_to(:all)}
+      context "all" do
+        before(:each) do
+          api_stubs.all
+        end
+        it_behaves_like "stub for Api.photo"
+        it_behaves_like "stub for Api.photos"
+        it_behaves_like "stub for Api.photo_details"
+        it_behaves_like "stub for Api.photo_sizes"
+#        it_behaves_like "stub for Api.interesting_photos"
+        it_behaves_like "stub for Api.commons_institutions"
+      end
+
       specify {api_stubs.should respond_to :photos}
       context "photos" do
         before(:each) do
           api_stubs.photos
         end
-        context "owner_id provided" do
-          it "returns object with same user when owner_id provided" do
-            params = {:owner_id => '1'}
-            api.photos(:owner_id => '1').should ==
-              ::FlickrMocks::PhotoSearch.new(fixtures.photos,api.search_params(params))
-          end
-          it "returns object with same user when owner_id and tags provided" do
-            params = {:owner_id => '1',:search_terms => 'iran'}
-            api.photos(:owner_id => '1').should ==
-              ::FlickrMocks::PhotoSearch.new(fixtures.photos,api.search_params({:owner_id => '1'}))
-          end
-          it "returns object with no entries when owner_id set to  'garbage'" do
-            api.photos(:owner_id => 'garbage').should ==
-              ::FlickrMocks::PhotoSearch.new(fixtures.empty_photos,api.search_params({:owner_id => 'garbage'}))
-          end
-        end
-        context "search_terms provided" do
-          it "returns object with different owner_id values when :search_terms provided" do
-            params = {:search_terms => 'iran'}
-            api.photos(params).should ==
-              ::FlickrMocks::PhotoSearch.new(fixtures.photos,api.search_params(params))
-          end
-          it "returns object with no entries when :search_terms is set to 'garbage'" do
-            params = {:search_terms => 'garbage'}
-            api.photos(params).should ==
-              ::FlickrMocks::PhotoSearch.new(fixtures.empty_photos,api.search_params(params))
-          end
-        end
-
-        context "error conditions" do
-          let(:subject){api}
-          let(:method){:photos}
-          it_behaves_like "object that expects single Hash argument"
-        end
-
+        it_behaves_like "stub for Api.photos"
       end
 
       specify {api_stubs.should respond_to :photo_details}
@@ -259,58 +238,41 @@ describe APP::Stubs do
         before(:each) do
           api_stubs.photo_details
         end
-        it "returns expected object when proper :photo_id provided" do
-          api.photo_details(:photo_id => '1234').should ==
-            ::FlickrMocks::PhotoDetails.new(fixtures.photo_details,fixtures.photo_sizes)
-        end
-
-        context "error conditions" do
-          let(:subject){api}
-          let(:method){:photo_details}
-          it_behaves_like "object that expects single Hash argument"
-          
-          it "raises FlickRaw::FailedResponse when :photo_id not supplied in Hash" do
-            expect {
-              api.photo_details({})
-            }.to raise_error(FlickRaw::FailedResponse)
-          end
-          it "raises FlickRaw::FailedResponse when :photo_id is nil" do
-            expect {
-              api.photo_details({:photo_id => nil})
-            }.to raise_error(FlickRaw::FailedResponse)
-          end
-          it "raises FlickRaw::FailedResponse when :photo_id is garbage" do
-            expect {
-              api.photo_details({:photo_id => 'garbage'})
-            }.to raise_error(FlickRaw::FailedResponse)
-          end
-        end
+        it_behaves_like "stub for Api.photo_details"
       end
 
       specify {api_stubs.should respond_to :photo}
       context "photo" do
-         context "error conditions" do
+        before(:each) do
+          api_stubs.photo
         end
-
+        it_behaves_like "stub for Api.photo"
       end
       
       specify {api_stubs.should respond_to :photo_sizes}
       context "photo_sizes" do
-
+        before(:each) do
+          api_stubs.photo_sizes
+        end
+        it_behaves_like "stub for Api.photo_sizes"
       end
       
       specify {api_stubs.should respond_to :interesting_photos}
       context "interesting_photos" do
-
+        before(:each) do
+          api_stubs.interesting_photos
+        end
+        it_behaves_like "stub for Api.interesting_photos"
       end
       
       specify {api_stubs.should respond_to :commons_institutions}
       context "commons_institutions" do
-        
+        before(:each) do
+          api_stubs.commons_institutions
+        end
+        it_behaves_like "stub for Api.commons_institutions"
       end
-      
-    end
-
-
+    end   
   end
+
 end
