@@ -52,33 +52,33 @@ this file to place all your custom configurations):
 == Using the search API
 FlickrMocks::Api.photo(options_hash), returns object of class FlickrMocks::Photo.
 The options accepted include:
-    - :photo_id => "id for photo"
-    - :secret => "secret for photo"
+    :photo_id => "id for photo"
+    :secret => "secret for photo"
 FlickrMocks::Api.photo_details(options_hash), returns object of class FlickrMocks::PhotoDetails.
 The options accepted include:
-    - :photo_id => "id for photo"
-    - :secret => "secret for photo"
+    :photo_id => "id for photo"
+    :secret => "secret for photo"
 FlickrMocks::Api.photos(options_hash), returns object of class FlickrMocks::PhotoSearch.
 The options accepted include:
-    - :search_terms => 'search terms' # comma separated list of search terms 'happy cow, pasture'
-    - :owner_id => 'id for owner of photo' # either :owner_id or :search_terms must be specified
-    - :tag_mode => 'all' # optional argument, can be either all or any
-    - :per_page =>  '50' # optional argument, can be any number greater than 0
-    - :page =>  '1' # optional argument, can be any number greater than 0
-    - :base_url => 'url' # optional argument
+    :search_terms => 'search terms' # comma separated list of search terms 'happy cow, pasture'
+    :owner_id => 'id for owner of photo' # either :owner_id or :search_terms must be specified
+    :tag_mode => 'all' # optional argument, can be either all or any
+    :per_page =>  '50' # optional argument, can be any number greater than 0
+    :page =>  '1' # optional argument, can be any number greater than 0
+    :base_url => 'url' # optional argument
 FlickrMocks::Api.photo_sizes(options_hash), returns object of class FlickrMocks::PhotoSizes.
 The options accepted include:
-    - :photo_id => "id for photo"
-    - :secret => "secret for photo" # optional argument
+    :photo_id => "id for photo"
+    :secret => "secret for photo" # optional argument
 FlickrMocks::Api.interesting_photos(options_hash), returns object of class FlickrMocks::PhotoSearch.
 The options accepted include:
-    - :date => '2010-10-10' # date of format YYYY-MM-DD
-    - :per_page => 'number' # optional argument
-    - :page =>  'number' # optional argument
+    :date => '2010-10-10' # date of format YYYY-MM-DD
+    :per_page => 'number' # optional argument
+    :page =>  'number' # optional argument
 FlickrMocks::Api.commons_institutions(options_hash), returns object of class FlickrMocks::CommonsInstitutions.
 The options accepted include:
-    - :per_page => 'number' # optional argument
-    - :current_page => 'number' # optional argument
+    :per_page => 'number' # optional argument
+    :current_page => 'number' # optional argument
 
 == Stubs for testing
 FlickrMocks provides Rspec 2.0 stubs for the search API routines. To stub all the routines simply call:
@@ -101,6 +101,8 @@ refer RDocs[http://rdoc.info/projects/takaltoo/flickrmocks].
 
 * {RDOCs}[http://rdoc.info/projects/takaltoo/flickrmocks]
 * {See more}[http://wiki.github.com/takaltoo/flickrmocks/]
+* Run the specs manually once you've checked out the repository:
+   rspec spec -f d
 
 		
 == Questions or Problems?
@@ -118,7 +120,8 @@ To get the specs running you should call +bundle+ and then +rake+.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.
 * Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+  (if you want to have your own version, that is fine but bump version in a commit
+ by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
 == License

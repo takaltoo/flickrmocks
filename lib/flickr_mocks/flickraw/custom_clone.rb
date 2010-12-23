@@ -1,7 +1,6 @@
 module FlickrMocks
 
   module CustomClone
-
     def initialize_copy(orig)
       super
       cloned = @h.clone
