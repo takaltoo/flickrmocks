@@ -39,7 +39,7 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.getInfo
             case params
             when Hash then
-              Photo.new(::FlickrMocks::Api.flickr_photo(params))
+              Photo.new(::FlickrMocks::Api::Flickr.photo(params))
             else
               raise ArgumentError
             end

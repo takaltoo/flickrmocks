@@ -33,7 +33,7 @@ module FlickrMocks
     #   :tag_mode : optionsl string containing either 'any' or 'all'. Affects the interpretation of the search terms to the FlickRaw API.
     def self.photos(params)
       raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
-      photos = Api.flickr_photos(params)
+      photos = Api::Flickr.photos(params)
       PhotoSearch.new photos,Api.search_params(params)
     end
 
@@ -46,8 +46,8 @@ module FlickrMocks
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
     def self.photo_details(params)
       raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
-      photo = Api.flickr_photo(params)
-      sizes = Api.flickr_photo_sizes(params)
+      photo = Api::Flickr.photo(params)
+      sizes = Api::Flickr.photo_sizes(params)
       PhotoDetails.new(photo,sizes)
     end
 
@@ -60,7 +60,7 @@ module FlickrMocks
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
     def self.photo(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      Photo.new Api.flickr_photo(params)
+      Photo.new Api::Flickr.photo(params)
     end
 
     # Used to retrieve the available sizes for a given photo. This methods returns a PhotoSize
@@ -72,7 +72,7 @@ module FlickrMocks
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
     def self.photo_sizes(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      PhotoSizes.new Api.flickr_photo_sizes(params)
+      PhotoSizes.new Api::Flickr.photo_sizes(params)
     end
 
     # Used to retrieve a list of interesting photos for a given date. This method returns a
@@ -85,7 +85,7 @@ module FlickrMocks
     #  :page : optional string containing the page for search results to be returned. The default is '1'
     def self.interesting_photos(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      photos = Api.flickr_interestingness(params)
+      photos = Api::Flickr.interestingness(params)
       PhotoSearch.new photos,Api.interesting_params(params)
     end
 
@@ -97,7 +97,7 @@ module FlickrMocks
     #
     def self.commons_institutions(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      institutions = Api.flickr_commons_institutions
+      institutions = Api::Flickr.commons_institutions
       CommonsInstitutions.new institutions,Api.commons_institutions_params(params)
     end
 
