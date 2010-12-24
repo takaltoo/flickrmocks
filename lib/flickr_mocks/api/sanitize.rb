@@ -7,7 +7,7 @@ module FlickrMocks
       def self.tags(params={})
         case params
         when Hash 
-          params[:search_terms].nil? ? '' : params[:search_terms].downcase.split(',').map.each do |v| v.strip end.join(',')
+          params[:search_terms].nil? ? nil : params[:search_terms].downcase.split(',').map.each do |v| v.strip end.join(',')
         when nil then
           nil
         when String then
@@ -24,7 +24,7 @@ module FlickrMocks
         when Hash then
           params[:per_page] || params[:perpage] || Api.default(:per_page)
         when String then
-          params.to_i.to_s
+          params.to_i > 0 ? params.to_i.to_s : Api.default(:per_page)
         when Fixnum then
           params > 0 ? params.to_i.to_s :  Api.default(:per_page)
         when nil then
@@ -32,14 +32,13 @@ module FlickrMocks
         else
           raise ArgumentError
         end
-
       end
 
       # returns the page entry that is a positive non-zero integer
       def self.page(params={})
         case params
         when Hash then
-          [nil,0,'0'].include?(params[:page]) ? '1' : params[:page].to_i.to_s
+          params[:page].to_i > 0 ? params[:page].to_i.to_s : Api.default(:page) 
         when Fixnum then
           params > 0 ? params.to_s : Api.default(:page)
         when NilClass then
