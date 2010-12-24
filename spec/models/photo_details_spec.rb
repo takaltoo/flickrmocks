@@ -1,12 +1,13 @@
 require 'spec_helper'
 
-describe APP::PhotoDetails do  
-  let(:klass){APP::PhotoDetails}
+describe APP::Models::PhotoDetails do
+  let(:klass){APP::Models::PhotoDetails}
   let(:fixtures){APP::Fixtures.instance}
+  let(:models){APP::Models}
 
-  let(:basic_photo) { APP::Photo.new fixtures.photo }
-  let(:extended_photo) { APP::Photo.new fixtures.photo_details }
-  let(:photo_sizes) { APP::PhotoSizes.new fixtures.photo_sizes }
+  let(:basic_photo) { models::Photo.new fixtures.photo }
+  let(:extended_photo) { models::Photo.new fixtures.photo_details }
+  let(:photo_sizes) { models::PhotoSizes.new fixtures.photo_sizes }
 
   let(:photo_details_basic){klass.new(basic_photo,photo_sizes)}
   let(:photo_details_extended){klass.new(extended_photo,photo_sizes)}
@@ -23,16 +24,16 @@ describe APP::PhotoDetails do
       klass.new(fixtures.photo_details,fixtures.photo_sizes).should be_a(klass)
     end
     it "raises an error when Array supplied for photo" do
-      lambda{APP::PhotoDetails.new [],photo_sizes}.should raise_error ArgumentError
+      lambda{models::PhotoDetails.new [],photo_sizes}.should raise_error ArgumentError
     end
     it "raises an error when Array supplied for photo_details" do
-      lambda{APP::PhotoDetails.new extended_photo,[]}.should raise_error ArgumentError
+      lambda{models::PhotoDetails.new extended_photo,[]}.should raise_error ArgumentError
     end
     it "raises error when nil supplied for photo_sizes" do
-      lambda{APP::PhotoDetails.new extended_photo,nil}.should raise_error ArgumentError
+      lambda{models::PhotoDetails.new extended_photo,nil}.should raise_error ArgumentError
     end
     it "raises error when nil supplied for photo_details" do
-      lambda{APP::PhotoDetails.new nil,photo_sizes}.should raise_error ArgumentError
+      lambda{models::PhotoDetails.new nil,photo_sizes}.should raise_error ArgumentError
     end
   end
 
@@ -118,7 +119,7 @@ describe APP::PhotoDetails do
           end
         end
       it "returns expected result delegated to url helpers for basic photo" do
-          reference = APP::Photo.new(fixtures.photo)
+          reference = models::Photo.new(fixtures.photo)
           FlickrMocks::Models::Helpers.possible_sizes.each do |size|
             subject.send(size).should == reference.send(size)
           end
@@ -133,7 +134,7 @@ describe APP::PhotoDetails do
           end
         end
         it "returns expected result delegated to url helpers for detailed photo" do
-          reference = APP::Photo.new(fixtures.photo_details)
+          reference = models::Photo.new(fixtures.photo_details)
           FlickrMocks::Models::Helpers.possible_sizes.each do |size|
             subject.send(size).should == reference.send(size)
           end

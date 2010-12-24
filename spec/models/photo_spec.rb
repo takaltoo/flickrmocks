@@ -1,24 +1,26 @@
 require 'spec_helper'
 
-describe APP::Photo do
-  let(:klass){APP::Photo}
+describe APP::Models::Photo do
+  let(:models){APP::Models}
+  let(:klass){models::Photo}
   let(:fixtures){APP::Fixtures.instance}
   let(:basic_photo){klass.new fixtures.photo}
   let(:extended_photo){klass.new fixtures.photo_details}
+
 
   subject {basic_photo}
 
   context "initialize" do
     context "with extended photo" do
       it "returns object of proper class" do
-        klass.new(fixtures.photo_details).should be_a(APP::Photo)
+        klass.new(fixtures.photo_details).should be_a(models::Photo)
       end
     end
 
     context "with basic photo" do
       subject {klass.new fixtures.photo}
       it "returns object of proper class" do
-        klass.new(fixtures.photo).should be_a(APP::Photo)
+        klass.new(fixtures.photo).should be_a(models::Photo)
       end
     end
     context "with nil" do

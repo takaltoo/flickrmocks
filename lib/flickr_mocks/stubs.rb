@@ -13,7 +13,7 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.search
             case params
             when Hash then
-              PhotoSearch.new flickr.photos.search(::FlickrMocks::Api.search_options(params)),::FlickrMocks::Api.search_params(params)
+              Models::PhotoSearch.new flickr.photos.search(::FlickrMocks::Api::Options.search(params)),params
             else
               raise ArgumentError
             end
@@ -26,8 +26,8 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.getSizes
             case params
             when Hash then
-              PhotoDetails.new(flickr.photos.getInfo(::FlickrMocks::Api.photo_options(params)),
-                flickr.photos.getSizes(::FlickrMocks::Api.photo_options(params)))
+              Models::PhotoDetails.new(flickr.photos.getInfo(::FlickrMocks::Api::Options.photo(params)),
+                flickr.photos.getSizes(::FlickrMocks::Api::Options.photo(params)))
             else
               raise ArgumentError
             end
@@ -39,7 +39,7 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.getInfo
             case params
             when Hash then
-              Photo.new(::FlickrMocks::Api::Flickr.photo(params))
+              Models::Photo.new(::FlickrMocks::Api::Flickr.photo(params))
             else
               raise ArgumentError
             end
@@ -51,7 +51,7 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.getSizes
             case params
             when Hash then
-              PhotoSizes.new(flickr.photos.getSizes(::FlickrMocks::Api.photo_options(params)))
+              Models::PhotoSizes.new(flickr.photos.getSizes(::FlickrMocks::Api::Options.photo(params)))
             else
               raise ArgumentError
             end
@@ -63,8 +63,7 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.interestingness
             case params
             when Hash then
-              PhotoSearch.new(flickr.interestingness.getList(params),
-                ::FlickrMocks::Api.interesting_params(params))
+              Models::PhotoSearch.new(flickr.interestingness.getList(params),params)
             else
               raise ArgumentError
             end
@@ -76,8 +75,7 @@ module FlickrMocks
             ::FlickrMocks::Stubs::Flickr.commons_institutions
             case params
             when Hash then
-              CommonsInstitutions.new(::FlickrMocks::Api.flickr_commons_institutions,
-                ::FlickrMocks::Api.commons_institutions_params(params))
+              CommonsInstitutions.new(::FlickrMocks::Api.flickr_commons_institutions,params)
             else
               raise ArgumentError
             end

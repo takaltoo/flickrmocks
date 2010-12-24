@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe APP::Api do
-  let(:api) {APP::Api}
-  let(:subject) {APP::Api}
+  let(:api) {APP::Api::Options}
+  let(:subject) {APP::Api::Options}
   let(:extras){
     { :license => '4,5,6,7',
       :media => 'photos',
@@ -24,43 +24,43 @@ describe APP::Api do
   }
   
 
-  context "search_options" do
+  context "search" do
     it "should give correct options when all options are specified except :author_id" do
-      subject.search_options(options.clone.merge(:per_page =>'400')).should == expected
+      subject.search(options.clone.merge(:per_page =>'400')).should == expected
     end
     it "should return options when fully specified" do
-      subject.search_options(:per_page => '400',:owner_id => 'authorid',:page => '2').should ==
+      subject.search(:per_page => '400',:owner_id => 'authorid',:page => '2').should ==
         expected.clone.merge(:user_id => 'authorid',:tags => nil)
       
     end
     it "should give correct values when :perpage given in lieu of :per_page" do
-      subject.search_options(options.clone.merge({:perpage => '400'})).should == expected
+      subject.search(options.clone.merge({:perpage => '400'})).should == expected
     end
     it "should give correct value when no :perpage is specified" do
-      subject.search_options(options).should == expected.clone.merge({:per_page => '200'})
+      subject.search(options).should == expected.clone.merge({:per_page => '200'})
     end
     it "should give preference to :per_page to :perpage" do
-      subject.search_options(options.clone.merge({:per_page => '500', :perpage => '444'})).should ==
+      subject.search(options.clone.merge({:per_page => '500', :perpage => '444'})).should ==
         expected.clone.merge(:per_page => '500')
     end
     it "should be able to set :tag_mode" do
-      subject.search_options(options.clone.merge(:per_page => '500', :tag_mode=>'all' )).should ==
+      subject.search(options.clone.merge(:per_page => '500', :tag_mode=>'all' )).should ==
         expected.clone.merge({:per_page => '500',:tag_mode => 'all'}
       )
     end
     it "should give default tag_mode when not specified" do
-      subject.search_options(options.clone.merge(:per_page => '500')).should ==
+      subject.search(options.clone.merge(:per_page => '500')).should ==
         expected.clone.merge({:per_page => '500'}
       )
     end
     it "should give default tag_mode when junk given for tag_mode" do
-      subject.search_options(options.clone.merge(:per_page => '500', :tag_mode => 'junk')).should ==
+      subject.search(options.clone.merge(:per_page => '500', :tag_mode => 'junk')).should ==
         expected.clone.merge({:per_page => '500'}
       )
     end
   end
 
-  context "interesting_options" do
+  context "interesting" do
     let(:expected){
       { :date => '2010-02-14',
         :per_page => '2',
@@ -68,113 +68,40 @@ describe APP::Api do
       }
     }
     it "should return proper date with default options" do
-      subject.interesting_options(expected).should == expected.clone.merge(:extras => 'license')
+      subject.interesting(expected).should == expected.clone.merge(:extras => 'license')
     end
     it "should return proper date when no page given" do
-      subject.interesting_options(:date => '2010-02-14', :per_page => '2').should ==
+      subject.interesting(:date => '2010-02-14', :per_page => '2').should ==
         expected.clone.merge(:page => '1', :extras => 'license')
       
     end
     it "should return proper date when not specified" do
       date = Chronic.parse('yesterday').strftime('%Y-%m-%d')
-      subject.interesting_options({:date => date})[:date].should == date
+      subject.interesting({:date => date})[:date].should == date
     end
   end
 
-  context "photo_options" do
+  context "photo" do
     let(:expected) {
       {:photo_id => '20030', :secret => 'abcdef'}
     }
 
     it "should extract :photo_id and :secret" do
-      subject.photo_options(expected).should == expected
+      subject.photo(expected).should == expected
     end
     it "should return photo id when present" do
-      subject.photo_options(:id => '20030',:secret => 'abcdef').should == expected
+      subject.photo(:id => '20030',:secret => 'abcdef').should == expected
     end
     it "should give preference to :photo_id over :id" do
-      subject.photo_options(expected.clone.merge(:id => 'not correct')).should == expected
+      subject.photo(expected.clone.merge(:id => 'not correct')).should == expected
     end
     it "should give preference to :photo_secret over :secret" do
-      subject.photo_options(:photo_secret => 'abcdef', :secret => 'not correct', :id => '20030').should ==
+      subject.photo(:photo_secret => 'abcdef', :secret => 'not correct', :id => '20030').should ==
         expected
       
     end
   end
 
-  context "search_params" do
-    let(:expected){
-      {
-        :search_terms => 'iran,shiraz',
-        :owner_id => 'authorid',
-        :base_url => 'http://www.happyboy.com/'
-      }
-    }
-    let(:base_url) {'http://www.example.com/'}
-    
-    it "should return properly when all options specified" do
-      subject.search_params(expected).should == expected
-    end
-    it "should filter non-required options" do
-      subject.search_params(expected.clone.merge(:date => '2010-10-02',:per_page => '2')).should ==
-        expected
-      
-    end
-    it "should properly extract :base_url" do
-      subject.search_params(expected.clone.merge(:base_url => base_url)).should ==
-        expected.clone.merge(:base_url => base_url)
-    end
-  end
-
-  context "interesting_params" do
-    let(:expected) {
-      {
-        :date => 'iran,shiraz',
-        :base_url => 'http://www.happyboy.com/'
-      }
-    }
-    it "should return correct options when all are specified" do
-      subject.interesting_params(expected).should == expected
-    end
-    it "should filter non-required options" do
-      subject.interesting_params(expected.clone.merge(:search_terms => 'iran,shiraz',
-          :owner_id => 'authorid')).should == expected
-    end
-    it "should extract base_url options" do
-      subject.interesting_params(expected.clone.merge(:base_url => expected[:base_url])).should ==
-        expected.clone.merge(:base_url => expected[:base_url])
-    end
-  end
-
-  context "institution_params" do
-    it "returns :per_page and :current_page if specified" do
-      expected = {:per_page => 2, :current_page => 3}
-      subject.commons_institutions_params(expected).should == expected
-    end
-    it "returns :per_page is prefereed over :perpage is specified" do
-      expected = {:per_page => 2, :current_page => 1}
-      subject.commons_institutions_params(:per_page => 3, :perpage => 20, :current_page => 1).should ==
-        {:per_page => 3, :current_page => 1}
-    end
-    it "returns :perpage if :per_page is not specified" do
-      expected = {:perpage => 3}
-      subject.commons_institutions_params(:perpage => 20, :current_page => 1).should ==
-        {:per_page => 20, :current_page => 1}
-    end
-    it "returns :current_page of 1 if not specified" do
-      subject.commons_institutions_params(:per_page => 20).should ==
-        {:per_page => 20, :current_page => 1}
-    end
-    it "returns :current_page in preference to :page" do
-      subject.commons_institutions_params(:per_page=>20,:page=>2,:current_page=>3).should ==
-        {:per_page => 20, :current_page => 3}
-    end
-    it "returns :page when :current_page is not specified" do
-      subject.commons_institutions_params(:per_page=>20,:page=>3).should ==
-        {:per_page => 20, :current_page => 3}
-    end
-  end
-  
   
 end
 

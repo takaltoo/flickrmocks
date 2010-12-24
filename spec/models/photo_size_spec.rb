@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-describe APP::PhotoSize do
-  let(:klass){APP::PhotoSize}
+describe APP::Models::PhotoSize do
+  let(:models){APP::Models}
+  let(:klass){models::PhotoSize}
   let(:fixtures){APP::Fixtures.instance}
   let(:size_fixture){fixtures.photo_size}
 
@@ -10,7 +11,7 @@ describe APP::PhotoSize do
   context "#initialize" do
     context "size fixture" do
       it "returns object of proper class" do
-        subject.should be_a(APP::PhotoSize)
+        subject.should be_a(models::PhotoSize)
       end
     end
     context "FlickRaw::ResponseList object" do

@@ -1,11 +1,13 @@
 require 'spec_helper'
 
-describe APP::Photos do
+describe APP::Models::Photos do
   let(:api) {APP::Api}
-  let(:klass) {APP::Photos}
+  let(:models){APP::Models}
+  let(:klass) {models::Photos}
   let(:fixtures){APP::Fixtures.instance}
   let(:photos_fixture) {fixtures.photos}
   let(:interesting_photos_fixture){fixtures.interesting_photos}
+
 
   subject {klass.new photos_fixture}
   let(:max_pages){subject.default(:max_entries)/subject.default(:per_page)}
@@ -181,7 +183,7 @@ describe APP::Photos do
       end
       it "returns Array containing elements of class FlickrMocks::Photo " do
         subject.photos.each do |photo|
-          photo.should be_instance_of(APP::Photo)
+          photo.should be_instance_of(models::Photo)
         end
       end
       it "returns expected number of photos" do
@@ -261,7 +263,7 @@ describe APP::Photos do
       specify{ subject.should respond_to(:delegated_instance_methods)}
       context "#delegated_instance_methods" do
         it "returns expected list of methods that are delegated to other objects" do
-          subject.delegated_instance_methods.should == APP::Models::Helpers.array_accessor_methods
+          subject.delegated_instance_methods.should == models::Helpers.array_accessor_methods
         end
       end
 

@@ -9,6 +9,7 @@ module FlickrMocks
   #   FlickRaw.api_key = your_flickr_api_key
   class Api
     @defaults = {
+      :page => '1',
       :per_page => '200',
       :license => '4,5,6,7',
       :media => 'photos',
@@ -19,6 +20,12 @@ module FlickrMocks
 
     class << self
       attr_accessor :defaults
+    end
+
+    # returns the default value stored in the class instance variable hash @defaults
+    # for the supplied key.
+    def self.default(value)
+      Api.defaults[value.to_sym]
     end
 
     # Used to search for photos that match the user provided parameters.
@@ -34,7 +41,7 @@ module FlickrMocks
     def self.photos(params)
       raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
       photos = Api::Flickr.photos(params)
-      PhotoSearch.new photos,Api.search_params(params)
+      Models::PhotoSearch.new photos,params
     end
 
     # Used to return detailed information regarding a user specified photo. The method
@@ -48,7 +55,7 @@ module FlickrMocks
       raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
       photo = Api::Flickr.photo(params)
       sizes = Api::Flickr.photo_sizes(params)
-      PhotoDetails.new(photo,sizes)
+      Models::PhotoDetails.new(photo,sizes)
     end
 
     # Used to retrieve basic information regarding a single photo. This method returns a Photo
@@ -60,7 +67,7 @@ module FlickrMocks
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
     def self.photo(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      Photo.new Api::Flickr.photo(params)
+      Models::Photo.new Api::Flickr.photo(params)
     end
 
     # Used to retrieve the available sizes for a given photo. This methods returns a PhotoSize
@@ -72,7 +79,7 @@ module FlickrMocks
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
     def self.photo_sizes(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      PhotoSizes.new Api::Flickr.photo_sizes(params)
+      Models::PhotoSizes.new Api::Flickr.photo_sizes(params)
     end
 
     # Used to retrieve a list of interesting photos for a given date. This method returns a
@@ -86,7 +93,7 @@ module FlickrMocks
     def self.interesting_photos(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
       photos = Api::Flickr.interestingness(params)
-      PhotoSearch.new photos,Api.interesting_params(params)
+      Models::PhotoSearch.new photos,params
     end
 
     # Used to retrieve a list of commons institutions. This method returns a CommonsInstitutions
@@ -98,8 +105,7 @@ module FlickrMocks
     def self.commons_institutions(params)
       raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
       institutions = Api::Flickr.commons_institutions
-      CommonsInstitutions.new institutions,Api.commons_institutions_params(params)
+      Models::CommonsInstitutions.new institutions,params
     end
-
   end
 end

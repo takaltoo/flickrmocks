@@ -9,22 +9,22 @@ module FlickrMocks
       #  :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
       #  :page : optional string containing the page for search results to be returned. The default is '1'
       #  :tag_mode : optionsl string containing either 'any' or 'all'. Affects the interpretation of the search terms to the FlickRaw API.
-      def self.photos(params)
-        flickr.photos.search Api.search_options(params)
+      def self.photos(options)
+        flickr.photos.search Api::Options.search(options)
       end
 
       # wrapper for flickr.photos.getInfo Flickr API call. Recognized options include:
       #  :photo_id : required string that contains the id for the photo
       #  :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
-      def self.photo(params)
-        flickr.photos.getInfo Api.photo_options(params)
+      def self.photo(options)
+        flickr.photos.getInfo Api::Options.photo(options)
       end
 
       # wrapper for flickr.photos-getSizes Flickr API call. Recognized options include:
       #  :photo_id : required string that contains the id for the photo
       #  :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
-      def self.photo_sizes(params)
-        flickr.photos.getSizes Api.photo_options(params)
+      def self.photo_sizes(options)
+        flickr.photos.getSizes Api::Options.photo(options)
       end
 
       # wrapper for flickr.interestingness.getList Flickr API call. Recognized options
@@ -32,8 +32,8 @@ module FlickrMocks
       #   :date : string containing date of format 'YYYY-MM-DD'
       #   :per_page : optional string containing maximum number of items per page
       #   :page : optional string containing the page to retrieve for the query
-      def self.interestingness(params)
-        flickr.interestingness.getList Api.interesting_options(params)
+      def self.interestingness(options)
+        flickr.interestingness.getList Api::Options.interesting(options)
       end
 
       # wrapper for flickr.photos-search Flickr API call. Options can be supplied
@@ -41,8 +41,8 @@ module FlickrMocks
       #  :owner_id : string containing owner for the photo. This gets mapped to :user_id
       #  :per_page : optional string containing maximum number of items per page
       #  :page : optional string containing the page to retrieve for the query
-      def self.author(params)
-        flickr.photos.search Api.author_options(params)
+      def self.author(options)
+        flickr.photos.search Api::Options.author(options)
       end
 
       # wrapper for flickr.commons.getInstitutions Flickr API call.

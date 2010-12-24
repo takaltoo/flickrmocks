@@ -1,15 +1,16 @@
 require 'spec_helper'
 
-describe APP::PhotoSizes do
-  let(:klass){APP::PhotoSizes}
+describe APP::Models::PhotoSizes do
+  let(:models){APP::Models}
+  let(:klass){models::PhotoSizes}
   let(:fixtures){APP::Fixtures.instance}
 
-  subject {APP::PhotoSizes.new fixtures.photo_sizes}
+  subject {models::PhotoSizes.new fixtures.photo_sizes}
 
   context "initialize" do
     context "with FlickRaw::ResponseList" do
       it "returns object of proper class" do
-        klass.new(fixtures.photo_sizes).should be_a(APP::PhotoSizes)
+        klass.new(fixtures.photo_sizes).should be_a(models::PhotoSizes)
       end
     end
     context "with FlickRaw::Response" do
@@ -123,7 +124,7 @@ describe APP::PhotoSizes do
     context "#delegated_instance_methods" do
       it "returns array accessor methods + size methods" do
         subject.delegated_instance_methods.sort.should == (subject.possible_sizes +
-                                                                           APP::Models::Helpers.array_accessor_methods).sort
+                                                                           models::Helpers.array_accessor_methods).sort
       end
     end
 

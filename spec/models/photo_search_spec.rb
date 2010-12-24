@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-describe APP::PhotoSearch do
+describe APP::Models::PhotoSearch do
   let(:api) {APP::Api}
-  let(:klass) {APP::PhotoSearch}
+  let(:models){APP::Models}
+  let(:klass) {models::PhotoSearch}
   let(:fixtures){APP::Fixtures.instance}
   let(:options) {{:search_terms => 'iran', :page => '20', :date => '2010-10-03'}}
 
@@ -29,8 +30,8 @@ describe APP::PhotoSearch do
       it "returns object of proper class when photos responselist object specified" do
         klass.new(fixtures.photos, options).class.should == klass
       end
-      it "returns object of proper class when APP::Photos object is provided" do
-        klass.new(APP::Photos.new(fixtures.photos),options).class.should == klass
+      it "returns object of proper class when Photos object is provided" do
+        klass.new(models::Photos.new(fixtures.photos),options).class.should == klass
       end
       it "raises an error when an array is provided" do
         expect {
@@ -143,7 +144,7 @@ describe APP::PhotoSearch do
       end
       it "returns yesterday for date when no options are specified" do
         options = {:date => nil, :search_terms => nil}
-        klass.new(fixtures.photos,options).url_params.should == {:date => APP::Api.time}
+        klass.new(fixtures.photos,options).url_params.should == {:date => api::Helpers.date}
       end
       it "returns date when valid date and no search terms is provided" do
         options = {:date => '2010-01-01', :search_terms => nil}
@@ -234,8 +235,8 @@ describe APP::PhotoSearch do
     specify {subject.should respond_to(:delegated_instance_methods)}
     context "#delegated_instance_methods" do
       it "returns array accessor methods as well as other methods delegated to photos" do
-        subject.delegated_instance_methods.sort.should == (FlickrMocks::PhotoSearch.delegated_instance_methods +
-            FlickrMocks::Models::Helpers.array_accessor_methods).sort
+        subject.delegated_instance_methods.sort.should == (models::PhotoSearch.delegated_instance_methods +
+           models::Helpers.array_accessor_methods).sort
       end
     end
   end

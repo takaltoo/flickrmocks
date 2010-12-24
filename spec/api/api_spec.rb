@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'ruby-debug'
 describe APP::Api do
   let(:klass) { APP::Api }
+  let(:models){APP::Models}
 
   let(:fixtures){APP::Fixtures.instance}
   let(:photo){fixtures.photo}
@@ -21,7 +22,7 @@ describe APP::Api do
         klass.defaults = @defaults
       end
       it "returns has with expected set of keys" do
-        klass.defaults.keys.sort.should  == [:per_page,:license,:media,:extras,:tag_mode,:flickr_tag_modes].sort
+        klass.defaults.keys.sort.should  == [:page,:per_page,:license,:media,:extras,:tag_mode,:flickr_tag_modes].sort
       end
       it "returns object whose elements can be set similar to a hash" do
         expected = "#{Random.srand}"
@@ -34,13 +35,26 @@ describe APP::Api do
   end
 
   context "class methods" do
+    specify {klass.should respond_to(:default)}
+    context "default" do
+      it "returns key stored in @defaults class instance variable when symbol specified" do
+        klass.default(:per_page).should == klass.defaults[:per_page]
+      end
+      it "returns key stored in @defaults class instance variable when string specified" do
+        klass.default('per_page').should  == klass.defaults[:per_page]
+      end
+      it "returns nil when key that is not in @defaults class instance variable is specified" do
+        klass.default('garbage').should == nil
+      end
+    end
+    
     let(:subject){klass}
     specify {klass.should respond_to(:photo)}
     context "photo" do
       it "returns expected Photo object" do
         flickr.photos.stub(:getInfo).and_return(photo)
         klass.photo({:photo =>photo.id,
-                         :secret => photo.secret}).should == APP::Photo.new(photo)
+            :secret => photo.secret}).should == models::Photo.new(photo)
       end
       context "arguments" do
         let(:method){:photo}
@@ -53,7 +67,7 @@ describe APP::Api do
       it "returns expected PhotoSearch object" do
         flickr.photos.stub(:search).and_return(photos)
         klass.photos({:search_terms => 'iran'}).should ==
-          APP::PhotoSearch.new(photos,{:search_terms => 'iran'})
+          models::PhotoSearch.new(photos,{:search_terms => 'iran'})
       end
       it "raises error when non-hash argument provided" do
         expect {
@@ -69,10 +83,10 @@ describe APP::Api do
     specify {klass.should respond_to(:photo_sizes)}
     context "photo_sizes" do
       it "returns expected PhotoSizes object" do
-        expected = APP::PhotoSizes.new(sizes)
+        expected = models::PhotoSizes.new(sizes)
         flickr.photos.stub(:getSizes).and_return(sizes)
         klass.photo_sizes(:photo => expected.id,
-                                :secret => expected.secret).should ==  expected
+          :secret => expected.secret).should ==  expected
       end
       context "arguments" do
         let(:method){:photos}
@@ -86,7 +100,7 @@ describe APP::Api do
         flickr.photos.stub(:getSizes).and_return(sizes)
         flickr.photos.stub(:getInfo).and_return(photo)
         klass.photo_details(:photo => photo.id,
-                                  :secret => photo.secret).should  == APP::PhotoDetails.new(photo,sizes)
+          :secret => photo.secret).should  == models::PhotoDetails.new(photo,sizes)
       end
       context "arguments" do
         let(:method){:photo_details}
@@ -100,7 +114,7 @@ describe APP::Api do
       it "returns expected PhotoSearch object" do
         flickr.interestingness.stub(:getList).and_return(interesting_photos)
         klass.interesting_photos({:date => '2010-01-01'}).should ==
-                  APP::PhotoSearch.new(interesting_photos,{:date => '2010-01-01'})
+          models::PhotoSearch.new(interesting_photos,{:date => '2010-01-01'})
       end
       context "arguments" do
         let(:method){:interesting_photos}
@@ -113,7 +127,7 @@ describe APP::Api do
       it "returns expected CommonsInstitutions object" do
         flickr.commons.stub(:getInstitutions).and_return(commons_institutions)
         klass.commons_institutions({}).should ==
-          APP::CommonsInstitutions.new(commons_institutions)
+          models::CommonsInstitutions.new(commons_institutions)
       end
       context "arguments" do
         let(:method){:commons_institutions}

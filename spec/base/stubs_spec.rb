@@ -6,6 +6,7 @@ describe APP::Stubs do
   let(:flickr_stubs){klass::Flickr}
   let(:api_stubs){klass::Api}
   let(:api){APP::Api}
+  let(:models){APP::Models}
   
   context "class methods" do
     context "Flickr" do

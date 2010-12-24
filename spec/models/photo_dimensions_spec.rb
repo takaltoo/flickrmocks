@@ -1,11 +1,12 @@
 require 'spec_helper'
 
-describe APP::PhotoDimensions do
+describe APP::Models::PhotoDimensions do
   let(:dimensions_string) {'square:1x11,thumbnail:2x12,small:3x13,medium:4x14,medium_640:5x15,large:6x16,original:7x17'}
   let(:expected_sizes) { [:square, :thumbnail, :small, :medium,:medium_640, :large, :original] }
-  let(:klass) {APP::PhotoDimensions}
+  let(:models){APP::Models}
+  let(:klass) {models::PhotoDimensions}
 
-  subject { APP::PhotoDimensions.new(dimensions_string) }
+  subject { models::PhotoDimensions.new(dimensions_string) }
 
   context "class methods" do
     specify {klass.should respond_to(:regexp_size)}
@@ -148,7 +149,7 @@ describe APP::PhotoDimensions do
       end
 
       context "partially specified dimensions" do
-        subject {APP::PhotoDimensions.new('square:1x11')}
+        subject {models::PhotoDimensions.new('square:1x11')}
         it "should return object for dimensions that are specified" do
           subject.send(:square).should_not be_nil
         end

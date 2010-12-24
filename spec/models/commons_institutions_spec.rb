@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-describe APP::CommonsInstitutions do
+describe APP::Models::CommonsInstitutions do
   let(:api) {APP::Api}
-  let(:klass) {APP::CommonsInstitutions}
+  let(:models){APP::Models}
+  let(:klass) {models::CommonsInstitutions}
   let(:fixtures){APP::Fixtures.instance}
   let(:fixture){fixtures.commons_institutions}
   subject {klass.new(fixture)}
@@ -11,7 +12,7 @@ describe APP::CommonsInstitutions do
   context "class methods" do
     specify { klass.should respond_to(:defaults)}
     it "returns expected set of defaults" do
-      klass.defaults.should == FlickrMocks::Models::Helpers.paging_defaults
+      klass.defaults.should == models::Helpers.paging_defaults
     end
   end
 
