@@ -7,21 +7,21 @@ module FlickrMocks
         return {
           :tags => Api::Sanitize.tags(params[:search_terms]),
           :user_id =>  params[:owner_id],
-          :per_page =>  Api::Sanitize.per_page(params),
-          :page =>  Api::Sanitize.page(params),
+          :per_page =>  Api::Sanitize.per_page_hash(params),
+          :page =>  Api::Sanitize.page_hash(params),
           :license => Api.default(:license),
           :media => Api.default(:media),
           :extras => Api.default(:extras),
-          :tag_mode => Api::Sanitize.tag_mode(params)
+          :tag_mode => Api::Sanitize.tag_mode_hash(params)
         }
       end
 
       # returns parameter hash for searching for interesting flickr photos
       def self.interesting(params)
         return {
-          :date => Api::Sanitize.date(params),
-          :per_page => Api::Sanitize.per_page(params),
-          :page =>  Api::Sanitize.page(params),
+          :date => Api::Sanitize.date_hash(params),
+          :per_page => Api::Sanitize.per_page_hash(params),
+          :page =>  Api::Sanitize.page_hash(params),
           :extras => Api.default(:extras)
         }
       end

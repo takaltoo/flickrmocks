@@ -29,6 +29,17 @@ describe APP::Models::CommonsInstitutions do
   end
 
   context "instance methods" do
+    specify {subject.should respond_to(:extract_per_page)}
+    context "#extract_per_page" do
+      it "should be developed"
+    end
+
+    specify {subject.should respond_to(:extract_current_page)}
+    context "#current_page" do
+      it "should be developed"
+    end
+
+
     specify {subject.should respond_to(:default)}
     context "#default" do
       it "should return default when proper symbol provided" do
@@ -72,14 +83,14 @@ describe APP::Models::CommonsInstitutions do
       context "#per_page" do
         it "returns default per_page when none specified at initialization" do
           klass.new(fixture,:current_page => 1).per_page.should ==
-            FlickrMocks::Models::Helpers.paging_defaults[:per_page]
+            api.default(:per_page).to_i
         end
         it "returns per_page value that was specified during initialization" do
           klass.new(fixture,:per_page => 33, :current_page => 1).per_page.should == 33
         end
         it "returns 1 when per_page is set to 0" do
           klass.new(fixture,:per_page => 0, :current_page => 1).per_page.should ==
-                             FlickrMocks::Models::Helpers.paging_defaults[:per_page]
+                             api.default(:per_page).to_i
         end
       end
 

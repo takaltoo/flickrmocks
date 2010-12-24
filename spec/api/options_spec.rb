@@ -73,7 +73,6 @@ describe APP::Api do
     it "should return proper date when no page given" do
       subject.interesting(:date => '2010-02-14', :per_page => '2').should ==
         expected.clone.merge(:page => '1', :extras => 'license')
-      
     end
     it "should return proper date when not specified" do
       date = Chronic.parse('yesterday').strftime('%Y-%m-%d')

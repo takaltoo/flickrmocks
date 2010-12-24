@@ -15,6 +15,14 @@ module FlickrMocks
         self.per_page = extract_per_page(options)
         self.current_page = extract_current_page(options)
       end
+      
+      def  extract_per_page(params)
+        Api::Sanitize.per_page_hash(params)
+      end
+
+      def extract_current_page(params)
+        Api::Sanitize.page(params[:current_page] || params[:page])
+      end
 
       def default(value)
         CommonsInstitutions.defaults[value.to_s.to_sym]
@@ -85,22 +93,11 @@ module FlickrMocks
       end
 
       def current_page=(page)
-        @current_page = sanitize_page(page) > max_page ? max_page : sanitize_page(page)
+        @current_page = Api::Sanitize.page(page).to_i > max_page ? max_page : Api::Sanitize.page(page).to_i
       end
 
       def max_page
         (total_entries  / @per_page.to_f).ceil == 0 ? 1 : (total_entries  / @per_page.to_f).ceil
-      end
-
-      def sanitize_page(page)
-        page.to_i < 1 ? 1 : page.to_i
-      end
-      def  extract_per_page(params)
-        params[:per_page] || params[:perpage]
-      end
-      
-      def extract_current_page(params)
-        params[:current_page] || params[:page] || 1
       end
     end
   end

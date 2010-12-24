@@ -73,6 +73,22 @@ describe APP::Models::PhotoSearch do
   end
 
   context "instance methods" do
+
+    specify {subject.should respond_to(:extract_date)}
+    context "#extract_date" do
+      it "needs to extract a date"
+    end
+
+    specify {subject.should respond_to(:extract_search_terms)}
+    context "#extract_search_terms" do
+      it "needs to be developed"
+    end
+
+    specify {subject.should respond_to(:extract_page)}
+    context "#extract_page" do
+      it "needs to be developed"
+    end
+    
     specify {subject.should respond_to(:search_terms)}
     context "#search_terms" do
       let(:search_terms){'shiraz,iran'}
