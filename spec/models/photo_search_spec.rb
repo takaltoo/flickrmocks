@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'spec_helper' 
 
 describe APP::Models::PhotoSearch do
   let(:api) {APP::Api}
@@ -73,20 +73,45 @@ describe APP::Models::PhotoSearch do
   end
 
   context "instance methods" do
-
     specify {subject.should respond_to(:extract_date)}
     context "#extract_date" do
-      it "needs to extract a date"
+      it "returns nil when :date is nil in option" do
+        subject.extract_date(:date => nil).should be_nil
+      end
+      it "returns supplied date when proper date is supplied as string" do
+        subject.extract_date(:date => '2010-10-10').should == '2010-10-10'
+      end
+      it "raises error when supplied date is an array" do
+        expect {
+          subject.extract_date(:date => [])
+        }.to raise_error(ArgumentError)
+      end
+      it "raises an error when supplied date is ambiguous" do
+        expect{
+          subject.extract_date(:date  => '2010')
+        }.to raise_error(ArgumentError)
+      end
     end
 
     specify {subject.should respond_to(:extract_search_terms)}
     context "#extract_search_terms" do
-      it "needs to be developed"
+      it "returns lower-cased and stripped version of :serch_terms" do
+        subject.extract_search_terms(:search_terms => 'Iran , Shiraz Hello,   goodbye').should ==
+          'iran,shiraz hello,goodbye'
+      end
+      it "returns nil when :search_terms is nil" do
+        subject.extract_search_terms(:search_terms => nil).should be_nil
+      end
+      it "returns nil when :saerch_terms is not specified" do
+        subject.extract_search_terms({}).should be_nil
+      end
     end
 
     specify {subject.should respond_to(:extract_page)}
     context "#extract_page" do
-      it "needs to be developed"
+      let(:method){:extract_page}
+      let(:options){{}}
+      it_behaves_like "page hash option"
     end
     
     specify {subject.should respond_to(:search_terms)}

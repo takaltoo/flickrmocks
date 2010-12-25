@@ -1,6 +1,9 @@
 module FlickrMocks
 
+  # module is included in classes that wrap the FlickRaw::Response and FlickRaw::ResponseList
+  # objects. Module is used internally.
   module CustomClone
+    # special ruby method that overrides Ruby's cloning method. 
     def initialize_copy(orig)
       super
       cloned = @h.clone

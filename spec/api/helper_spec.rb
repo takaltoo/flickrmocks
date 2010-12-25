@@ -27,5 +27,11 @@ describe APP::Api::Helpers do
     it "returns true when valid string of Format 'YYYY-MM-DD' provided" do
       klass.valid_date?('2001-10-10').should be_true
     end
+    it "returns false when integer provided string of format provided" do
+      klass.valid_date?(1).should be_false
+    end
+    it "returns false when ambiguous date provided" do
+      klass.valid_date?('2000').should be_false
+    end
   end
 end

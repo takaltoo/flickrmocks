@@ -222,7 +222,7 @@ describe APP::Stubs do
         it_behaves_like "stub for Api.photos"
         it_behaves_like "stub for Api.photo_details"
         it_behaves_like "stub for Api.photo_sizes"
-#        it_behaves_like "stub for Api.interesting_photos"
+        it_behaves_like "stub for Api.interesting_photos"
         it_behaves_like "stub for Api.commons_institutions"
       end
 

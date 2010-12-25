@@ -1,8 +1,7 @@
-module FlickrMocks
-  
-  # Contains wrappers for performing queries against the Flickr API's. Uses the
-  # FlickRaw gem to perform the queries. Query results are encapsulated in Ruby
-  # classes for enhanced usability.
+module FlickrMocks  
+  # Wrappers for performing queries against the Flickr API's. Uses the
+  # FlickRaw gem to perform the queries. Query results are encapsulated in easy-to-use
+  # Ruby classes.
   #
   # Before calling the API methods you must initialize FlickRaw with your api_key:
   #
@@ -22,90 +21,84 @@ module FlickrMocks
       attr_accessor :defaults
     end
 
-    # returns the default value stored in the class instance variable hash @defaults
-    # for the supplied key.
+    # returns the default value stored in the class instance variable @defaults hash.
     def self.default(value)
       Api.defaults[value.to_sym]
     end
 
-    # Used to search for photos that match the user provided parameters.
-    # A sample search that returns up to 4,000 photos that are tagged with the keyword 'france' is
-    # provided below:
+    # Searches for photos that match the user provided parameters.
+    # Sample usage:
     #  Api.photos(:search_terms => 'france') 
-    # This method accepts an options hash that contains the fields:
+    # Options hash accepts:
     #   :search_terms : string with comma separated list of terms 'france,lyon'
     #   :owner_id : pptional string containing the id for the owner of the photo.
     #   :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
     #   :page : optional string containing the page for search results to be returned. The default is '1'
     #   :tag_mode : optionsl string containing either 'any' or 'all'. Affects the interpretation of the search terms to the FlickRaw API.
-    def self.photos(params)
-      raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
-      photos = Api::Flickr.photos(params)
-      Models::PhotoSearch.new photos,params
+    def self.photos(options)
+      raise ArgumentError.new("Expecting a Hash argument.") unless options.is_a?(Hash)
+      photos = Api::Flickr.photos(options)
+      Models::PhotoSearch.new photos,options
     end
 
-    # Used to return detailed information regarding a user specified photo. The method
-    # returns a PhotoDetails object that encapsulates the retrieved data into an easy-to-use
-    # Ruby class. A sample search that returns detailed information is provided below:
+    # Retrieves detailed information for a photo. A PhotoDetails object that encapsulates
+    # the retrieved data into an easy-to-use Ruby class is returned. Sample usage:
     #  Api.photo_details(:photo_id => '1234'
-    # This method accepts an options hash with the fields:
+    # Options hash accepts:
     #   :photo_id : required string that contains the id for the photo
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
-    def self.photo_details(params)
-      raise ArgumentError.new("Expecting a Hash argument.") unless params.is_a?(Hash)
-      photo = Api::Flickr.photo(params)
-      sizes = Api::Flickr.photo_sizes(params)
+    def self.photo_details(options)
+      raise ArgumentError.new("Expecting a Hash argument.") unless options.is_a?(Hash)
+      photo = Api::Flickr.photo(options)
+      sizes = Api::Flickr.photo_sizes(options)
       Models::PhotoDetails.new(photo,sizes)
     end
 
-    # Used to retrieve basic information regarding a single photo. This method returns a Photo
-    # object that encapsulates the retrieved data into an easy-to-use Ruby class.
-    # A sample search is provided below:
+    # Retrieve basic information for a photo. Returns object of class Photo.
+    # Sample usage:
     #  Api.photo(:photo_id => '1234')
-    # This method accepts an options hash with the fields:
+    # Options hash accepts:
     #   :photo_id : required string that contains the id for the photo
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
-    def self.photo(params)
-      raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      Models::Photo.new Api::Flickr.photo(params)
+    def self.photo(options)
+      raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
+      Models::Photo.new Api::Flickr.photo(options)
     end
 
-    # Used to retrieve the available sizes for a given photo. This methods returns a PhotoSize
-    # object that encapsulates the retrieved data into an easy-to-use Ruby class.
-    # A sample search is provided below:
+    # Retrieves available sizes for a given photo. Returns object of class PhotoSize.
+    # Sample usage:
     #  Api.photo_sizes(:photo_id => '1234')
-    # This method accepts an options hash with the fields:
+    # Options hash accepts:
     #   :photo_id : required string that contains the id for the photo
     #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
-    def self.photo_sizes(params)
-      raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      Models::PhotoSizes.new Api::Flickr.photo_sizes(params)
+    def self.photo_sizes(options)
+      raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
+      Models::PhotoSizes.new Api::Flickr.photo_sizes(options)
     end
 
-    # Used to retrieve a list of interesting photos for a given date. This method returns a
-    # PhotoSearch object that encapsulates the retrieved data into an easy-to-use Ruby class.
-    # A sample search is provided below:
+    # Retrieves interesting photos for a given date. Returns object of class PhotoSearch.
+    # Sample usage:
     #  Api.interesting_photos(:date => '2000-01-01'
-    # This methods accepts an options hash with the fields:
+    # Options hash accepts:
     #  :date : string with date in the format yyyy-mm-dd
     #  :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
     #  :page : optional string containing the page for search results to be returned. The default is '1'
-    def self.interesting_photos(params)
-      raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
-      photos = Api::Flickr.interestingness(params)
-      Models::PhotoSearch.new photos,params
+    def self.interesting_photos(options)
+      raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
+      photos = Api::Flickr.interestingness(options)
+      Models::PhotoSearch.new photos,options
     end
 
-    # Used to retrieve a list of commons institutions. This method returns a CommonsInstitutions
-    # object that encapsulates the retrieved data into an easy-to-use Ruby class.
-    # a sample search is provided below:
+    # Retrieves list of commons institutions. Returns object of class CommonsInstitutions.
+    # Sample usage:
     #  Api.commons_institutions({})
-    # The method accepts an options hash with the fields:
-    #
-    def self.commons_institutions(params)
-      raise ArgumentError.new("Expecting a Hash argument") unless params.is_a?(Hash)
+    # Options hash accepts:
+    #  :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
+    #  :page : optional string containing the page for search results to be returned. The default is '1'
+    def self.commons_institutions(options)
+      raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
       institutions = Api::Flickr.commons_institutions
-      Models::CommonsInstitutions.new institutions,params
+      Models::CommonsInstitutions.new institutions,options
     end
   end
 end

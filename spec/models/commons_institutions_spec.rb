@@ -31,12 +31,29 @@ describe APP::Models::CommonsInstitutions do
   context "instance methods" do
     specify {subject.should respond_to(:extract_per_page)}
     context "#extract_per_page" do
-      it "should be developed"
+      let(:method){:extract_per_page}
+      let(:options){{}}
+      it_behaves_like "per page hash option"
     end
 
     specify {subject.should respond_to(:extract_current_page)}
-    context "#current_page" do
-      it "should be developed"
+    context "#extract_current_page" do
+      let(:method){:extract_current_page}
+      context ":page option provided" do
+        let(:options){{}}
+        it_behaves_like "page hash option"
+      end
+      context ":current_page option" do
+        it "returns page number when current_page given" do
+          subject.extract_current_page(:current_page => '2').should == '2'
+        end
+        it "prefers :current_page to :page" do
+          subject.extract_current_page(:current_page => '3', :page => '30').should == '3'
+        end
+        it "returns default page when :current_page is set to nil" do
+          subject.extract_current_page(:current_page => nil).should == FlickrMocks::Api.default(:page)
+        end
+      end
     end
 
 

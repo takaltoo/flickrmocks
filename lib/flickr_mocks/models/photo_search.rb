@@ -23,7 +23,8 @@ module FlickrMocks
       end
 
 
-      # extracts the search terms options
+      # returns the string stored in the :search_terms tag. The string is stripped
+      # of spurious spaces and is made to be lower case.
       def extract_search_terms(params)
         Api::Sanitize.tags(params[:search_terms])
       end
@@ -44,11 +45,12 @@ module FlickrMocks
         Api::Sanitize.page(params[:page])
       end
 
-      # extracts hash of options accepted by PhotoSearch object for interesting photo search
+      # returns the default class instance value corresponding to the supplied key.
       def default(value)
         PhotoSearch.defaults[value.to_sym]
       end
 
+      # returns the list of photo objects returned by search
       def photos
         @delegated_to_object
       end

@@ -1,12 +1,16 @@
 module FlickrMocks
 
+  # contains custom methods that allow the marshaling of FlickRaw::Response and
+  # FlickRaw::ResponseList objects. FlickRaw responses contain singleton methods that
+  # can not be marshaled by default. This module is used internally
   module CustomMarshal
 
-    def self.included(base)
+    def self.included(base) 
       base.extend ClassMethods
     end
     
-    module ClassMethods
+    module ClassMethods    
+      # used to un-marshal FlickRaw responses
       def _load(string)
         data = Marshal.load(string)
         type = data.delete('flickr_type')
@@ -14,6 +18,7 @@ module FlickrMocks
       end
     end
 
+    # used to marshal FlickRaw responses
     def _dump(level)
       result = marshal_flickraw(self)
       result["flickr_type"] = self.flickr_type

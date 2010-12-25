@@ -15,20 +15,20 @@ end
 
 shared_examples_for "stub for Api.photos" do
   it "returns PhotoSearch object populated with fixtures.photos with valid tag" do
-    APP::Api.photos(:tags => 'france').should ==
-      APP::Models::PhotoSearch.new(fixtures.photos,{:tags => 'france'})
+    APP::Api.photos(:search_terms => 'france').should ==
+      APP::Models::PhotoSearch.new(fixtures.photos,{:search_terms => 'france'})
   end
   
   context "owner_id provided" do
     it "returns object with same user when owner_id provided" do
       params = {:owner_id => '1'}
       api.photos(:owner_id => '1').should ==
-        ::FlickrMocks::Models::PhotoSearch.new(fixtures.photos,params)
+        ::FlickrMocks::Models::PhotoSearch.new(fixtures.author_photos,params)
     end
     it "returns object with same user when owner_id and tags provided" do
       params = {:owner_id => '1',:search_terms => 'iran'}
       api.photos(:owner_id => '1').should ==
-        ::FlickrMocks::Models::PhotoSearch.new(fixtures.photos,{:owner_id => '1'})
+        ::FlickrMocks::Models::PhotoSearch.new(fixtures.author_photos,{:owner_id => '1'})
     end
     it "returns object with no entries when owner_id set to  'garbage'" do
       api.photos(:owner_id => 'garbage').should ==

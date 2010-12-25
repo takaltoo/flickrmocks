@@ -23,8 +23,9 @@ describe APP::Api do
     }.merge(extras.clone)
   }
   
-
+  specify {subject.should respond_to(:search)}
   context "search" do
+    let(:method){:search}
     it "should give correct options when all options are specified except :author_id" do
       subject.search(options.clone.merge(:per_page =>'400')).should == expected
     end
@@ -33,75 +34,194 @@ describe APP::Api do
         expected.clone.merge(:user_id => 'authorid',:tags => nil)
       
     end
-    it "should give correct values when :perpage given in lieu of :per_page" do
-      subject.search(options.clone.merge({:perpage => '400'})).should == expected
-    end
-    it "should give correct value when no :perpage is specified" do
-      subject.search(options).should == expected.clone.merge({:per_page => '200'})
-    end
-    it "should give preference to :per_page to :perpage" do
-      subject.search(options.clone.merge({:per_page => '500', :perpage => '444'})).should ==
-        expected.clone.merge(:per_page => '500')
-    end
-    it "should be able to set :tag_mode" do
-      subject.search(options.clone.merge(:per_page => '500', :tag_mode=>'all' )).should ==
-        expected.clone.merge({:per_page => '500',:tag_mode => 'all'}
-      )
-    end
-    it "should give default tag_mode when not specified" do
-      subject.search(options.clone.merge(:per_page => '500')).should ==
-        expected.clone.merge({:per_page => '500'}
-      )
-    end
-    it "should give default tag_mode when junk given for tag_mode" do
-      subject.search(options.clone.merge(:per_page => '500', :tag_mode => 'junk')).should ==
-        expected.clone.merge({:per_page => '500'}
-      )
-    end
-  end
-
-  context "interesting" do
-    let(:expected){
-      { :date => '2010-02-14',
-        :per_page => '2',
-        :page => '2'
+    context "tag_mode option" do
+      let(:options){
+        extras.clone.merge({
+            :search_terms => 'france',
+            :owner_id =>  '1234',
+            :page =>  '1',
+            :per_page => '50'
+          })
       }
-    }
-    it "should return proper date with default options" do
-      subject.interesting(expected).should == expected.clone.merge(:extras => 'license')
+      let(:expected){
+        extras.clone.merge({
+            :tags => options[:search_terms],
+            :user_id =>  options[:owner_id],
+            :page =>  options[:page],
+            :per_page => options[:per_page]
+          })
+      }
+      it_behaves_like "tag mode hash option"
     end
-    it "should return proper date when no page given" do
-      subject.interesting(:date => '2010-02-14', :per_page => '2').should ==
-        expected.clone.merge(:page => '1', :extras => 'license')
+    context "per page option" do
+      let(:options){
+        extras.clone.merge({
+            :search_terms => 'france',
+            :owner_id =>  '1234',
+            :page =>  '1',
+          })
+      }
+      let(:expected){
+        extras.clone.merge({
+            :tags => options[:search_terms],
+            :user_id =>  options[:owner_id],
+            :page =>  options[:page],
+          })
+      }
+      it_behaves_like "per page hash option"
     end
-    it "should return proper date when not specified" do
-      date = Chronic.parse('yesterday').strftime('%Y-%m-%d')
-      subject.interesting({:date => date})[:date].should == date
+    context "page option" do
+      let(:options){
+        extras.clone.merge({
+            :search_terms => 'france',
+            :owner_id =>  '1234',
+            :per_page =>  '50',
+          })
+      }
+      let(:expected){
+        extras.clone.merge({
+            :tags => options[:search_terms],
+            :user_id =>  options[:owner_id],
+            :per_page =>  options[:per_page],
+          })
+      }
+      it_behaves_like "page hash option"      
     end
   end
 
+  specify {subject.should respond_to(:interesting)}
+  context "interesting" do
+    let(:method){:interesting}
+    context "date option" do
+      let(:options){{
+          :per_page => '2',
+          :page => '2',
+          :extras => 'license'
+        }}
+      let(:expected){options}
+      it_behaves_like "date hash option"
+    end
+    
+    context "page option" do
+      let(:options){
+        {   :date => '2010-10-10',
+          :per_page =>  '50',
+          :extras => FlickrMocks::Api.default(:extras)
+        }}
+      let(:expected){options}
+      it_behaves_like "page hash option"
+    end
+    context "per page option" do
+      let(:options){
+        { :date => '2010-10-10',
+          :page =>  '1',
+          :extras => FlickrMocks::Api.default(:extras)
+        }}
+      let(:expected){options}
+      it_behaves_like "per page hash option"
+    end
+  end
+
+  specify{subject.should respond_to(:photo)}
   context "photo" do
     let(:expected) {
       {:photo_id => '20030', :secret => 'abcdef'}
     }
-
-    it "should extract :photo_id and :secret" do
+    it "returns :photo_id and :secret when provided" do
       subject.photo(expected).should == expected
     end
-    it "should return photo id when present" do
+    it "returns :photo_id when :id provided" do
       subject.photo(:id => '20030',:secret => 'abcdef').should == expected
     end
-    it "should give preference to :photo_id over :id" do
+    it "should prefer :photo_id over :id" do
       subject.photo(expected.clone.merge(:id => 'not correct')).should == expected
     end
-    it "should give preference to :photo_secret over :secret" do
+    it "should prefer :photo_secret over :secret" do
       subject.photo(:photo_secret => 'abcdef', :secret => 'not correct', :id => '20030').should ==
-        expected
-      
+        expected   
+    end
+    it "returns nil for :photo_id when no id given" do
+      subject.photo({:secret => '22'}).should ==
+        {:secret => '22', :photo_id => nil}
+    end
+    it "returns nil for :secret when no :secret given" do
+      subject.photo({:photo_id => '1234'}).should ==
+        {:secret => nil, :photo_id => '1234'}
+    end
+    it "returns nil for :secret and :photo_id when nil provided" do
+      subject.photo({:photo_id => nil, :secret => nil}).should ==
+        {:secret => nil, :photo_id => nil}
     end
   end
 
-  
+
+
+  specify {subject.should respond_to(:author)}
+  context "author" do
+    let(:method){:author}
+    let(:expected){
+      { :per_page => '400',
+        :user_id => nil,
+        :page => '2'}.merge(extras.clone)
+    }
+    it "should give correct options when all options are specified except :author_id" do
+      subject.author(options.clone.merge(:per_page =>'400')).should == expected
+    end
+    it "should return options when fully specified" do
+      subject.author(:per_page => '400',:owner_id => 'authorid',:page => '2').should ==
+        expected.clone.merge(:user_id => 'authorid')
+
+    end
+    context "tag_mode option" do
+      it "should be able to set :tag_mode" do
+        subject.author(options.clone.merge(:per_page => '500', :tag_mode=>'all' )).should ==
+          expected.clone.merge({:per_page => '500',:tag_mode => 'all'}
+        )
+      end
+      it "should give default tag_mode when not specified" do
+        subject.author(options.clone.merge(:per_page => '500')).should ==
+          expected.clone.merge({:per_page => '500'}
+        )
+      end
+      it "should give default tag_mode when junk given for tag_mode" do
+        subject.author(options.clone.merge(:per_page => '500', :tag_mode => 'junk')).should ==
+          expected.clone.merge({:per_page => '500'}
+        )
+      end
+    end
+    context "per page option" do
+      let(:options){
+        extras.clone.merge({
+            :search_terms => 'france',
+            :owner_id =>  '1234',
+            :page =>  '1',
+          })
+      }
+      let(:expected){
+        extras.clone.merge({
+            :user_id =>  options[:owner_id],
+            :page =>  options[:page],
+          })
+      }
+      it_behaves_like "per page hash option"
+    end
+    context "page option" do
+      let(:options){
+        extras.clone.merge({
+            :search_terms => 'france',
+            :owner_id =>  '1234',
+            :per_page =>  '50',
+          })
+      }
+      let(:expected){
+        extras.clone.merge({
+            :user_id =>  options[:owner_id],
+            :per_page =>  options[:per_page],
+          })
+      }
+      it_behaves_like "page hash option"
+    end
+  end
 end
 
  

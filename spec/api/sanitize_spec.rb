@@ -37,11 +37,25 @@ describe APP::Api::Sanitize do
         end
       end
     end
+    
     specify {klass.should respond_to(:tags_hash)}
     context ":tags_hash" do
-      it "needs to be developed"
+      it "returns tags when :search_terms supplied" do
+        klass.tags_hash(:search_terms => "lyon,france").should ==
+          "lyon,france"
+      end
+      it "returns nil when :search_terms is nil supplied" do
+        klass.tags_hash(:search_terms => nil).should be_nil
+      end
+      it "returns nil when :search_terms not supplied" do
+        klass.tags_hash({}).should be_nil
+      end
+      it "raises argument error when Array supplied" do
+        expect {
+          klass.tags_hash([])
+        }.to raise_error(ArgumentError)
+      end
     end
-
 
     specify {klass.should respond_to(:per_page)}
     context "per_page" do
@@ -78,9 +92,12 @@ describe APP::Api::Sanitize do
         end
       end
     end
+
     specify {klass.should respond_to(:per_page_hash)}
     context ":per_page_hash" do
-      it "needs to be developed"
+      let(:options){{}}
+      let(:method){:per_page_hash}
+      it_behaves_like "per page hash option"
     end
 
     # returns the page entry that is a positive non-zero integer
@@ -121,7 +138,9 @@ describe APP::Api::Sanitize do
     end
     specify {klass.should respond_to(:page_hash)}
     context ":page_hash" do
-      it "needs to be developed"
+      let(:options){{}}
+      let(:method){:page_hash}
+      it_behaves_like "page hash option"
     end
 
     specify {klass.should respond_to(:tag_mode)}
@@ -155,7 +174,9 @@ describe APP::Api::Sanitize do
 
     specify {klass.should respond_to(:tag_mode_hash)}
     context ":tag_mode_hash" do
-      it "needs to be developed"
+      let(:options){{}}
+      let(:method){:tag_mode_hash}
+      it_behaves_like "tag mode hash option"
     end
 
     specify {klass.should respond_to(:date)}
@@ -175,7 +196,10 @@ describe APP::Api::Sanitize do
 
     specify {klass.should respond_to(:date_hash)}
     context ":date_hash" do
-      it "needs to be developed"
+      let(:options){{}}
+      let(:method){:date_hash}
+      it_behaves_like "date hash option"
     end
+
   end
 end

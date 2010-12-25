@@ -2,24 +2,31 @@ module FlickrMocks
   class Api
     module Helpers
       # returns a date string of format YYYY-MM-DD. If the supplied date is ambiguous
-      # it returns yesterday's date in the format YYYY-MM-DD
+      # it returns yesterday's date in the format YYYY-MM-DD. Sample usage:
+      #
+      #  self.date('2010-10-10')
+      #  self.date('yesterday')
+      #
       def self.date(date=nil)
-        begin
-          date = Chronic.parse(date).strftime('%Y-%m-%d')
-          date ? date : Chronic.parse('yesterday').strftime('%Y-%m-%d')
-        rescue
-          Chronic.parse('yesterday').strftime('%Y-%m-%d')
-        end
+        self.valid_date?(date) ? self.parse_date(date) : self.parse_date('yesterday')
       end
       
-      # checks to see whether supplied date is of format YYYY-MM-DD
+      # returns true when supplied date is of format YYYY-MM-DD. Sample usage:
+      #
+      #   self.valid_date?('2010-10-10')
+      #
       def self.valid_date?(date)
         begin
-          Chronic.parse(date).strftime('%Y-%m-%d')
+          self.parse_date(date)
           true
         rescue
           false
         end
+      end
+
+      private
+      def self.parse_date(date)
+        Chronic.parse(date).strftime('%Y-%m-%d')
       end
 
     end

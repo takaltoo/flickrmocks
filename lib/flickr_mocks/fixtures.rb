@@ -2,6 +2,12 @@ require 'ostruct'
 require 'singleton'
 
 module FlickrMocks
+  # contains fixtures for various FlickRaw responses. This class is used internally.
+  # For stubbing FlickrRaw APIs for your Rspec 2.0 please refer to the
+  # FlickrMocks::Stubs class. This is a singleton class. To access the singleton
+  # class instance you can call:
+  #
+  #   Fixtures.instance
   class Fixtures
     include Singleton
     attr_accessor :photos,:interesting_photos,:author_photos,:photo,:photo_details,
@@ -25,9 +31,9 @@ module FlickrMocks
       @empty_photos = load_fixture(:empty_photos)
 
       @expected_methods = load_fixture(:expected_methods)
-
     end
 
+    # returns directory where fixtures are stored.
     def self.repository
       File.expand_path(File.dirname(__FILE__) + '/../../spec/fixtures') + '/'
     end
