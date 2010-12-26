@@ -22,7 +22,11 @@ describe APP::Api do
         klass.defaults = @defaults
       end
       it "returns has with expected set of keys" do
-        klass.defaults.keys.sort.should  == [:page,:per_page,:license,:media,:extras,:tag_mode,:flickr_tag_modes].sort
+        klass.defaults.keys.sort.should  == [:page,:per_page,:license,:media,
+                                                        :max_entries,:extras,:tag_mode,
+                                                        :possible_sizes,:possible_tag_modes].sort
+
+
       end
       it "returns object whose elements can be set similar to a hash" do
         expected = "#{Random.srand}"

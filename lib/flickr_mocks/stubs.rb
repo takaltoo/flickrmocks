@@ -4,8 +4,16 @@ module FlickrMocks
   # your Rspec 2.0 tests.
   module Stubs
     module Api
-      # Stubs all the wrapper Api calls to Flickr
+      # Once this method is called all subsequent calls to the following calls are stubbed:
+      #
+      #  Api.photos
+      #  Api.photo_details
+      #  Api.photo
+      #  Api.photo_sizes
+      #  Api.interesting_photos
+      #  Api.commons_institutions
       def self.all
+        # [:VERSION, :Stubs, :Helpers, :Fixtures, :Models, :Api, :CustomClone, :CustomCompare, :CustomMarshal]
         [:photos,:photo_details,:photo,:photo_sizes,
           :interesting_photos,:commons_institutions].each do |method|
           self.send(method)
@@ -13,8 +21,10 @@ module FlickrMocks
       end
 
 
-      # Stubs the call to Api.photos. The stub returns an object of class Flickr::PhotoSearch.
-      # The stub's return value depends on the supplied options hash:
+      # Once this method is called, all subsequent calls to Api.photos are stubbed.
+      # The stub returns an object of class Flickr::PhotoSearch.
+      # The return value for Api.photos hash depends on the
+      # the options hash:
       #
       #   :search_terms => 'garbage' (returns empy list of photos)
       #   :owner_id => 'garbage' (returns empty list of photos)
@@ -33,8 +43,10 @@ module FlickrMocks
         end}.call
       end
 
-      # stubs the call to Api.photo_details.The stub returns an object of class Models::PhotoDetails. Its
-      # state depends on the supplied options:
+      # Once this method is called, subsequent calls to Api.photo_details are stubbed.
+      # The stub returns an object of class Models::PhotoDetails.
+      # The return value for Api.photo_details stub depends on the
+      # state of the supplied options hash:
       #
       #   :photo_id or :id => 'garbage' (raises FlickRaw::FailedResponse error)
       #   :photo_id or :id => nil (raises FlickRaw::FailedResponse error)
@@ -53,8 +65,9 @@ module FlickrMocks
           end}.call
       end
 
-      # stubs the call to Api.photo. The stub returns an object of class Models::Photo. Its
-      # state depends on the supplied options:
+      # Once this method is called, all subsequent calls to Api.photo are stubbed.
+      # The stub returns an object of class Models::Photo. The return value for the Api.photo
+      # stub depends on the supplied options:
       #
       #   :photo_id or :id => 'garbage' (raises Invaid ID error)
       #   :photo_id or :id => nil (raises invalid ID error)
@@ -71,8 +84,9 @@ module FlickrMocks
         end}.call
       end
 
-      # stubs the call to Api.photo_sizes. The stub returns an object of class Models::PhotoSizes.
-      # Its state depends on the supplied options:
+      # Once this method is called, all subsequent calls to Api.photo_sizes are stubbed.
+      # The stub returns an object of class Models::PhotoSizes.
+      # The return value of Api.photo_sizes stub depends on the supplied options:
       #
       #   :photo_id or :id => 'garbage' (raises FlickRaw::FailedResponse error)
       #   :photo_id or :id => nil (raises FlickRaw::FailedResponse error)
@@ -89,9 +103,10 @@ module FlickrMocks
           end}.call
       end
 
-      # stubs the call to Api.interesting_photos. The stub returns an object of class
-      # Models::PhotoSearch on the supplied options hash. The stub's return value depends on
-      # the supplied option:
+      # Once this method is called, all subsequent calls to Api.interesting_photos
+      # are stubbed. The stub returns an object of class Models::PhotoSearch.
+      # The return value for Api.interesting_photos stub depends on the supplied
+      # options hash:
       # 
       #  :date => '2000-01-01' (returns empy list of photos)
       #  :date => 'garbage' (raises an error)
@@ -108,7 +123,8 @@ module FlickrMocks
           end}.call
       end
 
-      # stubs the call to Api.commons_institutions.
+      # Once method is called all subsequent calls to Api.commons_institutions
+      # are stubbed.
       def self.commons_institutions
         lambda {::FlickrMocks::Api.stub(:commons_institutions) do |params|
             ::FlickrMocks::Stubs::Flickr.commons_institutions
@@ -125,7 +141,7 @@ module FlickrMocks
 
     # stubs low level FlickRaw Api calls to Flickr
     module Flickr
-      # Stubs the calls to the following Api
+      # Once this method is called, the following calls are stubbed: 
       #  flickr.photos.search
       #  flickr.photos.getInfo
       #  flickr.photos.getSizes
@@ -137,7 +153,8 @@ module FlickrMocks
         end
       end
 
-      # Stubs the calls to flickr.photos.search. The stub's return value depends on
+      # Once this method are called, all subsequent calls to flickr.photos.search
+      # are stubbed. The return value for the flickr.photos.search depends on
       # the supplied options hash:
       #
       #   :tags => 'garbage' (returns empy list of photos)
@@ -168,7 +185,8 @@ module FlickrMocks
         }.call
       end
 
-      # Stubs the calls to flickr.photos.getInfo. The stub's return value depends on
+      # Once this method is called, all subsequent calls to flickr.photos.getInfo
+      # are stubbed. The return value for the flickr.photos.getInfo stub depends on
       # the supplied options hash:
       #
       #   :photo_id => 'garbage' (raises Invaid ID error)
@@ -196,7 +214,8 @@ module FlickrMocks
         }.call
       end
 
-      # stubs flickr.photos.getSizes. The stub's return value depends
+      # Once this method is called all subsequent calls for flickr.photos.getSizes
+      # are stubbed. The return value for the flickr.photos.getSizes stub depends
       # on the supplied options hash:
       #
       #  :photo_id => nil (raises FlickRaw::FailedResponse error)
@@ -224,7 +243,8 @@ module FlickrMocks
         }.call
       end
 
-      # stubs flickr.interestingness.getList. The stub's return value depends
+      # Once this method is called, all subsequent calls to flickr.interestingness.getList
+      # are stubbed. The return value for the flickr.interesting.getList stub depends
       # on the supplied options hash.
       #
       #  :date => '2000-01-01' (returns empy list of photos)
@@ -248,8 +268,8 @@ module FlickrMocks
         }.call
       end
 
-      # stubs the flickr.commons.getInstitutions. Stub returns a list of
-      # commons institutions.
+      # Once called, all subsequent calls to flickr.commons.getInstitutions are stubbed.
+      # The flickr.commons.getInstitutions stub simply returns a list of commons institutions.
       def self.commons_institutions
         lambda {
           flickr.commons.stub(:getInstitutions) do

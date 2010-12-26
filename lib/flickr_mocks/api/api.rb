@@ -13,8 +13,10 @@ module FlickrMocks
       :license => '4,5,6,7',
       :media => 'photos',
       :extras => 'license',
+      :max_entries => '4000',
       :tag_mode => 'any',
-      :flickr_tag_modes => ['any','all']
+      :possible_tag_modes => ['any','all'],
+      :possible_sizes => [:square, :thumbnail, :small, :medium, :medium_640, :large, :original],
     }
 
     class << self

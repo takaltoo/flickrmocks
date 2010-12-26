@@ -6,7 +6,6 @@ module FlickrMocks
       #
       #  self.date('2010-10-10')
       #  self.date('yesterday')
-      #
       def self.date(date=nil)
         self.valid_date?(date) ? self.parse_date(date) : self.parse_date('yesterday')
       end
@@ -14,7 +13,6 @@ module FlickrMocks
       # returns true when supplied date is of format YYYY-MM-DD. Sample usage:
       #
       #   self.valid_date?('2010-10-10')
-      #
       def self.valid_date?(date)
         begin
           self.parse_date(date)

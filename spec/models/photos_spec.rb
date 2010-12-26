@@ -10,7 +10,7 @@ describe APP::Models::Photos do
 
 
   subject {klass.new photos_fixture}
-  let(:max_pages){subject.default(:max_entries)/subject.default(:per_page)}
+  let(:max_pages){subject.max_entries/subject.per_page}
 
   context "class methods" do 
     specify { klass.should respond_to(:defaults)}   
@@ -41,8 +41,8 @@ describe APP::Models::Photos do
       specify { klass.defaults.should have_key(:max_entries) }
       specify { klass.defaults.should have_key(:per_page) }
       
-      it "returns 50 for argument :per_page" do
-        klass.defaults[:per_page].should == 50
+      it "returns 200 for argument :per_page" do
+        klass.defaults[:per_page].should == FlickrMocks::Api.default(:per_page).to_i
       end
       it "returns 4000 for argument :max_entries" do
         klass.defaults[:max_entries].should == 4000

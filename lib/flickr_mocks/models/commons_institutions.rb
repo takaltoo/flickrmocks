@@ -4,10 +4,12 @@ module FlickrMocks
     class CommonsInstitutions
       attr_accessor :per_page,:current_page
 
-      @defaults =  FlickrMocks::Models::Helpers.paging_defaults.clone
-
       class << self
-        attr_accessor :defaults
+        attr_writer :defaults
+        def defaults
+          @defaults ||= FlickrMocks::Models::Helpers.paging_defaults().clone
+          @defaults
+        end
       end
 
       def initialize(institutions,options={})
@@ -15,15 +17,18 @@ module FlickrMocks
         self.per_page = extract_per_page(options)
         self.current_page = extract_current_page(options)
       end
-      
-      def  extract_per_page(params)
-        Api::Sanitize.per_page_hash(params)
+
+      # returns the sanitized value stored in :per_page key in the options hash.
+      def  extract_per_page(options)
+        Api::Sanitize.per_page_hash(options)
       end
 
-      def extract_current_page(params)
-        Api::Sanitize.page(params[:current_page] || params[:page])
+      # returns the sanitized value stored in the :page key in the options hash.
+      def extract_current_page(options)
+        Api::Sanitize.page(options[:current_page] || options[:page])
       end
 
+      # returns the default value stored in the
       def default(value)
         CommonsInstitutions.defaults[value.to_s.to_sym]
       end
@@ -81,7 +86,6 @@ module FlickrMocks
           obj.replace(institutions[start, per_page])
         end
       end
-
       private
       def delegated_to_object=(object)
         raise ArgumentError, "FlickRaw::ResponseList expected" unless object.class == FlickRaw::ResponseList

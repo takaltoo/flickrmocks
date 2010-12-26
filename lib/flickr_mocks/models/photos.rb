@@ -4,11 +4,14 @@ module FlickrMocks
       attr_reader :current_page,:per_page,:total_entries,:total_pages,:photos
       alias :perpage :per_page
 
-      @defaults =  FlickrMocks::Models::Helpers.paging_defaults.clone
-
+    
 
       class << self
-        attr_accessor :defaults
+        attr_writer :defaults
+        def defaults
+          @defaults ||= FlickrMocks::Models::Helpers.paging_defaults().clone
+          @defaults
+        end
       end
 
       def initialize(data)
@@ -96,7 +99,7 @@ module FlickrMocks
           photo.clone
         end
       end
-    
+
       private
       def current_page=(value)
         raise ArgumentError,"Expected Fixnum but was #{value.class}" unless value.is_a?(Fixnum) or value.is_a?(String)

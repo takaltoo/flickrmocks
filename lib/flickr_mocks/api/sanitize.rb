@@ -95,7 +95,7 @@ module FlickrMocks
       def self.tag_mode(value=nil)
         case value
         when String then
-         Api.default(:flickr_tag_modes).include?(value.to_s.downcase) ?
+         Api.default(:possible_tag_modes).include?(value.to_s.downcase) ?
            value.to_s.downcase : Api.default(:tag_mode)
         when nil then
           Api.default(:tag_mode)

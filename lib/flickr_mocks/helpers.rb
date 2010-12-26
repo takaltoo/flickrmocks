@@ -14,8 +14,8 @@ module FlickrMocks
         symbol.to_s + extension
       end
 
-      # method determines whether two FlickRaw::Response or two FlickRaw::ResponseList
-      # objects are equal. It recursively checks the internal state of these two objects.
+      # compares two FlickRaw::Response or two FlickRaw::ResponseList.
+      # It recursively checks the internal state of these two objects.
       def equivalent?(a,b)
         return false if a.class != b.class
         case a
@@ -35,7 +35,7 @@ module FlickrMocks
         end
       end
 
-      # saves the marshaled version of the supplied object into the specified file
+      # saves the marshaled version of the supplied object into a file
       def dump(response,file)
         begin
           f  = File.open(file,'w')
@@ -45,7 +45,7 @@ module FlickrMocks
         end
       end
 
-      # returns the unmarshaled contents of the user-specified file
+      # returns the un-marshaled contents of the user-specified file
       def load(file)
         begin
           f=File.open(file,'r')

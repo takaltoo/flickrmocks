@@ -21,17 +21,18 @@ describe APP::Models::Helpers do
           :medium_640, :large, :original]
       end
     end
-    
+
     specify {klass.should respond_to(:paging_defaults)}
     context "paging_defaults" do
-      it "returns expected hash of paging defaults" do
+      it "returns expected hash containing paging defaults" do
         klass.paging_defaults.should == {
-          :max_entries => 4000,
-          :per_page => 50,
-          :current_page => 1
+          :max_entries => ::FlickrMocks::Api.default(:max_entries).to_i,
+          :per_page => ::FlickrMocks::Api.default(:per_page).to_i,
+          :current_page => ::FlickrMocks::Api.default(:page).to_i
         }
       end
     end
-    
+
   end
 end
+
