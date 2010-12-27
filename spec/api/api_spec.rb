@@ -24,7 +24,9 @@ describe APP::Api do
       it "returns has with expected set of keys" do
         klass.defaults.keys.sort.should  == [:page,:per_page,:license,:media,
                                                         :max_entries,:extras,:tag_mode,
-                                                        :possible_sizes,:possible_tag_modes].sort
+                                                        :possible_sizes,:possible_tag_modes,
+                                                        :usable_licenses
+                                                        ].sort
 
 
       end

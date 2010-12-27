@@ -42,8 +42,7 @@ module FlickrMocks
         @delegated_to_object == other.instance_eval('@delegated_to_object')
       end
 
-      # customizes the cloning behavior of the object. Internal state of cloned object
-      # will not point to original object. 
+      # compares value for internal state rather than object_id
       def initialize_copy(orig) 
         super
         @delegated_to_object = @delegated_to_object.clone

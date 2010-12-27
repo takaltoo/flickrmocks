@@ -10,13 +10,6 @@ describe APP::Models::PhotoSearch do
   subject { klass.new fixtures.photos,options }
 
   context "class instance variables" do
-    specify {klass.should respond_to(:defaults)}
-    context "defaults" do
-      it "returns expected set of defaults" do
-        klass.defaults.should == {:page => 1}
-      end
-    end
-
     specify {klass.should respond_to(:delegated_instance_methods)}
     it "returns expected set of methods" do
       klass.delegated_instance_methods.sort.should == [:current_page, :per_page,
@@ -124,7 +117,7 @@ describe APP::Models::PhotoSearch do
       end
 
       it "returns empty string when no search_terms supplied during initialization" do
-        klass.new(fixtures.photos,{}).search_terms.should be_empty
+        klass.new(fixtures.photos,{}).search_terms.should be_nil
       end
     end
 

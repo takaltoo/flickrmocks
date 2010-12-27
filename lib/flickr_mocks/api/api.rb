@@ -17,6 +17,7 @@ module FlickrMocks
       :tag_mode => 'any',
       :possible_tag_modes => ['any','all'],
       :possible_sizes => [:square, :thumbnail, :small, :medium, :medium_640, :large, :original],
+      :usable_licenses => [4,5,6,7]
     }
 
     class << self
