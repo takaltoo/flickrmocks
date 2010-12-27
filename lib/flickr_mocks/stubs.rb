@@ -13,7 +13,6 @@ module FlickrMocks
       #  Api.interesting_photos
       #  Api.commons_institutions
       def self.all
-        # [:VERSION, :Stubs, :Helpers, :Fixtures, :Models, :Api, :CustomClone, :CustomCompare, :CustomMarshal]
         [:photos,:photo_details,:photo,:photo_sizes,
           :interesting_photos,:commons_institutions].each do |method|
           self.send(method)
@@ -26,11 +25,14 @@ module FlickrMocks
       # The return value for Api.photos hash depends on the
       # the options hash:
       #
-      #   :search_terms => 'garbage' (returns empy list of photos)
-      #   :owner_id => 'garbage' (returns empty list of photos)
-      #   :owner_id => '<valid_id>' (returns list of photos that contain same author photos; valid_id is any string other than garbage)
-      #   :search_terms => '<valid_tag>' (returns list of photos with different author photos (if :owner_id must be nil); valid_tag is any string other than 'garbage')
-      #   :search_terms => nil and :owner_id => nil (raises FlickRaw::FailedResponse error)
+      #   :search_terms => 'garbage'           --> returns empy list of photos
+      #   :owner_id => 'garbage'               --> returns empty list of photos
+      #   :owner_id => '<valid_id>'            --> returns list of photos that contain same author photos;
+      #                                             valid_id is any string other than garbage
+      #   :search_terms => '<valid_tag>'       --> returns list of photos with different author photos
+      #                                              only if :owner_id  nil); valid_tag is any
+      #                                              string other than 'garbage'
+      #   (:search_terms && :owner_id) => nil  --> raises FlickRaw::FailedResponse error
       def self.photos
         lambda {::FlickrMocks::Api.stub(:photos) do |params|
             ::FlickrMocks::Stubs::Flickr.search
@@ -48,9 +50,10 @@ module FlickrMocks
       # The return value for Api.photo_details stub depends on the
       # state of the supplied options hash:
       #
-      #   :photo_id or :id => 'garbage' (raises FlickRaw::FailedResponse error)
-      #   :photo_id or :id => nil (raises FlickRaw::FailedResponse error)
-      #   :photo_id or :id => <valid_id> (returns a photo fixture with detailed information; valid_id can be any string other than 'garbage' )
+      #   (:photo_id || :id) => 'garbage'  --> raises FlickRaw::FailedResponse error
+      #   (:photo_id || :id) => nil        --> raises FlickRaw::FailedResponse error
+      #   (:photo_id || :id) => <valid_id> --> returns a photo fixture with detailed information;
+      #                                         valid_id can be any string other than 'garbage'
       def self.photo_details
         lambda {::FlickrMocks::Api.stub(:photo_details) do |params|
             ::FlickrMocks::Stubs::Flickr.getInfo
@@ -69,9 +72,10 @@ module FlickrMocks
       # The stub returns an object of class Models::Photo. The return value for the Api.photo
       # stub depends on the supplied options:
       #
-      #   :photo_id or :id => 'garbage' (raises Invaid ID error)
-      #   :photo_id or :id => nil (raises invalid ID error)
-      #   :photo_id or :id => <valid_id> (returns a photo fixture with detailed information; valid_id is any string other than 'garbage')
+      #   (:photo_id || :id) => 'garbage'  --> raises Invaid ID error
+      #   (:photo_id || :id) => nil        --> raises invalid ID error
+      #   (:photo_id || :id) => <valid_id> --> returns a photo fixture with detailed information;
+      #                                         valid_id is any string other than 'garbage'
       def self.photo
         lambda{::FlickrMocks::Api.stub(:photo) do |params|
             ::FlickrMocks::Stubs::Flickr.getInfo
@@ -88,9 +92,10 @@ module FlickrMocks
       # The stub returns an object of class Models::PhotoSizes.
       # The return value of Api.photo_sizes stub depends on the supplied options:
       #
-      #   :photo_id or :id => 'garbage' (raises FlickRaw::FailedResponse error)
-      #   :photo_id or :id => nil (raises FlickRaw::FailedResponse error)
-      #   :photo_id or :id => <valid_id> (returns list of photo sizes; valid_id is any string other than 'garbage')
+      #   (:photo_id || :id) => 'garbage'  --> raises FlickRaw::FailedResponse error
+      #   (:photo_id || :id) => nil        --> raises FlickRaw::FailedResponse error
+      #   (:photo_id || :id) => <valid_id> --> returns list of photo sizes; valid_id is
+      #                                         any string other than 'garbage'
       def self.photo_sizes  
          lambda {::FlickrMocks::Api.stub(:photo_sizes) do |params|
             ::FlickrMocks::Stubs::Flickr.getSizes
@@ -108,9 +113,10 @@ module FlickrMocks
       # The return value for Api.interesting_photos stub depends on the supplied
       # options hash:
       # 
-      #  :date => '2000-01-01' (returns empy list of photos)
-      #  :date => 'garbage' (raises an error)
-      #  :date => <valid_id> (returns interesting list of photos; date is any string other than 'garbage' and '2001-01-01')
+      #  :date => '2000-01-01' --> returns empty list of photos
+      #  :date => 'garbage'    --> raises an error
+      #  :date => <valid_id>   --> returns interesting list of photos; date is any string
+      #                            other than 'garbage' and '2001-01-01'
       def self.interesting_photos
          lambda {::FlickrMocks::Api.stub(:interesting_photos) do |params|
             ::FlickrMocks::Stubs::Flickr.interestingness
@@ -157,10 +163,11 @@ module FlickrMocks
       # are stubbed. The return value for the flickr.photos.search depends on
       # the supplied options hash:
       #
-      #   :tags => 'garbage' (returns empy list of photos)
-      #   :user_id => 'garbage' (returns empty list of photos)
-      #   :user_id => '<valid_id>' (returns list of photos that contain same author photos)
-      #   :tags => '<valid_tag>' (returns list of photos with different author photos; only if valid author id is not provided)
+      #   :tags => 'garbage'       --> returns empy list of photos
+      #   :user_id => 'garbage'    --> returns empty list of photos
+      #   :user_id => '<valid_id>' --> returns list of photos that contain same author photos
+      #   :tags => '<valid_tag>'   --> returns list of photos with different author photos
+           #                            only if valid author id is not provided
       def self.search
         fixtures = Fixtures.instance
         lambda { flickr.photos.stub(:search) do |params|
@@ -189,9 +196,9 @@ module FlickrMocks
       # are stubbed. The return value for the flickr.photos.getInfo stub depends on
       # the supplied options hash:
       #
-      #   :photo_id => 'garbage' (raises Invaid ID error)
-      #   :photo_id => nil (raises invalid ID error)
-      #   :photo_id => <valid_id> (returns a photo fixture with detailed information)
+      #   :photo_id => 'garbage'   --> raises Invaid ID error
+      #   :photo_id => nil         --> raises invalid ID error
+      #   :photo_id => <valid_id>  --> returns a photo fixture with detailed information
       def self.getInfo
         lambda {
           flickr.photos.stub(:getInfo) do |params|
@@ -218,9 +225,9 @@ module FlickrMocks
       # are stubbed. The return value for the flickr.photos.getSizes stub depends
       # on the supplied options hash:
       #
-      #  :photo_id => nil (raises FlickRaw::FailedResponse error)
-      #  :photo_id => 'garbage' (raises FlickRaw::FailedResponse error)
-      #  :photo_id => '<valid_id>' (returns a list of photo sizes)
+      #  :photo_id => nil          --> raises FlickRaw::FailedResponse error)
+      #  :photo_id => 'garbage'    --> raises FlickRaw::FailedResponse error)
+      #  :photo_id => '<valid_id>' --> returns a list of photo sizes)
       def self.getSizes
         lambda {
           flickr.photos.stub(:getSizes) do |params|
@@ -247,9 +254,9 @@ module FlickrMocks
       # are stubbed. The return value for the flickr.interesting.getList stub depends
       # on the supplied options hash.
       #
-      #  :date => '2000-01-01' (returns empy list of photos)
-      #  :date => 'garbage' (raises an error)
-      #  :date => <valid_id> (returns interesting list of photos)
+      #  :date => '2000-01-01'   --> returns empy list of photos
+      #  :date => 'garbage'      --> raises an error
+      #  :date => <valid_id>     --> returns interesting list of photos
       def self.interestingness
         lambda {
           flickr.interestingness.stub(:getList) do |params|

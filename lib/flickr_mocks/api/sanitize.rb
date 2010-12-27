@@ -3,7 +3,8 @@ module FlickrMocks
     # helper methods that help to clean up user supplied values. Module is
     # used internally.
     module Sanitize
-      # returns a lowercase stripped version of the supplied comma separated string. Sample usage:
+      # returns a lowercase stripped version of the supplied comma separated string.
+      # Sample usage:
       #
       #  Api.sanitize_tags('Shiraz  , HeLLo goodbye, wow')
       #  returns 'shiraz,hello goodbye,wow'
@@ -18,8 +19,8 @@ module FlickrMocks
         end
       end
 
-      # returns lowercase stripped version of the supplied string stored in the :search_terms key of the
-      # supplied hash. Sample usage:
+      # returns lowercase stripped version of the supplied string stored in the
+      # :search_terms key of the supplied hash. Sample usage:
       #
       #  self.sanitize_tags(:search_terms => 'Shiraz  , HeLLo goodbye, wow')
       #  returns 'shiraz,hello goodbye,wow'
@@ -62,7 +63,8 @@ module FlickrMocks
       end
 
       # returns the page number. Ensures that return value is string containing an integer
-      # greater than 0. When nonsensical page supplied, default page '1' is returned. Sample usage:
+      # greater than 0. When nonsensical page supplied, default page '1' is returned.
+      # Sample usage:
       #
       #   self.page('20')
       #   returns '20'
@@ -79,7 +81,8 @@ module FlickrMocks
         end
       end
 
-      # returns the page number contained in the :page key of the supplied hash. Sample usage:
+      # returns the page number contained in the :page key of the supplied hash.
+      # Sample usage:
       #
       #  self.page(:page => '20')
       #  returns '20'
@@ -104,7 +107,8 @@ module FlickrMocks
         end
       end
 
-      # returns tag_mode contained in the :tag_mode key of the supplied hash. Sample usage:
+      # returns tag_mode contained in the :tag_mode key of the supplied hash.
+      # Sample usage:
       #
       #   self.tag_mode(:tag_mode => 'any')
       #   returns 'any'

@@ -33,10 +33,13 @@ module FlickrMocks
     #  Api.photos(:search_terms => 'france') 
     # Options hash accepts:
     #   :search_terms : string with comma separated list of terms 'france,lyon'
-    #   :owner_id : pptional string containing the id for the owner of the photo.
-    #   :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
-    #   :page : optional string containing the page for search results to be returned. The default is '1'
-    #   :tag_mode : optionsl string containing either 'any' or 'all'. Affects the interpretation of the search terms to the FlickRaw API.
+    #   :owner_id : optional string containing the id for the owner of the photo.
+    #   :per_page : optional string containing the maximum number of photos
+    #                returned in a single page. The default value is '200'
+    #   :page : optional string containing the page for search results to be
+    #            returned. The default is '1'
+    #   :tag_mode : optionsl string containing either 'any' or 'all'. Affects the
+    #                interpretation of the search terms to the FlickRaw API.
     def self.photos(options)
       raise ArgumentError.new("Expecting a Hash argument.") unless options.is_a?(Hash)
       photos = Api::Flickr.photos(options)
@@ -48,7 +51,8 @@ module FlickrMocks
     #  Api.photo_details(:photo_id => '1234'
     # Options hash accepts:
     #   :photo_id : required string that contains the id for the photo
-    #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
+    #   :secret  : optional string that contains the flickr secret for photo.
+    #               When provided query is slightly faster
     def self.photo_details(options)
       raise ArgumentError.new("Expecting a Hash argument.") unless options.is_a?(Hash)
       photo = Api::Flickr.photo(options)
@@ -61,7 +65,8 @@ module FlickrMocks
     #  Api.photo(:photo_id => '1234')
     # Options hash accepts:
     #   :photo_id : required string that contains the id for the photo
-    #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
+    #   :secret  : optional string that contains the flickr secret for photo.
+    #               When provided query is slightly faster
     def self.photo(options)
       raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
       Models::Photo.new Api::Flickr.photo(options)
@@ -72,7 +77,8 @@ module FlickrMocks
     #  Api.photo_sizes(:photo_id => '1234')
     # Options hash accepts:
     #   :photo_id : required string that contains the id for the photo
-    #   :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
+    #   :secret  : optional string that contains the flickr secret for photo.
+    #               When provided query is slightly faster
     def self.photo_sizes(options)
       raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
       Models::PhotoSizes.new Api::Flickr.photo_sizes(options)
@@ -83,8 +89,10 @@ module FlickrMocks
     #  Api.interesting_photos(:date => '2000-01-01'
     # Options hash accepts:
     #  :date : string with date in the format yyyy-mm-dd
-    #  :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
-    #  :page : optional string containing the page for search results to be returned. The default is '1'
+    #  :per_page : optional string containing the maximum number of photos
+    #               returned in a single page. The default value is '200'
+    #  :page : optional string containing the page for search results to be
+    #           returned. The default is '1'
     def self.interesting_photos(options)
       raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
       photos = Api::Flickr.interestingness(options)
@@ -95,8 +103,10 @@ module FlickrMocks
     # Sample usage:
     #  Api.commons_institutions({})
     # Options hash accepts:
-    #  :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
-    #  :page : optional string containing the page for search results to be returned. The default is '1'
+    #  :per_page : optional string containing the maximum number of photos returned
+    #               in a single page. The default value is '200'
+    #  :page : optional string containing the page for search results to be returned.
+    #           The default is '1'
     def self.commons_institutions(options)
       raise ArgumentError.new("Expecting a Hash argument") unless options.is_a?(Hash)
       institutions = Api::Flickr.commons_institutions

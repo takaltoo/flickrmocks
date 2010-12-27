@@ -9,9 +9,12 @@ module FlickrMocks
       # Options hash accepts:
       #  :search_terms : string with comma separated list of terms 'france,lyon'
       #  :owner_id : pptional string containing the id for the owner of the photo.
-      #  :per_page : optional string containing the maximum number of photos returned in a single page. The default value is '200'
-      #  :page : optional string containing the page for search results to be returned. The default is '1'
-      #  :tag_mode : optionsl string containing either 'any' or 'all'. Affects the interpretation of the search terms to the FlickRaw API.
+      #  :per_page : optional string containing the maximum number of photos
+      #  returned in a single page. The default value is '200'
+      #  :page : optional string containing the page for search
+      #           results to be returned. The default is '1'
+      #  :tag_mode : optionsl string containing either 'any' or 'all'.
+      #               Affects the interpretation of the search terms to the FlickRaw API.
       def self.photos(options)
         flickr.photos.search Api::Options.search(options)
       end
@@ -22,7 +25,8 @@ module FlickrMocks
       #
       # Options hash accepts:
       #  :photo_id : required string that contains the id for the photo
-      #  :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
+      #  :secret  : optional string that contains the flickr secret for photo.
+      #              When provided query is slightly faster
       def self.photo(options)
         flickr.photos.getInfo Api::Options.photo(options)
       end
@@ -33,7 +37,8 @@ module FlickrMocks
       #
       # Options hash accepts:
       #  :photo_id : required string that contains the id for the photo
-      #  :secret  : optional string that contains the flickr secret for photo. When provided query is slightly faster
+      #  :secret  : optional string that contains the flickr secret for photo.
+      #              When provided query is slightly faster
       def self.photo_sizes(options)
         flickr.photos.getSizes Api::Options.photo(options)
       end
