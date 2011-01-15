@@ -10,7 +10,7 @@ In a standalone ruby project:
     gem install flickrmocks
 
     # in your code
-    require 'flickrmocks
+    require 'flickrmocks'
 
 In <b>Rails 3</b>, add this to your Gemfile.
 
@@ -101,28 +101,28 @@ refer RDocs[http://rdoc.info/projects/takaltoo/flickrmocks].
 
 * {RDOCs}[http://rdoc.info/projects/takaltoo/flickrmocks]
 * {See more}[http://wiki.github.com/takaltoo/flickrmocks/]
-* Run the specs manually once you've checked out the repository:
+* Run the specs manually once you have checked out the repository:
    rspec spec -f d
 
 		
 == Questions or Problems?
 
 If you have any issues with FlickrMocks which you cannot find the solution to in the documentation,
-please add an {issue on GitHub}[http://github.com/takaltoo/flickrmocks/issues] or fork the project and send a pull request.
+please add an issue on GitHub[http://github.com/takaltoo/flickrmocks/issues] or fork the project 
+and send a pull request. 
 
 To get the specs running you should call +bundle+ and then +rake+.
-
 
 == Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
+* Add tests for it. This is important so I do not break it 
+  in a future version unintentionally.
 * Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit
- by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+  (if you want to have your own version, that is fine but bump version in a commit by itself 
+  I can ignore when I pull)
+* Send me a pull request. 
 
 == License
 

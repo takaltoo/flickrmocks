@@ -12,12 +12,11 @@ Gem::Specification.new do |s|
   s.authors     = ["Takaltoo"]
   s.email       = ["pouya@lavabit.com"]
   s.homepage    = "http://rubygems.org/gems/flickrmocks"
-  s.summary     = %q{Sample gem to see if can do a bundle based gem}
-  s.description = %q{FlickrMocks makes it possible to Marshal responses
-       generated from the FLickRaw gem. This is useful for
-			 Mocking/Stubbing the Flickr interface for testing purposes.
-		   The FlickRaw::Response and FlickRaw::ResponseList objects can
-			 not be Marshaled because they contain singleton's.}
+  s.summary     = %q{Provides Classes and Helper functions that simplify 
+                     the development of an interface to Flickr using the FlickRaw GEM.}
+  s.description = %q{
+    FlickrMocks provides: 1) high level search API to access the Flickr API. Flickr responses are
+    wrapped in classes that provide a host of additional functionality.}
   s.extra_rdoc_files = ["README.rdoc"]
   s.rdoc_options = ["--charset=UTF-8"]
   s.rubyforge_project = "flickrmocks"
