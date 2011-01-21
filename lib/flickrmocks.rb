@@ -25,22 +25,31 @@ end
 #    require file if File.extname(file) == '.rb'
 #  end
 # end
+module FlickrMocks  
+  autoload :VERSION,  'flickr_mocks/version'
+  autoload :Stubs, 'flickr_mocks/stubs' 
+  autoload :Helpers, 'flickr_mocks/helpers'
+  autoload :Fixtures, 'flickr_mocks/fixtures'
+  
+  
+  # wrapper module that contains the classes that wrap the FlickRaw::Response and
+  # FlickRaw::ResponseList objects.
+  module Models
+    autoload :Helpers, 'flickr_mocks/models/helpers'
+    autoload :PhotoSizes, 'flickr_mocks/models/photo_sizes'
+    autoload :PhotoDimensions, 'flickr_mocks/models/photo_dimensions'
+    autoload :PhotoSize, 'flickr_mocks/models/photo_size'
+    autoload :Photos, 'flickr_mocks/models/photos'
+    autoload :Photo, 'flickr_mocks/models/photo'
+    autoload :PhotoSearch, 'flickr_mocks/models/photo_search'
+    autoload :PhotoDetails, 'flickr_mocks/models/photo_details'
+    autoload :CommonsInstitutions, 'flickr_mocks/models/commons_institutions'
+    autoload :CommonsInstitution, 'flickr_mocks/models/commons_institution'    
+  end
+  
+end
 
-[
- 'flickr_mocks/version.rb',
- 'flickr_mocks/stubs.rb',
- 'flickr_mocks/helpers.rb',
- 'flickr_mocks/fixtures.rb',
- 'flickr_mocks/models/helpers.rb',
- 'flickr_mocks/models/photo_sizes.rb',
- 'flickr_mocks/models/photo_dimensions.rb',
- 'flickr_mocks/models/photo_size.rb',
- 'flickr_mocks/models/photos.rb',
- 'flickr_mocks/models/photo.rb',
- 'flickr_mocks/models/photo_search.rb',
- 'flickr_mocks/models/photo_details.rb',
- 'flickr_mocks/models/commons_institutions.rb',
- 'flickr_mocks/models/commons_institution.rb',
+[          
  'flickr_mocks/api/helpers.rb',
  'flickr_mocks/api/options.rb',
  'flickr_mocks/api/flickr.rb',
